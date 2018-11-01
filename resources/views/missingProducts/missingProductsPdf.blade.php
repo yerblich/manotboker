@@ -134,8 +134,8 @@ table, th, td {
         <tr>
             <th>   סה"כ תשלום</th>
            @foreach ($pdfData['totaloProductsCosts'][$page] as $id => $cost)
-               <th style="white-space:nowrap" class="totalsBg"> <img  class="img" src="{{public_path('storage/images/shekel.png')}}" >{{$cost}} </th>
-            <th  style="white-space:nowrap" class= "returnsBg"> <img  class="img" src="{{public_path('storage/images/shekel.png')}}" >{{$pdfData['totalmProductsCosts'][$page][$id]}}</th>
+               <th style="white-space:nowrap" class="totalsBg"> <img  class="img" src="{{asset('storage/images/shekel.png')}}" >{{$cost}} </th>
+            <th  style="white-space:nowrap" class= "returnsBg"> <img  class="img" src="{{asset('storage/images/shekel.png')}}" >{{$pdfData['totalmProductsCosts'][$page][$id]}}</th>
            @endforeach
 
 

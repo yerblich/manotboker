@@ -4,10 +4,16 @@
   <style>
   .table
     {
-
-  margin-left:15em;
+      overflow: initial;
+  /* margin-left:15em; */
     }
-    .headcol {
+    .tableWrapper{
+      height:400px;
+    }
+    thead th {
+      position: sticky; top: 0; z-index: 100;
+    }
+    /* .headcol {
       text-align: center;
       height: 49px;
     position: absolute;
@@ -15,7 +21,7 @@
     margin-left: -219px;
     background-color: white;
     z-index: 1;
-    }
+    } */
   </style>
   <ol class="breadcrumb">
     <li class="breadcrumb-item">
@@ -77,7 +83,7 @@
  @foreach($data['products'] as $orderType => $products)
  @if(count($data['products'][$orderType]))
 <h1>{{ ucfirst($orderType)}}</h1>
- <div class=" blueScroll table-responsive form-group">
+ <div class="tableWrapper blueScroll table-responsive form-group">
   <table class="table-striped sticky table table-bordered table-responsive" id="dataTable" width="100%" cellspacing="0">
     <thead class="thead-light">
       <tr>

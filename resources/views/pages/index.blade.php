@@ -2,13 +2,13 @@
 
 @section('content')
 
-  
+
       <!-- Breadcrumbs-->
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
           <a href="#">בית</a>
         </li>
-        
+
       </ol>
       <!-- Area Chart Example-->
       <div class="card mb-3">
@@ -43,10 +43,10 @@
           </div>
         </div>
       </div>
-   
+
     <!-- /.container-fluid-->
     <!-- /.content-wrapper-->
-   
+
+
 
 @endsection
-

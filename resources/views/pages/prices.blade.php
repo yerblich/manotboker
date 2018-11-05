@@ -118,6 +118,7 @@
 </tfoot>
 </table>
 </div>
+<br/> 
 {{Form::submit('עדכון', ['class' => 'btn btn-primary'])}}
 {!! Form::close() !!}
 @endif

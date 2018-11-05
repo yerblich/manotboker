@@ -76,7 +76,7 @@
     <div class="col-4">{{Form::text('day', null, ['placeholder'=>'יום', 'class'=> 'text-right form-control','required' => 'required'])}}   </div>
 <div class="col-4">  {{Form::text('parsha', null,['placeholder'=>'פרשת','class'=> 'text-right form-control','required' => 'required'])}}  </div>
 
- <div class = "col-4">{{Form::text('date', null, array('placeholder'=>'תאריך','class' => 'text-right form-control datepicker', 'autocomplete' => 'off', 'required' => 'required'))}} </div>
+ <div class = "col-4">{{Form::text('date', null, array('style' => 'position: relative; z-index: 100000;', 'placeholder'=>'תאריך','class' => 'text-right form-control datepicker', 'autocomplete' => 'off', 'required' => 'required'))}} </div>
 </div><br/>
 
 {{-- create table for each type of product i.e shabbos and daily  --}}

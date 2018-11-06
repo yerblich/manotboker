@@ -135,7 +135,7 @@
       @endsection
       @section('js')
 
-      <script src={{ asset('js/updateDates.js') }}></script>
+      <script src={{ asset('storage/js/updateDates.js') }}></script>
 
 
 

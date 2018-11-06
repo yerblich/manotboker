@@ -2,7 +2,7 @@
 @section('content')
   <!-- Breadcrumbs-->
   <style>
-  
+
     .headcol {
       text-align: center;
       height: 49px;
@@ -17,7 +17,7 @@
     <li class="breadcrumb-item">
       <a href="#">Missing Products</a>
     </li>
-   
+
   </ol>
   <div class="row">
       <div class="col-md-10">
@@ -26,7 +26,7 @@
       <div class="col-md-2">
             {!! Form::open(['action'=> ['MissingProductsController@destroy',$data['id']], 'method' => 'POST'],['class' => 'form-group']) !!}
             @method('Delete')
-            
+
           {{Form::submit('הסר דו"ח', ['class'=> 'deleteAlert btn btn-primary','id'=>"progress"])}}
       {!! Form::close() !!}
       </div>
@@ -35,12 +35,12 @@
   @method('PUT')
   <div class="table-responsive">
         <table class="table-bordered table">
-          
+
                     <thead>
                             <tr>
           @foreach ($data['missingProducts'] as $name => $quantity)
             <th>{{$name}}</th>
-           
+
           @endforeach
         </tr>
         </thead>
@@ -48,30 +48,30 @@
         <tr>
                 @foreach ($data['missingProducts'] as $name => $quantity)
                 <td>{{Form::input('number',$data['missingProductsIds'][$name],$quantity,['onkeypress'=> "return isNumberKey(event)", 'class' => 'form-control','style' => 'padding:1px; text-align:center'] )}}</td>
-               
+
               @endforeach
 
         </tr>
 
         </tbody>
-        
-            
+
+
         </table>
       </div>
- 
+
       {{Form::submit('עדכון', ['class'=> 'btn btn-primary','id'=>"progress"])}}
       {!! Form::close() !!}
 
 
-   
+
 
 
       @endsection
       @section('js')
-     
-        <script src={{ asset('js/isNumberKey.js') }}></script>
-       
-        <script src={{ asset('js/deleteAlert.js') }}></script>
-    
-     
-      @stop 
+
+        <script src={{ asset('storage/js/isNumberKey.js') }}></script>
+
+        <script src={{ asset('storage/js/deleteAlert.js') }}></script>
+
+
+      @stop

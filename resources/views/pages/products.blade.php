@@ -114,9 +114,9 @@
 @endsection
 @section('js')
 
-  <script src={{ asset('js/isNumberKey.js') }}></script>
+  <script src={{ asset('storage/js/isNumberKey.js') }}></script>
 
-  <script src={{ asset('js/liveFilter.js') }}></script>
+  <script src={{ asset('storage/js/liveFilter.js') }}></script>
 
 
 @stop

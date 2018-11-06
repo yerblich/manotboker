@@ -110,8 +110,8 @@
       @endsection
       @section('js')
 
-      <script src={{ asset('js/deleteAlert.js') }}></script>
-      <script src={{ asset('js/isNumberKey.js') }}></script>
+      <script src={{ asset('storage/js/deleteAlert.js') }}></script>
+      <script src={{ asset('storage/js/isNumberKey.js') }}></script>
 
 
 

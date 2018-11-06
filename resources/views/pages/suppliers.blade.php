@@ -68,7 +68,7 @@
         </div>
 @endsection
 @section('js')
-<script src={{ asset('js/liveFilter.js') }}></script>
+<script src={{ asset('storage/js/liveFilter.js') }}></script>
 
 
 @stop

@@ -118,14 +118,14 @@
 </tfoot>
 </table>
 </div>
-<br/> 
+<br/>
 {{Form::submit('עדכון', ['class' => 'btn btn-primary'])}}
 {!! Form::close() !!}
 @endif
       @endsection
       @section('js')
 
-        <script src={{ asset('js/isNumberKey.js') }}></script>
+        <script src={{ asset('storage/js/isNumberKey.js') }}></script>
 
 
 

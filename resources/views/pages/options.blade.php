@@ -12,7 +12,7 @@
         <li class="breadcrumb-item">
           <a href="#">Options</a>
         </li>
-        
+
       </ol>
       <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
@@ -31,13 +31,13 @@
                         @foreach($clients as $client)
                         <li id ={{$client->name}} class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>{{$client->name}}</li>
                         @endforeach
-                        {!! Form::open(['action'=> ['OptionsController@store'], 'method' => 'POST']) !!} 
+                        {!! Form::open(['action'=> ['OptionsController@store'], 'method' => 'POST']) !!}
                         {{ csrf_field() }}
-                       
+
                         {!! Form::hidden('route','',['class'=>'route']) !!}
                         {{Form::submit('Update Route', ['id' =>'getRoute', 'class' => 'btn btn-primary'])}}
                         {!! Form::close() !!}
-                     
+
                             {{-- <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 1</li>
                             <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 2</li>
                             <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 3</li>
@@ -45,18 +45,18 @@
                             <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 5</li>
                             <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 6</li>
                             <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Item 7</li> --}}
-                          </ol>  
-                
+                          </ol>
+
             </div>
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-              
+
             </div>
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
           </div>
-   
+
     <!-- /.container-fluid-->
     <!-- /.content-wrapper-->
-   
+
 
 @endsection
 
@@ -65,7 +65,7 @@
         var token = '{{Session::token()}}';
         var url = '{{ route("options.store")}}'
     </script>
-<script src={{ asset('js/options.js') }}></script>
+<script src={{ asset('storage/js/options.js') }}></script>
 
 
 

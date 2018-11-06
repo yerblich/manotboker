@@ -197,11 +197,11 @@
       @section('overwriteAlert')
 
       @if($data['overWriteAlert'])
-        <script src={{ asset('js/overwriteAlert.js') }}></script>
+        <script src={{ asset('storage/js/overwriteAlert.js') }}></script>
 
 
      @else
-       <script src={{ asset('js/progressBar.js') }}></script>
+       <script src={{ asset('storage/js/progressBar.js') }}></script>
      @endif
 
       @stop

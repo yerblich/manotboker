@@ -64,5 +64,5 @@
         var token = '{{Session::token()}}';
         var url = '{{ route("checkExistingInvoice")}}'
     </script>
-<script src={{ asset('js/invoiceCheck.js') }}></script>
+<script src={{ asset('storage/js/invoiceCheck.js') }}></script>
 @stop

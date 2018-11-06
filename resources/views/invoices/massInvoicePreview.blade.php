@@ -118,5 +118,5 @@
       @section('js')
 
 
-<script src={{ asset('js/checkSave.js') }}></script>
+<script src={{ asset('storage/js/checkSave.js') }}></script>
 @stop

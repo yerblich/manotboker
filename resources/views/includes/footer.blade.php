@@ -31,8 +31,8 @@
     </div>
 
       <!-- Bootstrap core JavaScript-->
-      <script src="{{ asset('js/app.js') }}"></script>
-      <script src="{{ asset('js/sb-admin.js') }}"></script>
+      <script src="{{ asset('storage/js/app.js') }}"></script>
+      <script src="{{ asset('storage/js/sb-admin.js') }}"></script>
       <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
       <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 

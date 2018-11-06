@@ -51,7 +51,7 @@
       @endsection
       @section('js')
 
-      <script src={{ asset('js/deleteAlert.js') }}></script>
+      <script src={{ asset('storage/js/deleteAlert.js') }}></script>
 
 
 

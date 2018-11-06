@@ -15,7 +15,7 @@
     {{ Form::label($client->id, $client->name, ['class' => 'menu-item']) }}<br>
 
     @endforeach
-    
+
 
 
 
@@ -33,36 +33,26 @@
     </div>
     <div class="col-md-2">
 
-            <button id="modalpress" onclick="return false" class=" btn btn-primary ">ליצור חשבוניות מרובות</button>
+            <button id="modalpress" onclick="return false" class=" btn btn-primary  ">ליצור חשבוניות מרובות</button>
 
     </div>
     <div id="modalbar" class="modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">hello</h5>
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">טעינה</h5>
 
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                        The following have duplicate invoicess
-                        </div>
-                            <div class="col-md-2">
-                                    <button id="cancel" onclick="return false" class=" btn btn-danger ">Cancel</button>
-                                    </div>
-                        <div class="col-md-4">
-
-                        </div>
-
-                    </div>
-                    </div>
-                <div class="modal-footer">
-
-                </div>
-              </div>
-            </div>
           </div>
+          <div class="modal-body">
+
+            <div style="display:none" id="progressbar"></div>
+          </div>
+          <div class="modal-footer">
+
+          </div>
+        </div>
+      </div>
+    </div>
 {!! Form::close() !!}
 
 </div>

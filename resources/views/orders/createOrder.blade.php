@@ -181,7 +181,7 @@
 @endif
  @endforeach
 
-{{Form::submit('שמור', ['class' => 'btn btn-primary','id'=>"progress"])}}
+{{Form::submit('שמור', ['class' => 'btn btn-primary  ' ,'id'=>"progress"])}}
 {!! Form::close() !!}
 
 <div id="modalbar" class="modal" tabindex="-1" role="dialog">
@@ -201,6 +201,7 @@
     </div>
   </div>
 </div>
+
 
  @endif
       @endsection

@@ -23,8 +23,8 @@
 
           {!! Form::hidden('data', json_encode($data,true)) !!}
 
-          {{Form::submit('שמור',  ['id'=> 'save','name' => 'save','class' => ' btn btn-primary'])}}
-          {{Form::submit('שלח Pdf',  ['id'=> 'save','name' => 'send','class' => 'btn btn-primary'])}}
+          {{Form::submit('שמור',  ['id'=> 'save','name' => 'save','class' => 'progressMI btn btn-primary'])}}
+          {{Form::submit('שלח Pdf',  ['id'=> 'save','name' => 'send','class' => 'progressMI btn btn-primary'])}}
           {!! Form::close() !!}
           </div>
 

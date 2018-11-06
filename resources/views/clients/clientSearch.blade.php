@@ -73,7 +73,7 @@
          {!! Form::hidden('data', json_encode($data,TRUE)) !!}
 
         {{-- <a class="btn btn-primary" href="{{ url('/orders/pdf')}}">Download</a> --}}
-       {{Form::submit('ליצור חשבונית',  ['name' => 'create','class' => ' btn btn-primary'])}}
+       {{Form::submit('ליצור חשבונית',  ['name' => 'create','class' => 'progressBar overwriteAlert btn btn-primary'])}}
         {!! Form::close() !!}
  </div>
 
@@ -175,13 +175,33 @@
 לא נמצאו הזמנות
 @endif
 
+<div id="modalbar" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">טעינה</h5>
+
+      </div>
+      <div class="modal-body">
+
+        <div style="display:none" id="progressbar"></div>
+      </div>
+      <div class="modal-footer">
+
+      </div>
+    </div>
+  </div>
+</div>
 
       @endsection
       @section('overwriteAlert')
-      {{-- @if($data['overWriteAlert'])
+
+      @if($data['overWriteAlert'])
         <script src={{ asset('js/overwriteAlert.js') }}></script>
 
 
-     @endif --}}
+     @else
+       <script src={{ asset('js/progressBar.js') }}></script>
+     @endif
 
       @stop

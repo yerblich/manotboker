@@ -167,7 +167,7 @@ class InvoiceController extends Controller
 
 
 
-      $data = array(
+     $data = array(
          // 'paid' => $invoice->paid,
 
         'client' => $client,
@@ -459,7 +459,7 @@ public function checkExistingInvoice(Request $request){
     $e =  json_decode($test->content(),true);
    $from_date = Carbon::parse( $e['from_date'])->format('Y-m-d');
     $to_date = Carbon::parse( $e['to_date'])->format('Y-m-d');
-    $invoice_exists = Invoice::where(['client_id' => 1, 'from_date' => $from_date, 'to_date' => $to_date])->first();
+    $invoice_exists = Invoice::where([ 'from_date' => $from_date, 'to_date' => $to_date])->first();
      if($invoice_exists == ''){
         return   response()->json(['from_date' => 'noduplicate']);
      }else{

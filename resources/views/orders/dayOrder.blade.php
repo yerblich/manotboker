@@ -51,7 +51,7 @@
       @endforeach
 
       <hr>
-      {{Form::submit('שלח Pdf',  ['class' => ' w-100  btn btn-primary'])}}
+      {{Form::submit('שלח Pdf',  ['class' => ' w-100  progressMI btn btn-primary'])}}
     </div>
 
   {!! Form::close() !!}
@@ -75,6 +75,23 @@
 </div>
 </div>
 
+<div id="modalbar" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">טעינה</h5>
+
+      </div>
+      <div class="modal-body">
+
+        <div style="display:none" id="progressbar"></div>
+      </div>
+      <div class="modal-footer">
+
+      </div>
+    </div>
+  </div>
+</div>
       @endsection
       @section('js')
 

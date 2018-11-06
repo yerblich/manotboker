@@ -1,0 +1,109 @@
+@font-face {
+	font-family: 'DanaYadAlefAlefAlef-Normal';
+	src: url('../fonts/DanaYadAlefAlefAlef-Normal.woff') format('woff'),
+	     url('fonts/ezrasilsr-webfont.woff') format('woff'),
+	     url('../public/fonts/SBL_Hbrw.ttf')  format('truetype'),
+	     url('fonts/ezrasilsr-webfont.svg#EzraSILSR') format('svg');
+    }
+    .heb{
+        font-family: 'DanaYadAlefAlefAlef-Normal'
+    }
+
+.chartWrapper {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    height: auto;
+    width: 75%;
+  }
+.centerTable{
+
+    margin-right: auto;
+    margin-left: auto;
+    border-width: .2rem;
+  }
+  .paginateLinks{
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .chartWrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(54, 57, 233, 0.3);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 1000px rgba(0,123,255);
+}
+.blueScroll::-webkit-scrollbar {
+    height: 8px;
+}
+.blueScroll::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(54, 57, 233, 0.3);
+    border-radius: 10px;
+}
+.blueScroll::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 1000px rgba(0,123,255);
+}
+.clientInvoices{
+    margin-top: 4%;
+    margin-left: 18%;
+    height: 230px;
+    width: 80%;
+    overflow-y: scroll;
+
+
+}
+.clientInvoices::-webkit-scrollbar {
+    width: 8px;
+}
+
+.ddpad{
+    padding:9px !important;
+}
+.dateGroup{
+    padding: 12px;
+    border: 1px solid #dee2e6!important;
+
+}
+.dateGroup:hover{
+    cursor: pointer;
+    background:#dee2e6!important;
+}
+.dateGroupItem{
+    padding: 1%;
+}
+
+/* Progress Bar */
+#progressbar .ui-progressbar-value {
+    display: none;
+    background-color: #ccc;
+  }
+  .invoiceGroup{
+    padding: 12px;
+    border: 1px solid #dee2e6!important;
+}
+.invoiceGroupItem{
+    padding: 12px;
+    border: 1px solid #dee2e6!important;
+}
+
+
+.invoiceGroup:hover{
+    cursor: pointer;
+    background:#dee2e6!important;
+}
+.clientInfo h2{
+    padding-right: 10%;
+}
+.supplierProducts::-webkit-scrollbar {
+    width: 8px;
+}
+.supplierProducts{
+    overflow-y: scroll;
+    height: 195px;
+}

@@ -1,4 +1,7 @@
-*
-!js/*
-!css/*
+fonts/
+images/
+missingReportsPdf/
+pdf/
+pdfInvoices/
+productImages/
 !.gitignore

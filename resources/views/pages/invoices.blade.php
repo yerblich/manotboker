@@ -31,7 +31,7 @@
 <div  style="display:none" class=" well invoiceList">
   @foreach($invoiceArray as $invoice)
   <div class="invoiceGroupItem" >
-     <a  href="{{url('/invoices')}}/{{$invoice->id}}"> {{$invoice->from_date }} To  {{$invoice->to_date }} </a>
+     <a  href="{{url('/invoices')}}/{{$invoice->id}}"> {{$invoice->from_date->format('d-m-Y') }} To  {{$invoice->to_date->format('d-m-Y') }} </a>
   </div>
 
     @endforeach

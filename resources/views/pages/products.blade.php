@@ -37,7 +37,11 @@
         </div>
 
         <div class=" form-group input-group   ">
-           {!! Form::select('type',[0 => 'שבת',1 =>'יומי'],null,['class' => ' text-right custom-select'] ) !!}
+           {!! Form::select('type',[
+                 0 => 'שבת' ,
+                 1 => 'יומי',
+                 2 => 'אמריקאי']
+           ,null,['class' => ' text-right custom-select'] ) !!}
 
             <div class="input-group-append">
                 <span class="input-group-text">סוג</span>

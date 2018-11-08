@@ -225,7 +225,7 @@ $totalMissingCost = array_sum($totalsArray);
 
               if($productsInOrders == []){
                   return redirect()->route('suppliers.show',$supplier->id)->with('error','לא נמצאו הזמנות בתאריכים אלו');
-}
+                }
                foreach ($productsInOrders as $key => $productId) {
                   $names[Product::find($productId)->name] = $productId;
                   }
@@ -238,7 +238,7 @@ $totalMissingCost = array_sum($totalsArray);
 
                       $quantity = 0;
                       if(!$missing->missingItems()->where('product_id' , $productId)->first() == ''){
-                    $missingItem =     $missing->missingItems()->where('product_id' , $productId)->first();
+                        $missingItem =     $missing->missingItems()->where('product_id' , $productId)->first();
 
                       $missingProducts[Carbon::parse($missing->date)->format('d-m-Y')][$productId] =  $missingItem->quantity;
                       $missingCosts[Carbon::parse($missing->date)->format('d-m-Y')][$productId] =  $missingItem->quantity *  $missingItem->current_price ;
@@ -252,19 +252,22 @@ $totalMissingCost = array_sum($totalsArray);
             //  return $missingCosts;
 
               //return $missingProducts;
-               $currentMonthOrders = Order::whereBetween('date',[$from_date,$to_date])->get();
+                $currentMonthOrders = Order::whereBetween('date',[$from_date,$to_date])->get();
                //$monthOrdersIds = Order::whereBetween('date',[$from_date,$to_date])->pluck('id')->toArray();
+
               foreach ($currentMonthOrders as $order) {
+
                 $monthOrdersIds = Order::where('date',$order->date)->pluck('id')->toArray();
                   foreach ($productsInOrders as $key => $productId) {
 
                       $quantity = 0;
+
                       if(!$order->orderItems()->where('product_id' , $productId)->first() == ''){
                        $orderItem =  $order->orderItems()->where('product_id' , $productId)->first();
 
                       }
                       $quantity = orderItem::whereIn('order_id', $monthOrdersIds)->where('product_id',$productId)->sum('quantity');
-                      $orders[Carbon::parse($order->date)->format('d-m-Y')][$productId] = $quantity;
+                     $orders[Carbon::parse($order->date)->format('d-m-Y')][$productId] = $quantity;
                     $ordersCost[Carbon::parse($order->date)->format('d-m-Y')][$productId] = $quantity * $orderItem->c_supplier_price;
                   }
 

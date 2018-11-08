@@ -236,6 +236,7 @@ class ordersController extends Controller
 
         // $products =  Product::where('active', 1)->get();
          foreach($products as $key => $product_id){
+
             if( Product::find($product_id)->type == 1){
              $sums['daily'][$product_id] = $request->input('sum_'.$product_id);
          }elseif(Product::find($product_id)->type == 0){
@@ -292,7 +293,8 @@ class ordersController extends Controller
                     }
 
             }
-             $this->createOrderPdf($newDateformat,$sums);
+        
+        $this->createOrderPdf($newDateformat,$sums);
 
      }else{
     $messageCode = 'error';
@@ -310,6 +312,7 @@ class ordersController extends Controller
 
  public function createOrderPdf($orderDate, $sums)
     {
+
         $parsha = Order::where('date',$orderDate)->first()->parsha;
         $day = Order::where('date',$orderDate)->first()->day;
         $suppliers = Supplier::all();
@@ -432,7 +435,7 @@ class ordersController extends Controller
 
       );
 
-       $this->pdfDownload($data);
+    $this->pdfDownload($data);
     }
 
 
@@ -519,7 +522,7 @@ class ordersController extends Controller
          $data['productNameArray'] = $productNameArray;
       $data['route'] = (array)$route;
       $data['sums'] = $pagedSums;
-//return $data;
+
     //
          $mpdf = PDF::loadView('orders.pdfDaily', compact('data'));
          $mpdf->save( storage_path('app/public/pdf/order'.$date.'.pdf')  );

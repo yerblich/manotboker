@@ -270,7 +270,7 @@ class ordersController extends Controller
                     ])->first();
 
 
-                    $client_order =   Utils::createClientOrderArray($products, $request, $client);
+                 $client_order =   Utils::createClientOrderArray($products, $request, $client);
 
                    // return $client_order;
                     if( isset($client_order) && !$client_order == "" ){
@@ -293,8 +293,8 @@ class ordersController extends Controller
                     }
 
             }
-        
-        $this->createOrderPdf($newDateformat,$sums);
+//testt!
+      $this->createOrderPdf($newDateformat,$sums);
 
      }else{
     $messageCode = 'error';
@@ -313,7 +313,7 @@ class ordersController extends Controller
  public function createOrderPdf($orderDate, $sums)
     {
 
-        $parsha = Order::where('date',$orderDate)->first()->parsha;
+      $parsha = Order::where('date',$orderDate)->first()->parsha;
         $day = Order::where('date',$orderDate)->first()->day;
         $suppliers = Supplier::all();
         $products = Product::all();
@@ -484,7 +484,7 @@ class ordersController extends Controller
         $productPage++;
      }
     }
-    if(count($routes[$productType][$routeNum]) == 35){
+    if(count($routes[$productType][$routeNum]) == 45){
         $routeNum++;
  }
 

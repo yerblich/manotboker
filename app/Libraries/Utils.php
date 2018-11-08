@@ -19,13 +19,13 @@ class Utils
        $order->client_id = $client;
        $order->save();
        return $order;
-      } 
+      }
 
 
 
 
       public static function saveReturnToDatabase($newDateformat,$client, $order){
-        $return = new ProductReturn;                             
+        $return = new ProductReturn;
         $return->date = $newDateformat;
         $return->order_id = $order->id;
         $return->client_id = $client;
@@ -36,6 +36,7 @@ class Utils
 
 
        public static function saveOrderItemsAndReturnItemsToDatabase($client_order,$order,$request,$client,$return){
+
         foreach($client_order as $productId => $quantity){
             $orderItem = new orderItem;
             $orderItem->order_id = $order->id;
@@ -44,7 +45,7 @@ class Utils
              $orderItem->c_supplier_price = Product::where( 'id' ,$productId)->first()->supplier_price;
           $orderItem->currentPrice = Price::where(['client_id' => $client, 'product_id' => $productId])->first()->price;
             $orderItem->save();
-        
+
             $returnItem = new returnItem;
             $returnItem->order_items_id = $orderItem->id;
             $returnItem->product_return_id = $return->id;
@@ -52,49 +53,50 @@ class Utils
             $returnItem->quantity = 0;
             $returnItem->currentPrice = Price::where(['client_id' => $client, 'product_id' => $productId])->first()->price;
             $returnItem->save();
-        
-        
-        
+
+
+
         }
        }
 
        public static function extractClientIds($requestArray){
-    
-        foreach($requestArray as $ClientId_ProductId => $amount) { 
+
+        foreach($requestArray as $ClientId_ProductId => $amount) {
             if (is_numeric($ClientId_ProductId[0])) {
                 if($amount !== null){
                     $temp[]  = strtok( $ClientId_ProductId,  '_');
-                    $allTheRest[] = strtok( '' ); 
-                } 
+                    $allTheRest[] = strtok( '' );
+                }
             }
-           
+
            }
           return  array_unique($temp);
     }
 
        public static function extractProductIds($requestArray){
-    
-        foreach($requestArray as $ClientId_ProductId => $amount) { 
+
+        foreach($requestArray as $ClientId_ProductId => $amount) {
             if (is_numeric($ClientId_ProductId[0])) {
                 if($amount !== null){
                     $temp[]  = strtok( $ClientId_ProductId,  '_');
-                    $allTheRest[] = strtok( '' ); 
+                    $allTheRest[] = strtok( '' );
                 }
-               
+
             }
-           
+
            }
           return  array_unique($allTheRest);
     }
-    
+
     public static function createClientOrderArray($products, $request, $client){
         $client_order = [];
         foreach($products as $key => $product_id ){
-                                   
+
             if(!$request->input($client ."_". $product_id) == null){
+            
                 $client_order[$product_id] =  $request->input($client ."_". $product_id);
-          
-         }  
+
+         }
         }
         return $client_order;
     }
@@ -112,6 +114,6 @@ public static function prefix_product($supplierName,$productNameInput,$type){
 return $productFix;
 }
 
-   
+
 
 }

@@ -219,7 +219,8 @@ class ordersController extends Controller
     public function store(Request $request)
     {
 
-   //s return $request;
+
+
          // create array with just orders without the token and date in order to check if all fields are empty
        $requestProducts = $request->all();
         unset($requestProducts['_token'],$requestProducts['date'],$requestProducts['parsha'],$requestProducts['day']);
@@ -236,14 +237,18 @@ class ordersController extends Controller
 
         // $products =  Product::where('active', 1)->get();
          foreach($products as $key => $product_id){
+           if($request->input('sum_'.$product_id) > 0 ){
+             if( Product::find($product_id)->type == 1){
+              $sums['daily'][Product::find($product_id)->name] = $request->input('sum_'.$product_id);
+          }elseif(Product::find($product_id)->type == 0){
+             $sums['shabbos'][Product::find($product_id)->name] = $request->input('sum_'.$product_id);
+          }else{
+            $sums['american'][Product::find($product_id)->name] = $request->input('sum_'.$product_id);
+          }
+           }
 
-            if( Product::find($product_id)->type == 1){
-             $sums['daily'][$product_id] = $request->input('sum_'.$product_id);
-         }elseif(Product::find($product_id)->type == 0){
-            $sums['shabbos'][$product_id] = $request->input('sum_'.$product_id);
-         }else{
-           $sums['american'][$product_id] = $request->input('sum_'.$product_id);
-         }
+
+
         }
 
         //  foreach($request as $key => $value) {
@@ -270,9 +275,9 @@ class ordersController extends Controller
                     ])->first();
 
 
-                 $client_order =   Utils::createClientOrderArray($products, $request, $client);
+        $client_order =   Utils::createClientOrderArray($products, $request, $client);
 
-                   // return $client_order;
+
                     if( isset($client_order) && !$client_order == "" ){
                         if($orderCheck == null){
 
@@ -293,8 +298,8 @@ class ordersController extends Controller
                     }
 
             }
-//testt!
-      $this->createOrderPdf($newDateformat,$sums);
+
+    $this->createOrderPdf($newDateformat,$sums);
 
      }else{
     $messageCode = 'error';
@@ -331,7 +336,7 @@ class ordersController extends Controller
        // check if this client has any orders for the date which was clcked
        if(!$client->orders()->where('date',$orderDate)->first() == null){
            //get order
-       $order = $client->orders()->where('date',$orderDate)->   first();
+       $order = $client->orders()->where('date',$orderDate)->first();
       //get all orderitems for this order
         $orderItems[$client->name] =  orderItem::where('order_id',$order->id)->get();
        $itemlist = $orderItems[$client->name];
@@ -434,8 +439,7 @@ class ordersController extends Controller
         'suppliers' => $suppliers
 
       );
-
-    $this->pdfDownload($data);
+   $this->pdfDownload($data);
     }
 
 
@@ -484,7 +488,7 @@ class ordersController extends Controller
         $productPage++;
      }
     }
-    if(count($routes[$productType][$routeNum]) == 45){
+    if(count($routes[$productType][$routeNum]) == 35){
         $routeNum++;
  }
 
@@ -507,8 +511,8 @@ class ordersController extends Controller
 
     foreach ($data['sums'] as $ordertype => $sumArray) {
       $sumPage = 1;
-    foreach ($sumArray as $productId => $sum) {
-      $pagedSums[$ordertype][$sumPage][$productId] = $sum;
+    foreach ($sumArray as $name => $sum) {
+      $pagedSums[$ordertype][$sumPage][Product::where('name',$name)->first()->name] = $sum;
     if(count($pagedSums[$ordertype][$sumPage]) == 9){
       $sumPage++;
     }
@@ -521,9 +525,9 @@ class ordersController extends Controller
          $date =  $data['date'];
          $data['productNameArray'] = $productNameArray;
       $data['route'] = (array)$route;
-      $data['sums'] = $pagedSums;
+   $data['sums'] = $pagedSums;
 
-    //
+    // return $data;
          $mpdf = PDF::loadView('orders.pdfDaily', compact('data'));
          $mpdf->save( storage_path('app/public/pdf/order'.$date.'.pdf')  );
 
@@ -604,7 +608,7 @@ class ordersController extends Controller
    // get all products in order to create form
    //$products = Product::where('active', 1)->orderBy('type', 'desc')->orderBy('supplier_id')->get();
 
-         $data = array(
+        $data = array(
         'date' => $orderDate,
         'day' => $day,
         'parsha' => $parsha,

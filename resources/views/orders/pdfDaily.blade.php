@@ -95,13 +95,20 @@ table{
   </tr>
   <tr>
     <th>סה"כ</th>
-    @foreach( $data['sums'][$orderType][$pageNum] as  $product_id => $sum)
+    @foreach( $nameArray as  $name)
 
-  @if($sum > 0 )
-    <th>{{$sum}}</th>
-@endif
+
+    <th>{{$data['sums'][$orderType][$pageNum][$name]}}</th>
+
 
   @endforeach
+    {{-- @foreach( $data['sums'][$orderType][$pageNum] as  $product_id => $sum)
+
+
+    <th>{{$sum}}</th>
+
+
+  @endforeach --}}
 </tr>
 </tfoot>
 </table>

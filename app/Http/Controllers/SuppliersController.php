@@ -396,8 +396,9 @@ $totalMissingCost = array_sum($totalsArray);
             'totaloProductsCosts' => $oCostPages,
             'totalmProductsCosts' => $mCostPages,
             'supplier' => $supplier,
-            'from_date' => $from_date,
-            'to_date' => $to_date,
+            'from_date' => Carbon::parse($from_date)->format('d-m-Y') ,
+
+            'to_date' => Carbon::parse($to_date)->format('d-m-Y') ,
             'orderSums' => $oSumPages,
             'missingSums' => $mSumPages,
             'missingProducts' => $mPages,

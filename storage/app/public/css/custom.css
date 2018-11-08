@@ -107,3 +107,6 @@
     overflow-y: scroll;
     height: 195px;
 }
+.modal{
+	z-index: 10000000 !important;
+}

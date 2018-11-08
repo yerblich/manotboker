@@ -80,7 +80,11 @@
                 </div>
           </div>
           <div class="input-group form-group ">
-             {!! Form::select('type',[0 => 'שבת',1 =>'יומי'],$data['type'],['class' => 'form-control custom-select'] ) !!}
+             {!! Form::select('type',[
+                   0 => 'שבת' ,
+                   1 => 'יומי',
+                   2 => 'אמריקאי'],
+                   $data['type'],['class' => 'form-control custom-select'] ) !!}
              <div class="input-group-append">
                  <span class="input-group-text">סוג</span>
                </div>

@@ -29,7 +29,7 @@ class ProductsController extends Controller
      }else{
          $supplierList = [];
      }
-    
+
      //return $supplierList;
         return view('pages.products')->with('products', $products)->with('suppliers', $supplierList)
         ->with('LiveSearchArray', $LiveSearchArray);
@@ -68,14 +68,14 @@ class ProductsController extends Controller
      $price =  $request->input("price");
      $clients =  Client::orderBy('route', 'asc')->get();
       $supplierName = Supplier::find($request->input("supplier"))->name;
-    
+
       $productFix =   Utils:: prefix_product($supplierName, $request->input("productName"),$type);
-      
+
      $exist = Product::where('name', $productFix )->first();
        if($exist == ''){
-         
+
         $product = new Product;
-        
+
         $product->name = $productFix;
         $product->supplier_id =  $supplierId;
         $product->type = $type;
@@ -117,9 +117,9 @@ class ProductsController extends Controller
             $messageType = 'error';
             $messageText = 'מוצר כבר קיימת';
         }
-        
+
        }
-      
+
 
         return redirect ('/products')->with($messageType, $messageText);
     }
@@ -133,12 +133,14 @@ class ProductsController extends Controller
     public function show($id)
     {
        $product =  Product::find($id);
-    
+
      $supplier = $product->supplier()->first();
      if($product->type == 1){
         $type = "יומי";
-    }else{
+    }elseif($product->type == 0){
         $type = "שבת";
+    }else {
+      $type = "אמריקאי";
     }
         $data = array(
             'id' => $id,
@@ -148,7 +150,7 @@ class ProductsController extends Controller
             'weight' => $product->weight,
             'supplierPrice' => $product->supplier_price,
             'type' => $type
-        
+
         );
         return view('products.productsShow')->with('data', $data);
     }
@@ -164,7 +166,7 @@ class ProductsController extends Controller
         $product =  Product::find($id);
         $supplier = $product->supplier()->first();
 
-   
+
 
 
            $data = array(
@@ -176,7 +178,7 @@ class ProductsController extends Controller
                'supplierPrice' => $product->supplier_price,
                'type' => $product->type
            );
-           
+
         return view('products.productEdit')->with('data', $data);
     }
 
@@ -189,7 +191,7 @@ class ProductsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+
       $product =  Product::find($id);
       $type = $request->input('type');
       if($request->input('productName') !== null){
@@ -212,17 +214,17 @@ class ProductsController extends Controller
      }else{
         $filenameToStore = "noimage.jpg";
      }
-    
-       
-   
-   
+
+
+
+
          $product->update([
              'name' => $productName,
              'weight' => $request->input('weight'),
              'supplier_price' => $request->input('supplierPrice'),
              'type' => $request->input('type')
-             
-           
+
+
          ]);
          if($request->hasFile('product_image')){
            $product->update([ 'image' =>  $filenameToStore]);
@@ -241,7 +243,7 @@ class ProductsController extends Controller
     {
         $product = Product::find($id)->update(['active' => 0]);
         $price = Price::where('product_id' ,$id)->update(['active' => 0]);
-      
+
         return redirect ('/products')->with('success', 'מוצר נמחקה');
     }
 }

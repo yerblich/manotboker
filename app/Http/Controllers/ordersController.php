@@ -67,6 +67,7 @@ class ordersController extends Controller
     {
         $products['daily'] = Product::where(['active' => 1, 'type' => '1' ])->orderBy('type', 'desc')->get();
         $products['shabbos'] = Product::where(['active' => 1, 'type' => '0' ])->orderBy('type', 'desc')->get();
+        $products['american'] = Product::where(['active' => 1, 'type' => '2' ])->orderBy('type', 'desc')->get();
       if(!count($products['daily']) && !count($products['shabbos'])){
         return redirect()->route('orders.index')->with('error', 'לא נמצאו מוצרים');
       }
@@ -107,8 +108,10 @@ class ordersController extends Controller
     foreach($orderItems as $orderItem){
         if(Product::find($orderItem->product_id)->type == 0 ){
           $orders['shabbos'][$orderItem->product_id] = $orderItem->quantity;
-        }else{
+        }elseif(Product::find($orderItem->product_id)->type == 1){
           $orders['daily'][$orderItem->product_id] = $orderItem->quantity;
+        }else{
+          $orders['american'][$orderItem->product_id] = $orderItem->quantity;
         }
 
     }
@@ -123,8 +126,10 @@ class ordersController extends Controller
         foreach($productsArray as $product){
             if($product->type == 0 ){
                 $orders['shabbos'][$product->id] = 0;
-              }else{
+              }elseif($product->type == 1){
                 $orders['daily'][$product->id] = 0;
+              }else {
+              $orders['american'][$product->id] = 0;
               }
         }
 
@@ -233,8 +238,10 @@ class ordersController extends Controller
          foreach($products as $key => $product_id){
             if( Product::find($product_id)->type == 1){
              $sums['daily'][$product_id] = $request->input('sum_'.$product_id);
-         }else{
+         }elseif(Product::find($product_id)->type == 0){
             $sums['shabbos'][$product_id] = $request->input('sum_'.$product_id);
+         }else{
+           $sums['american'][$product_id] = $request->input('sum_'.$product_id);
          }
         }
 
@@ -310,6 +317,7 @@ class ordersController extends Controller
         $allClients =  Client::orderBy('route', 'asc')->get();
         $productNames['daily'] = [];
         $productNames['shabbos'] = [];
+        $productNames['american'] = [];
            // declare resultArray which will be filled with objects that contain client name , product id and their quantiies
       $resultArray = [];
       $products_array= [];
@@ -340,8 +348,10 @@ class ordersController extends Controller
     foreach($products_array as $productId){
         if( Product::find($productId)->type == 1){
             $productNames['daily'][$productId] = Product::find($productId)->name;
-        }else{
+        }elseif(Product::find($productId)->type == 0){
             $productNames['shabbos'][$productId] = Product::find($productId)->name;
+        }else{
+          $productNames['american'][$productId] = Product::find($productId)->name;
         }
 
     }
@@ -365,6 +375,7 @@ class ordersController extends Controller
 
        $product_array['daily'] = [];
        $product_array['shabbos'] = [];
+       $product_array['american'] = [];
      // return $currentlist;
       //initialize product array
 
@@ -387,8 +398,10 @@ class ordersController extends Controller
           if(Product::find($product_id)->type == 1){
             $product_array['daily'][$product_id] = $quantity;
 
-          }else{
+          }elseif(Product::find($product_id)->type == 0){
             $product_array['shabbos'][$product_id] = $quantity;
+          }else {
+            $product_array['american'][$product_id] = $quantity;
           }
 
 
@@ -436,20 +449,21 @@ class ordersController extends Controller
 
     $productNameArray['daily'] = [];
     $productNameArray['shabbos'] = [];
-
+      $productNameArray['american'] = [];
 
 
 
 
     $route['daily'] = [];
     $route['shabbos'] = [];
-
+    $route['american'] = [];
 
 
 
 
     $routes['daily'] = [];
     $routes['shabbos'] = [];
+    $routes['american'] = [];
     foreach($products as $productType => $array){
 
 
@@ -545,7 +559,7 @@ class ordersController extends Controller
     {
         $products['daily'] = Product::where(['active' => 1, 'type' => '1' ])->orderBy('type', 'desc')->get();
         $products['shabbos'] = Product::where(['active' => 1, 'type' => '0' ])->orderBy('type', 'desc')->get();
-
+          $products['american'] = Product::where(['active' => 1, 'type' => '2' ])->orderBy('type', 'desc')->get();
 
             $orderDate =  Carbon::parse($date)->format('Y-m-d');
 
@@ -625,8 +639,10 @@ class ordersController extends Controller
          foreach($products as $key => $product_id){
             if( Product::find($product_id)->type == 1){
              $sums['daily'][$product_id] = $request->input('sum_'.$product_id);
-         }else{
+         }elseif(Product::find($product_id)->type == 0){
             $sums['shabbos'][$product_id] = $request->input('sum_'.$product_id);
+         }else {
+           $sums['american'][$product_id] = $request->input('sum_'.$product_id);
          }
         }
 

@@ -10,9 +10,11 @@ class Invoice extends Model
         'debt',
         'paid',
         'sent'
-        
+
 
     ];
+    protected $dates = ['from_date', 'to_date'];
+
     public function client(){
         return $this->belongsTo('App\Client');
      }

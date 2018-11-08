@@ -174,8 +174,8 @@ class InvoiceController extends Controller
         'orders' => $orders,
         'productNames' =>  $productNames,
         'products'=> $products,
-        'from_date' => Carbon::parse($from_date)->format('Y-m-d'),
-        'to_date' => Carbon::parse($to_date)->format('Y-m-d'),
+        'from_date' => Carbon::parse($from_date)->format('d-m-Y'),
+        'to_date' => Carbon::parse($to_date)->format('d-m-Y'),
         'invoiceInfo' => $invoiceInfo,
         'totalToPay' => $totalToPay
     );
@@ -583,9 +583,11 @@ public function generateMassInvoice(Request $request){
 
            }
         $all[$client->name]['totalToPay'] =  array_sum(array_column($totalToPay, 'totalToPay'));
-
+        $all[$client->name]['from_date'] = Carbon::parse($from_date)->format('d-m-Y') ;
+        $all[$client->name]['to_date'] = Carbon::parse($to_date)->format('d-m-Y') ;
      }
     // return $all;
+
 
     $pdf =  PDF::loadView('invoices.pdfMassInvoice', compact('all'))->save( storage_path('app/public/pdfInvoices/pdfMassInvoicePreview.pdf')  );
  return view('invoices.massInvoicePreview')->with('data',$all);

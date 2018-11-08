@@ -102,13 +102,7 @@ table{
 
 
   @endforeach
-    {{-- @foreach( $data['sums'][$orderType][$pageNum] as  $product_id => $sum)
 
-
-    <th>{{$sum}}</th>
-
-
-  @endforeach --}}
 </tr>
 </tfoot>
 </table>

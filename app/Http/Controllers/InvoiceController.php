@@ -396,18 +396,7 @@ class InvoiceController extends Controller
      $invoice->update(['paid' => $amountPaid]);
 
 
-        $allDebt = Invoice::all()->pluck('debt')->toArray();
-        $allPaid = Invoice::all()->pluck('paid')->toArray();
-        $balance =  array_sum($allDebt)  - array_sum($allPaid);
-         if($balance < 0){
-            Client::find($invoice->client_id)->update(['credit' => abs($balance), 'debt' => 0]);
-
-         }elseif($balance > 0 ){
-            Client::find($invoice->client_id)->update(['debt' => $balance, 'credit' => 0]);
-
-         }else{
-            Client::find($invoice->client_id)->update(['debt' => 0, 'credit' => 0]);
-         }
+      $this->updateBalance($invoice->client_id);
         }
 
         return redirect()->route('invoices.show',[$invoiceId])->with('success', 'עודכן בהצלחה');

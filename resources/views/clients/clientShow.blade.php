@@ -127,12 +127,12 @@
   @foreach($data['invoices'] as $invoice)
     <div class="well">
     @if($invoice->debt - $invoice->paid > 0 )
-    <a class="text-danger" href="{{ url('/invoices')}}/{{$invoice->id}}">   {{$invoice->from_date }} To  {{$invoice->to_date }} </a>
+    <a class="text-danger" href="{{ url('/invoices')}}/{{$invoice->id}}">   {{$invoice->from_date->format('d-m-Y') }} To  {{$invoice->to_date->format('d-m-Y') }} </a>
     @else
     @if($invoice->debt - $invoice->paid  < 0 )
-    <a class = "text-primary" href="{{ url('/invoices')}}/{{$invoice->id}}">   {{$invoice->from_date }} To  {{$invoice->to_date }} </a>
+    <a class = "text-primary" href="{{ url('/invoices')}}/{{$invoice->id}}">   {{$invoice->from_date->format('d-m-Y') }} To  {{$invoice->to_date->format('d-m-Y') }} </a>
       @else
-    <a class = "text-success" href="{{ url('/invoices')}}/{{$invoice->id}}">   {{$invoice->from_date }} To  {{$invoice->to_date }} </a>
+    <a class = "text-success" href="{{ url('/invoices')}}/{{$invoice->id}}">   {{$invoice->from_date->format('d-m-Y') }} To  {{$invoice->to_date->format('d-m-Y') }} </a>
     @endif
     @endif
     </div>

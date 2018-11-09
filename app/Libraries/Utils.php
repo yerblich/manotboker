@@ -93,7 +93,7 @@ class Utils
         foreach($products as $key => $product_id ){
 
             if(!$request->input($client ."_". $product_id) == null){
-            
+
                 $client_order[$product_id] =  $request->input($client ."_". $product_id);
 
          }
@@ -102,9 +102,9 @@ class Utils
     }
 
 public static function prefix_product($supplierName,$productNameInput,$type){
-    $prefix = mb_substr($supplierName,0 ,2, 'utf-8');
+    $prefix = $supplierName;
       if(!strpos( $productNameInput, '_'.$prefix)){
-        $productFix  = str_replace(' ', '_', $productNameInput)   .'_'.  $prefix;
+        $productFix  = $prefix .'_'. str_replace(' ', '_', $productNameInput)     ;
       }  else{
           $productFix = $productNameInput;
       }

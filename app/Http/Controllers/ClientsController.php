@@ -50,11 +50,11 @@ class ClientsController extends Controller
     public function store(Request $request)
     {
 
-        $validatedData = $request->validate([
-
-            'email' => 'required|unique:clients,email'
-
-        ]);
+        // $validatedData = $request->validate([
+        //
+        //     'email' => 'required|unique:clients,email'
+        //
+        // ]);
 
         $clientName = str_replace(' ', '_', $request->input("clientName"));
         $client = new Client;

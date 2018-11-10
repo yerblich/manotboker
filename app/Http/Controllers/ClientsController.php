@@ -462,11 +462,11 @@ class ClientsController extends Controller
 
     {
 
-        $validatedData = $request->validate([
-
-            'email' => 'required|unique:clients,email,'.$id
-
-        ]);
+        // $validatedData = $request->validate([
+        //
+        //     'email' => 'required|unique:clients,email,'.$id
+        //
+        // ]);
         Client::where([
             'id' => $id
         ])->update(['name' => $request->input('clientName'),

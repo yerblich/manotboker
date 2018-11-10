@@ -542,10 +542,16 @@ class ordersController extends Controller
     public function show($orderDate)
     {
 
+      $clientsIds =  Order::where('date', $orderDate)->pluck('client_id')->toArray();
+      foreach ($clientsIds as $clientId) {
+      $client =   Client::find($clientId);
+        $clients[$client->name] = $client;
+
+      }
 
       $data =   array(
 
-
+        'clients' => $clients,
         'date' =>  Carbon::parse($orderDate)->format('d-m-Y'),
         'suppliers' => Supplier::all()
 
@@ -776,6 +782,35 @@ class ordersController extends Controller
     return redirect()->route('orders.index')->with('success', 'הזמנה נמחקה');
     }
 
+    public function receipts(Request $request)
+    {
+      $date = Carbon::parse($request->input('date'))->format('Y-m-d');
+      unset($request['_token'],$request['date']);
+
+      $clients = $request->all();
+
+
+
+      foreach ($clients as $clientId => $name) {
+
+       $client = Client::find($clientId);
+       $order = $client->orders()->where('date',$date)->first();
+       $orderItems = OrderItem::where(['order_id'=> $order->id])->get();
+       foreach ($orderItems as $orderItem) {
+         $product = Product::find($orderItem->product_id);
+         $orders[$client->name]['products'][$product->name] = $orderItem->quantity;
+       }
+       $orders[$client->name]['clientInfo'] = $client;
+        $orders[$client->name]['orderInfo'] = $order;
+      }
+// return $orders;
+    //  $mpdf = PDF::stream('orders.pdfDaily');
+           $pdf = PDF::loadView('orders.receiptsPdf', compact('orders'));
+  	return $pdf->stream('receiptsPdf.pdf');
+
+
+
+    }
 
 
 

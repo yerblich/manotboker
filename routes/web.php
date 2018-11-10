@@ -22,10 +22,15 @@ Route::post('/returns/create', "returnsController@create");
 Route::get('/orders/pdfDownload', "ordersController@pdfDownload");
 Route::post('/orders/pdfSave', "ordersController@pdfSave");
 Route::post('/orders/pdfSend', "ordersController@pdfSend");
+Route::post('/orders/receipts', "ordersController@receipts");
+
+
+
+
 Route::post('/clients/{id}/search', "ClientsController@search")->name('search');
 Route::get('/clients/{id}/search', "ClientsController@search")->name('searchget');
-Route::post('/clients/{id}/search/pdf', "ClientsController@pdfDownload");   
-Route::post('/clients/{id}/search/pdfSend', "ClientsController@pdfSend");  
+Route::post('/clients/{id}/search/pdf', "ClientsController@pdfDownload");
+Route::post('/clients/{id}/search/pdfSend', "ClientsController@pdfSend");
 Route::post('/invoices/{id}/pdfDownload', "InvoiceController@pdfDownload");
 Route::post('/invoice/pdfSend', "InvoiceController@pdfSend");
 Route::post('/products/search', "ProductsController@search");
@@ -65,7 +70,5 @@ Route::post('/invoice/saveMassInvoice', "InvoiceController@saveMassInvoice");
 Route::post('/invoices/{id}', "InvoiceController@store");
 Route::resource('prices', 'PricesController');
 
- 
+
 });
-
-

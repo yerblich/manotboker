@@ -20,7 +20,7 @@
     {{Form::submit('הסר', ['class' => 'deleteAlert btn btn-primary'])}}
     {!! Form::close() !!}
 </div>
-  <div class="col-md-8   text-center" >
+  <div class="col-md-1  text-center" >
       <a class="btn btn-primary" href="{{ url('/orders')}}/{{$data['date'] }}/edit">עדכון</a>
       {{-- {!! Form::open(['action'=> ['ordersController@edit',$data['date'] ], 'method' => 'GET']) !!}
       {{ csrf_field() }}
@@ -30,12 +30,34 @@
       {!! Form::close() !!} --}}
     </div>
 
+<div class = 'col-md-6'> </div>
+
+
+    <div class="col-md-2 dropdown">
+      {!! Form::open(['action'=> 'ordersController@receipts', 'method' => 'POST']) !!}
+      {{ csrf_field() }}
+      {{-- <a class="btn btn-primary" href="{{ url('/orders/pdf')}}">Download</a> --}}
+      {!! Form::hidden('date',$data['date']) !!}
+      <button class="btn btn-primary dropdown-toggle"  type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      צור תעודת משלוח
+      </button>
+      <div class="dropdown-menu ddpad" aria-labelledby="dropdownMenuButton">
+        @foreach($data['clients'] as $client)
+        {{ Form::checkbox($client->id, $client->name,['class' => 'menu-item'])}}
+        {{ Form::label($client->id, $client->name, ['class' => 'menu-item']) }}<br>
+
+        @endforeach
+
+        <hr>
+        {{Form::submit('צור תעודת משלוח',  ['class' => ' w-100  progressMI btn btn-primary'])}}
+      </div>
+
+    {!! Form::close() !!}
+  </div>
 
 
 
-
-
-  <div class="col-md-3 dropdown">
+  <div class="col-md-2 dropdown">
     {!! Form::open(['action'=> 'ordersController@pdfSend', 'method' => 'POST']) !!}
     {{ csrf_field() }}
     {{-- <a class="btn btn-primary" href="{{ url('/orders/pdf')}}">Download</a> --}}

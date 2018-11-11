@@ -15,11 +15,11 @@
     </div>
 
     <div class="col-3">
-{!! Form::text('to_date',null,['placeholder' => 'לתאריך', 'class' => ' text-right form-control datepicker ', 'required' => 'required'] ) !!}
+{!! Form::text('to_date',null,['placeholder' => 'לתאריך', 'class' => ' text-right form-control datepicker ', 'autocomplete' => 'off' ,'required' => 'required'] ) !!}
 
 </div>
       <div class="col-3">
-  {!! Form::text('from_date',null,['placeholder' => 'מתאריך', 'class' => 'text-right form-control datepicker ', 'required' => 'required'] ) !!}
+  {!! Form::text('from_date',null,['placeholder' => 'מתאריך', 'class' => 'text-right form-control datepicker ','autocomplete' => 'off', 'required' => 'required'] ) !!}
       </div>
 
       <div class="col-2">

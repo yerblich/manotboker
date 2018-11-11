@@ -33,7 +33,7 @@ class ClockerController extends Controller
          $to_date =   Carbon::parse($request->input('to_date'))->format('Y-m-d');
          $employee = $request->input('employee');
 
-         $results =  Clocker::whereBetween('date',[$from_date,$to_date])->where('employee',$employee)->get();
+         $results =  Clocker::whereBetween('date',[$from_date,$to_date])->where('employee',$employee)->orderBy('date', 'asc')->get();
          if($results->count() == 0 ){
         return   redirect()->back()->with('error','No record Found');
          }
@@ -89,9 +89,22 @@ return view('clocker.clockerCreate')->with('array', $array)->with(['wage'=>$wage
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        return $id;
+
+      $date =   Carbon::parse($request->input('date'))->format('Y-m-d');
+      $employee = $request->input('employee');
+      $results =  Clocker::where('date',$date)->where('employee',$employee)->get();
+
+      if($results->count() == 0 ){
+     return   redirect()->back()->with('error','No record Found');
+      }
+   foreach ($results as $result) {
+       $array[$result->id]   =   gmdate("H:i:s",$result->start->diffInseconds($result->end));
+
+   }
+
+        return view('clocker.clockerShow')->with(['array'=> $array, 'date'=>Carbon::parse($date)->format('d-m-Y')]);
     }
 
     /**
@@ -125,6 +138,22 @@ return view('clocker.clockerCreate')->with('array', $array)->with(['wage'=>$wage
      */
     public function destroy($id)
     {
-        //
+
+      $date = Clocker::find($id)->date;
+      $employee= Clocker::find($id)->employee;
+      $data = array(
+        'date' => $date,
+        'employee' => $employee
+       );
+
+      Clocker::find($id)->delete();
+      $results = Clocker::where(['date' => $date, 'employee' => $employee])->get();
+
+      if($results->count() > 0 ){
+        return redirect()->action('ClockerController@show', $data);
+      }else{
+        return redirect()->route('clocker.index')->with('success', 'נמחקה');
+      }
+
     }
 }

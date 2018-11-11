@@ -61,6 +61,8 @@ Route::get('missingProducts/index/{id}', 'MissingProductsController@index');
 
 Route::resource('clocker', 'ClockerController');
 Route::post('clocker/create', 'ClockerController@create');
+Route::post('clocker/{id}', 'ClockerController@show');
+Route::get('clocker/delete/{id}', 'ClockerController@destroy');
 Route::resource('returns', 'ReturnsController');
 Route::resource('invoices', 'InvoiceController');
 Route::post('/invoices/create', "InvoiceController@create");

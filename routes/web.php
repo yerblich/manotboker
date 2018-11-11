@@ -45,6 +45,7 @@ Route::resource('orders', 'ordersController');
 Route::resource('clients', 'ClientsController');
 Route::resource('products', 'ProductsController');
 Route::resource('suppliers', 'SuppliersController');
+
 Route::get('suppliers/{id}/{date}', 'SuppliersController@show');
 Route::post('suppliers/{id}', 'SuppliersController@show');
 Route::post('suppliers/{id}/report/', 'SuppliersController@missingProductsReport');
@@ -58,7 +59,8 @@ Route::get('missingProducts/index/{id}', 'MissingProductsController@index');
 
 
 
-
+Route::resource('clocker', 'ClockerController');
+Route::post('clocker/create', 'ClockerController@create');
 Route::resource('returns', 'ReturnsController');
 Route::resource('invoices', 'InvoiceController');
 Route::post('/invoices/create', "InvoiceController@create");

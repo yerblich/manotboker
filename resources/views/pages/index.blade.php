@@ -11,6 +11,7 @@
 
       </ol>
       <!-- Area Chart Example-->
+  
       <div class="card mb-3">
         <div class="card-header">
           <i class="fa fa-area-chart"></i> דוגמה תרשים</div>

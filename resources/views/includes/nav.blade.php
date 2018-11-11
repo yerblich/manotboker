@@ -1,7 +1,16 @@
 
+<style>
+.clocker{
 
+    margin-right: 2%;
+
+}
+
+
+</style>
  <!-- Navigation-->
- <nav style="z-index:1000000" class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+
+<nav style="z-index:1000000" class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
    <h1> <a class="navbar-brand" href="{{ url('/')}}">משווק מנות בוקר</a></h1>
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -51,7 +60,7 @@
                   </a>
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Prices">
-                  <a class="nav-link" href="{{ url('/prices')}}">
+                <a class="nav-link" href="{{ url('/prices')}}">
                     <i class="fa fa-truck	"></i>
                     <span class="nav-link-text">מחירים</span>
                   </a>
@@ -62,6 +71,12 @@
                       <span class="nav-link-text">אפשריות</span>
                     </a>
                   </li>
+                  <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Workers">
+                      <a class="nav-link" href="{{ url('/clocker')}}">
+                        <i class="fa fa-clock-o"></i>
+                        <span class="nav-link-text">  עובדים</span>
+                      </a>
+                    </li>
 
       </ul>
       <ul class="navbar-nav sidenav-toggler">
@@ -115,6 +130,25 @@
 
 
     </div> --}}
+    @if(session()->has('started'))
+    {{-- <div class="badge badge-info " >  </div> --}}
+      <h3 class="clocker"><span class="badge badge-info "> {{gmdate("H:i:s", session()->get('started')->diffInseconds(Carbon\Carbon::now()))}}</span></h3>
+    @endif
+    <div class="">
+        {!! Form::open(['action'=> 'ClockerController@store', 'method' => 'POST']) !!}
+        {{ csrf_field() }}
+        {{-- <a class="btn btn-primary" href="{{ url('/orders/pdf')}}">Download</a> --}}
+
+        {!! Form::text('employee',session()->get('employee'),['required'=>'required', 'class' => ' '] ) !!}
+      @if(!session()->has('started'))
+        {!! Form::submit('start',[ 'class' => ' btn btn-primary'] ) !!}
+      @else
+        {!! Form::submit('end',[ 'class' => ' btn btn-primary'] ) !!}
+@endif
+        {!! Form::close() !!}
+
+      </div>
+
     <ul class="navbar-nav ml-auto">
       <!-- Authentication Links -->
       @guest

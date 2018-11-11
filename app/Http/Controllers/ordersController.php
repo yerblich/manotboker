@@ -527,7 +527,7 @@ class ordersController extends Controller
       $data['route'] = (array)$route;
    $data['sums'] = $pagedSums;
 
-    // return $data;
+  //  return $data;
          $mpdf = PDF::loadView('orders.pdfDaily', compact('data'));
          $mpdf->save( storage_path('app/public/pdf/order'.$date.'.pdf')  );
 
@@ -649,15 +649,20 @@ class ordersController extends Controller
      $products  = Utils::extractProductIds($requestProducts);
 
         // $products =  Product::where('active', 1)->get();
-         foreach($products as $key => $product_id){
+        foreach($products as $key => $product_id){
+          if($request->input('sum_'.$product_id) > 0 ){
             if( Product::find($product_id)->type == 1){
-             $sums['daily'][$product_id] = $request->input('sum_'.$product_id);
+             $sums['daily'][Product::find($product_id)->name] = $request->input('sum_'.$product_id);
          }elseif(Product::find($product_id)->type == 0){
-            $sums['shabbos'][$product_id] = $request->input('sum_'.$product_id);
-         }else {
-           $sums['american'][$product_id] = $request->input('sum_'.$product_id);
+            $sums['shabbos'][Product::find($product_id)->name] = $request->input('sum_'.$product_id);
+         }else{
+           $sums['american'][Product::find($product_id)->name] = $request->input('sum_'.$product_id);
          }
-        }
+          }
+
+
+
+       }
 
      // check if all fields are empty , if not continue
     if(!max($requestProducts )== "") {
@@ -736,7 +741,7 @@ class ordersController extends Controller
 
 
 
-                                 $this->createOrderPdf($orderDate, $sums);
+                              $this->createOrderPdf($orderDate, $sums);
                                  $messageCode = 'success';
                                  $messageText = 'הזמנה עודכן בהצלחה';
 

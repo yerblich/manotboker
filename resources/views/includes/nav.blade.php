@@ -141,11 +141,11 @@
 
 
       @if(!session()->has('started'))
-          {!! Form::text('employee',session()->get('employee'),['required'=>'required', 'class' => ' '] ) !!}
-        {!! Form::submit('start',[ 'class' => ' btn btn-primary'] ) !!}
+          {!! Form::text('employee',session()->get('employee'),['placeholder' => 'שם עובד','required'=>'required', 'class' => ' text-right'] ) !!}
+        {!! Form::submit('מתחיל',[ 'class' => ' btn btn-primary'] ) !!}
       @else
-          {!! Form::text('employee',session()->get('employee'),['required'=>'required', 'class' => ' ', 'readonly'] ) !!}
-        {!! Form::submit('end',[ 'class' => ' btn btn-primary' ] ) !!}
+          {!! Form::text('employee',session()->get('employee'),['placeholder' => 'שם עובד','required'=>'required', 'class' => ' text-right', 'readonly'] ) !!}
+        {!! Form::submit('עצור',[ 'class' => ' btn btn-primary' ] ) !!}
 @endif
         {!! Form::close() !!}
 

@@ -666,7 +666,16 @@ class ordersController extends Controller
 
      // check if all fields are empty , if not continue
     if(!max($requestProducts )== "") {
-        //
+      Storage::delete('public/pdf/order'.$date.'.pdf');
+
+     $orders =  Order::where('date', $orderDate)->get();
+
+     foreach($orders as $order){
+         $order->orderItems()->delete();
+         $order->delete();
+     }
+  
+
              foreach($clients as $client){
 
 

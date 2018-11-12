@@ -88,7 +88,7 @@ class InvoiceController extends Controller
         $returns_array = [];
 
         // get all products that exist in this invoice
-       $allProductsInInvoice = orderItem::whereIn('order_id', $orderIds)->pluck('product_id')->toArray();
+      return $allProductsInInvoice = orderItem::whereIn('order_id', $orderIds)->pluck('product_id')->toArray();
        //remove duplicates
        $products_array  = array_unique($allProductsInInvoice);
         //go through each product , and find any price changes within the orders and return array
@@ -110,7 +110,7 @@ class InvoiceController extends Controller
             $priceAndQty[$prc] = array_sum($orderQtys) -   array_sum($returnQtys);
             }
 
-         $priceAndQty;
+
             foreach($priceAndQty as $price => $qty){
 
               array_push($totalTemp,$price * $qty);
@@ -150,6 +150,7 @@ class InvoiceController extends Controller
        //  $totalToPay[$product_id] = $totalToPayForProduct;
 
        }
+
     $totalToPay =  array_sum(array_column($totalToPay, 'totalToPay'));
 //     $invoice->update(['debt' =>  $totalToPay]);
 //     $allDebt = Invoice::all()->pluck('debt')->toArray();

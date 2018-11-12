@@ -4,18 +4,14 @@
   <style>
   .table
     {
+      overflow: initial;
+  /* margin-left:15em; */
+    }
 
-  margin-left:15em;
+    thead th {
+      position: sticky; top: 0; z-index: 100;
     }
-    .headcol {
-      text-align: center;
-      height: 49px;
-    position: absolute;
-    width: 15.3em;
-    margin-left: -219px;
-    background-color: white;
-    z-index: 1;
-    }
+
   </style>
   <ol class="breadcrumb">
     <li class="breadcrumb-item">
@@ -42,7 +38,7 @@
 {{-- create table for each type of product i.e shabbos and daily  --}}
  @foreach($data['products'] as $orderType => $products)
 <h1>{{ ucfirst($orderType)}}</h1>
- <div class=" blueScroll table-responsive form-group">
+ <div class=" tableWrapper blueScroll table-responsive form-group">
   <table class=" sticky table table-striped table-bordered table-responsive" id="dataTable" width="100%" cellspacing="0">
     <thead class="thead-light">
       <tr>

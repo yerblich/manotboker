@@ -64,6 +64,9 @@
 
 .ddpad{
     padding:9px !important;
+		overflow: scroll;
+      max-height: 300px;
+			width:max-content;
 }
 .dateGroup{
     padding: 12px;

@@ -8,7 +8,7 @@
     <button class="btn btn-primary dropdown-toggle"  type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     בחר לקוחות
   </button>
-  <div style="width:max-content; margin-top: 47px;height: 500px;overflow-y: scroll;" class="dropdown-menu ddpad" aria-labelledby="dropdownMenuButton">
+  <div style="" class="dropdown-menu ddpad" aria-labelledby="dropdownMenuButton">
     @foreach($data['clients'] as $client)
     {{ Form::checkbox($client->id, $client->name,['class' => 'menu-item'])}}
 

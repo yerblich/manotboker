@@ -88,7 +88,7 @@ class InvoiceController extends Controller
         $returns_array = [];
 
         // get all products that exist in this invoice
-      return $allProductsInInvoice = orderItem::whereIn('order_id', $orderIds)->pluck('product_id')->toArray();
+       $allProductsInInvoice = orderItem::whereIn('order_id', $orderIds)->pluck('product_id')->toArray();
        //remove duplicates
        $products_array  = array_unique($allProductsInInvoice);
         //go through each product , and find any price changes within the orders and return array

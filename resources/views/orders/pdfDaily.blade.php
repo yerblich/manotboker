@@ -95,13 +95,13 @@ table{
   </tr>
   <tr>
     <th>סה"כ</th>
-    {{-- @foreach( $nameArray as  $name)
+    @foreach( $nameArray as  $name)
 
 
     <th>{{$data['sums'][$orderType][$pageNum][$name]}}</th>
 
 
-  @endforeach --}}
+  @endforeach
 
 </tr>
 </tfoot>

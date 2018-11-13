@@ -77,8 +77,8 @@ body{
   <table class=" pdf table  td-right table-bordered" id="dataTable" width="100%" cellspacing="0" autosize="1">
     <thead>
       <tr >
-          <td  >מחיר ליח׳</td>
-          <td>יחידות</td>
+          {{-- <td  >מחיר ליח׳</td> --}}
+          {{-- <td>יחידות</td> --}}
           <td>כמות</td>
           <td>מוצרים</td>
 
@@ -95,8 +95,8 @@ body{
 @foreach ($array['products'] as $name => $qty)
   <tr>
 
-<td>1</td>
-<td>30</td>
+{{-- <td>1</td>
+<td>30</td> --}}
       <td>{{$qty}}</td>
 <td>{{$name}}</td>
 

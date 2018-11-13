@@ -44,7 +44,7 @@ table{
   <br>
 
 @foreach ($orders as $clientName => $array)
-<div class="logo" style="text-align: center; "> <h1>משווק מנות בוקר</h1>
+<div class="logo" style="text-align: center; "> <h1>הופמן עוגות אמריקאי</h1>
 | 0527135921a@gmail.com |
 </div><br>
   <div class="table-responsive ">
@@ -74,6 +74,8 @@ table{
   <table class="table clientInfo td-right table-bordered" id="dataTable" width="100%" cellspacing="0" autosize="1">
     <thead>
       <tr>
+        <td>מחיר ליח׳</td>
+          <td>יחידות</td>
           <td>כמות</td>
           <td>מוצרים</td>
 
@@ -90,8 +92,8 @@ table{
 @foreach ($array['products'] as $name => $qty)
   <tr>
 
-
-
+<td>1</td>
+<td>30</td>
       <td>{{$qty}}</td>
 <td>{{$name}}</td>
 

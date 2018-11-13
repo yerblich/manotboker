@@ -27,7 +27,7 @@
      <div class=" heb wrapper">
 
 
-       <h1 class=""><strong>משווק מנות בוקר</strong></h1>
+       <h1 class=""><strong>הופמן </strong></h1>
 
 
 
@@ -36,7 +36,7 @@
             <table class="clientInfo td-right heb table  table" id="dataTable" width="100%" cellspacing="0">
               <tr>
                   <td> : דואר</td>
-              <td>   שם לקוח :{{$data['client']['name']}}</td>  
+              <td>   שם לקוח :{{$data['client']['name']}}</td>
               </tr>
               <tr>
                   <td> : כתובת</td>

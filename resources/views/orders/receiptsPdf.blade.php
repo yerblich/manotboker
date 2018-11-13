@@ -113,11 +113,11 @@ body{
 </tbody>
 <tfoot>
 
-  <tr>
+  {{-- <tr>
 
     <td>{{array_sum($array['products'])}}</td>
 <td>סה"כ</td>
-</tr>
+</tr> --}}
 </tfoot>
 </table>
 

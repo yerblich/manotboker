@@ -71,6 +71,12 @@
                   <span class="input-group-text">גרם</span>
                 </div>
                </div>
+             <div class=" input-group form-group  ">
+                 {!! Form::text('units',$data['units'],['placeholder' => ' כמות באריזה', 'class' => 'form-control text-right'] ) !!}
+                 <div class="input-group-append">
+                     <span class="input-group-text">כמות באריזה</span>
+                   </div>
+                  </div>
 
           <div class=" form-group input-group   ">
               {!! Form::input('number','supplierPrice',$data['supplierPrice'],['step'=>'0.1','onkeypress'=> "return isNumberKey(event)",'placeholder' => 'מחיר ', 'class' => 'form-control text-right'] ) !!}

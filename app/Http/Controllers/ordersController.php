@@ -674,7 +674,7 @@ class ordersController extends Controller
          $order->orderItems()->delete();
          $order->delete();
      }
-  
+
 
              foreach($clients as $client){
 
@@ -812,12 +812,16 @@ class ordersController extends Controller
        $orderItems = OrderItem::where(['order_id'=> $order->id])->get();
        foreach ($orderItems as $orderItem) {
          $product = Product::find($orderItem->product_id);
-         $orders[$client->name]['products'][$product->name] = $orderItem->quantity;
+         $orders[$client->name]['products'][$product->name]['qty'] = $orderItem->quantity;
+         $orders[$client->name]['products'][$product->name]['units'] = Product::find($orderItem->product_id)->units;
+         $orders[$client->name]['products'][$product->name]['totalUnits'] = $orderItem->quantity * Product::find($orderItem->product_id)->units;
+         $orders[$client->name]['products'][$product->name]['unitCost'] = $orderItem->currentPrice;
+
        }
        $orders[$client->name]['clientInfo'] = $client;
         $orders[$client->name]['orderInfo'] = $order;
       }
-// return $orders;
+ 
     //  $mpdf = PDF::stream('orders.pdfDaily');
            $pdf = PDF::loadView('orders.receiptsPdf', compact('orders'));
   	return $pdf->stream('receiptsPdf.pdf');

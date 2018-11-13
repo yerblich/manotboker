@@ -77,9 +77,11 @@ body{
   <table class=" pdf table  td-right table-bordered" id="dataTable" width="100%" cellspacing="0" autosize="1">
     <thead>
       <tr >
-          {{-- <td  >מחיר ליח׳</td> --}}
-          {{-- <td>יחידות</td> --}}
-          <td>כמות</td>
+          <td>סה״כ לתשלום</td>
+          <td>מחיר ליחידה</td>
+          <td>סה״כ כמות</td>
+          <td>כמות באריזה</td>
+          <td>אריזות</td>
           <td>מוצרים</td>
 
 
@@ -92,13 +94,14 @@ body{
 
 <tbody>
 
-@foreach ($array['products'] as $name => $qty)
+@foreach ($array['products'] as $name => $array)
   <tr>
-
-{{-- <td>1</td>
-<td>30</td> --}}
-      <td>{{$qty}}</td>
-<td>{{$name}}</td>
+      <td>{{$array['totalUnits'] * $array['unitCost']}}</td>
+      <td>{{$array['unitCost']}}</td>
+      <td>{{$array['totalUnits']}}</td>
+      <td>{{$array['units']}}</td>
+      <td>{{$array['qty']}}</td>
+      <td>{{$name}}</td>
 
 
 

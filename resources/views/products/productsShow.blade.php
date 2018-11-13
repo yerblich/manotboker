@@ -37,6 +37,7 @@
             <div class=" form-group float-right  text-right"><b>מספר מוצר</b>   {!! Form::text('productId',$data['id'],['placeholder' => 'מספר מוצר ', 'class' => 'form-control text-right', 'readonly'] ) !!}    </div><br>
             <div class=" form-group float-right  text-right"><b>שם מוצר</b>   {!! Form::text('productName',$data['name'],['placeholder' => 'שם מוצר ', 'class' => 'form-control text-right', 'readonly'] ) !!}    </div><br>
             <div class=" form-group float-right  text-right"> <b>משקל</b>  {!! Form::text('weight',$data['weight'],['placeholder' => 'משקל ', 'class' => 'form-control text-right', 'readonly'] ) !!}    </div><br>
+            <div class=" form-group float-right  text-right"> <b>כמות באריזה</b>  {!! Form::text('units',$data['units'],['placeholder' => 'כמות באריזה ', 'class' => 'form-control text-right', 'readonly'] ) !!}    </div><br>
             <div class=" form-group float-right  text-right"> <b>מחיר</b>  {!! Form::text('supplierPrice',$data['supplierPrice'],['placeholder' => 'מחיר ', 'class' => 'form-control text-right', 'readonly'] ) !!}    </div><br>
             <div class=" form-group float-right  text-right"> <b>סוג</b>  {!! Form::text('type',$data['type'],['placeholder' => ' סוג ', 'class' => 'form-control text-right', 'readonly'] ) !!}    </div><br>
 

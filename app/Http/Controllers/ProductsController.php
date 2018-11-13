@@ -66,6 +66,7 @@ class ProductsController extends Controller
      $type =  $request->input("type");
      $weight =  $request->input("weight");
      $price =  $request->input("price");
+     $units =  $request->input("units");
      $clients =  Client::orderBy('route', 'asc')->get();
       $supplierName = Supplier::find($request->input("supplier"))->name;
 
@@ -81,6 +82,7 @@ class ProductsController extends Controller
         $product->type = $type;
         $product->supplier_price = $price;
         $product->weight = $weight;
+        $product->units = $units;
         $product->save();
 
         foreach($clients as $client){
@@ -148,6 +150,7 @@ class ProductsController extends Controller
             'imageName' => $product->image,
             'supplier' => $supplier->name,
             'weight' => $product->weight,
+            'units' => $product->units,
             'supplierPrice' => $product->supplier_price,
             'type' => $type
 
@@ -175,6 +178,7 @@ class ProductsController extends Controller
                'imageName' => $product->image,
                'supplier' => $supplier->name,
                'weight' => $product->weight,
+                'units' => $product->units,
                'supplierPrice' => $product->supplier_price,
                'type' => $product->type
            );
@@ -221,6 +225,7 @@ class ProductsController extends Controller
          $product->update([
              'name' => $productName,
              'weight' => $request->input('weight'),
+             'units' => $request->input('units'),
              'supplier_price' => $request->input('supplierPrice'),
              'type' => $request->input('type')
 

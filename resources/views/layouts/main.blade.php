@@ -18,6 +18,7 @@
   <link href="{{ asset('storage/css/app.css') }}" rel="stylesheet">
   <link href="{{ asset('storage/css/custom.css') }}" rel="stylesheet">
   <link href="{{ asset('storage/css/jquery-ui.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('storage/css/mpdf.css') }}" rel="stylesheet">
   {{-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> --}}
   <!-- Custom fonts for this template-->
   <link href="{{ asset('storage/css/font-awesome.min.css') }}" rel="stylesheet">

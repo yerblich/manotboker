@@ -3,17 +3,12 @@
   <style>
   .table
     {
-
-  margin-left:15em;
+      overflow: initial;
+  /* margin-left:15em; */
     }
-    .headcol {
-      text-align: center;
-      height: 49px;
-    position: absolute;
-    width: 15.3em;
-    margin-left: -219px;
-    background-color: white;
-    z-index: 1;
+
+    thead th {
+      position: sticky; top: 0; z-index: 100;
     }
   </style>
   <!-- Breadcrumbs-->
@@ -112,7 +107,7 @@
 </div>
       @endsection
       @section('js')
-    
+
         <script src={{ asset('js/isNumberKey.js') }}></script>
 
 

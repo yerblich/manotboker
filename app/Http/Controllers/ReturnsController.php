@@ -26,12 +26,12 @@ class ReturnsController extends Controller
         $returnArray = [];
         $allReturns =   ProductReturn::distinct()->get(['date']);
         foreach($allReturns as $return){
-                
+
             $currentDate[$return->date->format('m-Y')][]  = $return;
-        
+
             $returnArray = $currentDate  ;
         }
-   
+
         return view('pages.returns')->with('returns', $returnArray);
     }
 
@@ -42,31 +42,31 @@ class ReturnsController extends Controller
      */
     public function create(Request $request)
     {
-        
-        date_default_timezone_set("Asia/Jerusalem");
-        $currentDate =  date("d-m-Y");
-        
-           
-           
-       //get al clients 
-     
-    $allClients =  Client::orderBy('route', 'asc')->get();
-   
-   
-// return $allClients;
-   // get all products in order to create form 
-   $products = Product::where('active' , 1)->get();
-         $data = array(
-        
-        'products' =>  $products,
-        'clientList' =>  $allClients,
-       
-        'currentDate' => $currentDate
 
-      );
-      
-         
-        return view('returns.createReturn')->with("data", $data);
+//         date_default_timezone_set("Asia/Jerusalem");
+//         $currentDate =  date("d-m-Y");
+//
+//
+//
+//        //get al clients
+//
+//     $allClients =  Client::orderBy('route', 'asc')->get();
+//
+//
+// // return $allClients;
+//    // get all products in order to create form
+//    $products = Product::where('active' , 1)->get();
+//          $data = array(
+//
+//         'products' =>  $products,
+//         'clientList' =>  $allClients,
+//
+//         'currentDate' => $currentDate
+//
+//       );
+//
+//
+//         return view('returns.createReturn')->with("data", $data);
     }
 
     /**
@@ -77,97 +77,99 @@ class ReturnsController extends Controller
      */
     public function store(Request $request)
     {
+      //return $request;
+
+
         $requestProducts = $request->all();
         unset($requestProducts['_token'],$requestProducts['date'],$requestProducts['parsha']);
-      
-     //validate date 
+
+     //validate date
         $this->validate($request,[
             'date' => 'required',
-             
+
         ]);
-     
-   
+
+
    // return $request->all();
     //  select first charachters of name attribute which corresponds to client id
-      foreach($request->all() as $key => $value) { 
-           $temp[]  = strtok( $key,  '_');
-           
+      foreach($requestProducts as $key => $value) {
+            $temp[]  = strtok( $key,  '_');
+
           }
-         
+
           //remove duplicate
              $trimmedList = array_unique($temp);
       //remove everything but numbers
-    $clients = array_filter($trimmedList, 'is_numeric');
-   
-  $products = Product::where('active', 1)->get();
-   
+   $clients = array_filter($trimmedList, 'is_numeric');
+
+
+
     $date = strtotime($request->input("date"));
     $newDateformat = date('Y-m-d',$date);
+
+
+      $orders =  Order::where('date',$newDateformat)->pluck('id')->toArray();
+      $orderItems =   orderItem::whereIn('order_id', $orders)->pluck('product_id')->toArray();
+      //erase duplicates
+  $products = array_unique($orderItems);
+  // $returnIds =   ProductReturn::where('date',$newDateformat)->pluck('id')->toArray();
+  //   returnItem::whereIn(['product_return_id' => $returnIds)->update(['quantity' => 0]);
+
     // check if all fields are empty , if not continue
-   if(!max($requestProducts )== "") {
-       // 
+   // if(!max($requestProducts )== "") {
+       //
             foreach($clients as $client){
-                            // check to see if a return exists with this client id and this date 
-                                $returnCheck = ProductReturn::where([
+                            // check to see if a return exists with this client id and this date
+                             $return = ProductReturn::where([
                                     'client_id' => $client,
                                     'date' => $newDateformat
                             ])->first();
-                            //select return of current client 
-                            foreach($products as $product ){
-                                $client_return[$product->id] =  $request->input($client ."_". $product->id);
+                            //select return of current client
+                            $quantity =  0;
+                            foreach($products as $productId ){
+
+                              if($request->input($client ."_". $productId) == null){
+                                  $client_return[$client][$productId] =  $quantity;
+                              }else{
+                                $client_return[$client][$productId] =  $request->input($client ."_". $productId);
+
+
+                              }
                             }
-                           
-                        // if the max of all the return = nothing it means no return was placed for this client so skip, otherwise continue
-                            if( !max($client_return) == "" ){
-                                // after we see order is not empty check if it already exists , if not ...
-                                   
-                                        //create order
-                                       
-                                            
-                                            $date = strtotime($request->input("date"));
-                                         $newDateformat = date('Y-m-d',$date); 
-                                         
-                                         
-                                         $return = ProductReturn::where([
-                                                'client_id' => $client,
-                                                'date' => $newDateformat
-                                        ])->first();
-                                    
-                                        foreach($client_return as $productId => $quantity){
-                                           
+
+
+
+                                        foreach($client_return[$client] as $productId => $quantity){
+
                                             returnItem::where(['product_return_id' => $return->id, 'product_id' => $productId])
                                             ->update(['quantity' => $quantity]);
-                                          
+
                                         }
-                                            
-                                            // insert order into product columns by iterating over product table 
-                                           
-                                            DB::table('orders')
-                                            ->where([
-                                                'client_id' => $client,
-                                                'date' => $newDateformat])
-                                                ->update(['product_return_id' => $return->id]);
+
+                                            // insert order into product columns by iterating over product table
+
+
                                             $messageCode = 'success';
                                             $messageText = 'נוצרה בהצלחה';
-                                        
-                                    
-                                
-                            }
-            
-            
-                }
-     }else{
-    $messageCode = 'error';
-    $messageText = ' ריק, נא הזן מוצר אחד לפחות ';
-    return redirect()->route('returns.create', [$newDateformat])->with($messageCode, $messageText);
-   }
-       
-       
-       return redirect()->route('returns.show', [$newDateformat])->with($messageCode, $messageText);
-   
-        
 
-     
+
+
+
+
+
+                }
+   //   }else{
+   //  $messageCode = 'error';
+   //  $messageText = ' ריק, נא הזן מוצר אחד לפחות ';
+   //  return redirect()->route('returns.show', [$newDateformat])->with($messageCode, $messageText);
+   // }
+
+
+       return redirect()->route('returns.show', [$newDateformat])->with($messageCode, $messageText);
+
+
+
+
     }
 
     /**
@@ -180,78 +182,99 @@ class ReturnsController extends Controller
     {
         $productsArray['daily'] =[];
         $productsArray['shabbos'] = [];
+        $productsArray['american'] = [];
+        //get all orders from this date
         $orders =  Order::where('date',$returnDate)->pluck('id')->toArray();
-      $orderItems =   orderItem::whereIn('order_id', $orders)->pluck('product_id')->toArray();  
+       $client_ids =  Order::where('date',$returnDate)->pluck('client_id')->toArray();
+       foreach ( $client_ids as $client_id) {
+        $client =   Client::find($client_id);
+         $clients[] = $client;
+
+       }
+
+        // get array of all products in the orders from this date
+      $orderItems =   orderItem::whereIn('order_id', $orders)->pluck('product_id')->toArray();
+      //erase duplicates
      $allproducts = array_unique($orderItems);
+
       foreach($allproducts as $product){
           if(Product::find($product)->type == 0){
             array_push($productsArray['shabbos'] ,Product::find($product));
-          }else{
+          }elseif(Product::find($product)->type == 1){
             array_push($productsArray['daily'] ,Product::find($product));
+          }else{
+            array_push($productsArray['american'] ,Product::find($product));
           }
       }
 
-        $allClients =  Client::orderBy('route', 'asc')->get();
+//return $productsArray;
       //  $clientList = [];
-        //      loop through clients and create array of the orders from yeserdays order in order to fill the form 
-      //  if client does not have any orders a blank array will return     
+        //      loop through clients and create array of the orders from yeserdays order in order to fill the form
+      //  if client does not have any orders a blank array will return
       $resultArray = [];
-      foreach($allClients as $client){
-      
-      
+      foreach($clients as $client){
+
+
         // check if this client has any returns for the date which was clcked
         if(!$client->returns()->where('date',$returnDate)->first() == null){
             //get order
         $return = $client->returns()->where('date',$returnDate)->first();
-       //get all returnitems for this return 
-          $returnItems[$client->name] =  returnItem::where('product_return_id',$return->id)->get();
+       //get all returnitems for this return
+         $returnItems[$client->name] =  returnItem::where('product_return_id',$return->id)->get();
          //create object
          $app = app();
          $result = $app->make('stdClass');
-         //set name to client name 
+         //set name to client name
          $result->name = $client->name;
          $result->id = $client->id;
-        
-          $currentlist = $returnItems[$client->name];
+
+         foreach($returnItems[$client->name] as $returnItem){
+         $allQty[$returnItem->product_id] = $returnItem->quantity;
+          }
+
+//return $allQty;
         //initialize product array
        $product_array = [];
        //loop through products to create key of the array (so that all products come up , not just ordered items)
          foreach($productsArray as $orderType => $products ){
+
+
             $product_array[$orderType] =[];
+
             foreach($products as $product){
-             $product_id = $product->id;
-             //set default 0
-        
-             foreach($currentlist as $returnItem){
-               
-                     $quantity = $returnItem->quantity;
-              
-                 //else its stays at default 0 
-             }
-             //add item to product array 
-             $product_array[$orderType][$product_id] = $quantity;
+                $quantity = 0;
+              if (array_key_exists($product->id,$allQty))
+                  {
+                    if($allQty[$product->id] > 0){
+                      $quantity = $allQty[$product->id];
+                    }
+                  }
+
+
+             //add item to product array
+             $product_array[$orderType][$product->id] = $quantity;
             }
          }
          ///add array to object
          $result->products = $product_array;
-         ///add order to result array 
+         ///add order to result array
          array_push($resultArray,$result);
-         
+
         }
-        
-       
+
+
         }
-     
-     
-       
-      $data = array(
-        
+
+
+
+   $data = array(
+
         'products' =>  $productsArray,
         'clientsWithOrders' => $resultArray,
         'date' =>  Carbon::parse($returnDate)->format('d-m-Y')
 
       );
-     
+
    // return $data;
        return view('returns.dayReturn')->with("data", $data);
     }

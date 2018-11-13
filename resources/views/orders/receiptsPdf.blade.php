@@ -23,7 +23,8 @@ table, th, td {
 
 
 }
-table{
+body{
+  font-size:12pt;
 
 
 }
@@ -33,8 +34,10 @@ table{
 }
 .clientInfo td{
   width: 50%;
+  font-size:12pt
 
 }
+
 </style>
 
 
@@ -71,10 +74,10 @@ table{
 
 <div class="table-responsive ">
 
-  <table class="table clientInfo td-right table-bordered" id="dataTable" width="100%" cellspacing="0" autosize="1">
+  <table class=" pdf table  td-right table-bordered" id="dataTable" width="100%" cellspacing="0" autosize="1">
     <thead>
-      <tr>
-        <td>מחיר ליח׳</td>
+      <tr >
+          <td  >מחיר ליח׳</td>
           <td>יחידות</td>
           <td>כמות</td>
           <td>מוצרים</td>

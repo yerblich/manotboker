@@ -47,7 +47,7 @@ body{
   <br>
 
 @foreach ($orders as $clientName => $array)
-<div class="logo" style="text-align: center; "> <h1>הופמן עוגות אמריקאי</h1>
+<div class="logo" style="text-align: center; "> <h1>הופמן עוגות אמריקאיות</h1>
 | 0527135921a@gmail.com |
 </div><br>
   <div class="table-responsive ">

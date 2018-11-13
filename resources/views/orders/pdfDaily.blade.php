@@ -94,7 +94,7 @@ table{
     @endforeach
   </tr>
   <tr>
-    <th>סה"כ</th>
+    {{-- <th>סה"כ</th>
     @foreach( $nameArray as  $name)
 
 
@@ -103,7 +103,7 @@ table{
 
   @endforeach
 
-</tr>
+</tr> --}}
 </tfoot>
 </table>
 

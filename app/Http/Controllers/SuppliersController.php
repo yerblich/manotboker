@@ -265,10 +265,13 @@ $totalMissingCost = array_sum($totalsArray);
                       if(!$order->orderItems()->where('product_id' , $productId)->first() == ''){
                        $orderItem =  $order->orderItems()->where('product_id' , $productId)->first();
 
-                      }
-                      $quantity = orderItem::whereIn('order_id', $monthOrdersIds)->where('product_id',$productId)->sum('quantity');
-                     $orders[Carbon::parse($order->date)->format('d-m-Y')][$productId] = $quantity;
-                    $ordersCost[Carbon::parse($order->date)->format('d-m-Y')][$productId] = $quantity * $orderItem->c_supplier_price;
+                       $supplierPrice = $orderItem->c_supplier_price;
+                       $quantity = orderItem::whereIn('order_id', $monthOrdersIds)->where('product_id',$productId)->sum('quantity');
+
+                     $ordersCost[Carbon::parse($order->date)->format('d-m-Y')][$productId] = $quantity * $supplierPrice;
+                   }
+
+                   $orders[Carbon::parse($order->date)->format('d-m-Y')][$productId] = $quantity;
                   }
 
 
@@ -298,7 +301,7 @@ $totalMissingCost = array_sum($totalsArray);
                   'names' => $names
               );
               //return $data;
-          $pdfData =   $this->pdfWrapper($data, $supplier,$from_date,$to_date);
+            $pdfData =   $this->pdfWrapper($data, $supplier,$from_date,$to_date);
               $mpdf = new \Mpdf\Mpdf();
               $mpdf = PDF::loadView('missingProducts.missingProductsPdf', compact('pdfData'));
               $mpdf->save( storage_path('app/public/missingReportsPdf/mReport'.$from_date. '~~' . $to_date .'.pdf')  );

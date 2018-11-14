@@ -131,6 +131,10 @@ class ordersController extends Controller
   }
   $clientList[$client->name] = $orders;
 
+}
+
+   // get all products in order to create form
+   //$products = Product::where('active', 1)->orderBy('type', 'desc')->orderBy('supplier_id')->get();
 
          $data = array(
 

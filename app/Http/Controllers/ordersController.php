@@ -238,13 +238,9 @@ class ordersController extends Controller
         // $products =  Product::where('active', 1)->get();
          foreach($products as $key => $product_id){
            if($request->input('sum_'.$product_id) > 0 ){
-             if( Product::find($product_id)->type == 1){
-              $sums['daily'][Product::find($product_id)->name] = $request->input('sum_'.$product_id);
-          }elseif(Product::find($product_id)->type == 0){
-             $sums['shabbos'][Product::find($product_id)->name] = $request->input('sum_'.$product_id);
-          }else{
-            $sums['american'][Product::find($product_id)->name] = $request->input('sum_'.$product_id);
-          }
+
+              $sums[Product::find($product_id)->name] = $request->input('sum_'.$product_id);
+
            }
 
 
@@ -299,7 +295,7 @@ class ordersController extends Controller
 
             }
 
-    $this->createOrderPdf($newDateformat,$sums);
+     $this->createOrderPdf($newDateformat,$sums);
 
      }else{
     $messageCode = 'error';
@@ -317,129 +313,92 @@ class ordersController extends Controller
 
  public function createOrderPdf($orderDate, $sums)
     {
-
+      //return $sums;
       $parsha = Order::where('date',$orderDate)->first()->parsha;
-        $day = Order::where('date',$orderDate)->first()->day;
-        $suppliers = Supplier::all();
-        $products = Product::all();
-        $allClients =  Client::orderBy('route', 'asc')->get();
-        $productNames['daily'] = [];
-        $productNames['shabbos'] = [];
-        $productNames['american'] = [];
-           // declare resultArray which will be filled with objects that contain client name , product id and their quantiies
-      $resultArray = [];
-      $products_array= [];
-      //loop through all clients
-      foreach($allClients as $client){
+      $day = Order::where('date',$orderDate)->first()->day;
 
-        $currentListProducts =[];
-       // check if this client has any orders for the date which was clcked
-       if(!$client->orders()->where('date',$orderDate)->first() == null){
-           //get order
-       $order = $client->orders()->where('date',$orderDate)->first();
-      //get all orderitems for this order
-        $orderItems[$client->name] =  orderItem::where('order_id',$order->id)->get();
-       $itemlist = $orderItems[$client->name];
-        foreach($itemlist as $item){
-            // return $item;
+        $clientsIds  = Order::where('date',$orderDate)->pluck('client_id')->toArray();
+        $allClientInOrders = Client::whereIn('id',$clientsIds)->get();
+        $orderIds = Order::where('date',$orderDate)->pluck('id')->toArray();
+        //grouped by product id to remove duplicate products
+        $allProductsInOrders = orderItem::whereIn('order_id',$orderIds)->groupBy('product_id')->get();
+        $allOrders = orderItem::whereIn('order_id',$orderIds)->get();
 
+        foreach ($allProductsInOrders as $orderItem)
+         {
 
-               array_push($products_array,$item->product_id) ;
+            $product = Product::find($orderItem->product_id);
+            if($product->type == 1)
+            {
+              $productType = "daily";
+              $products[$productType][$product->id] = $product->name;
 
-         }
+            }
+            elseif ($product->type == 0)
+            {
+              $productType = "shabbos";
+                $products[$productType][$product->id] = $product->name;
+            }
+            else
+            {
+               $productType = "american";
+                $products[$productType][$product->id] = $product->name;
+            }
+
         }
 
-     }
-    $products_array =  array_unique($products_array);
+
+        foreach ($products as $productType => $productArray) {
+          $pageNum = 1;
+          foreach ($productArray as $id => $name)
+          {
+            $pagedProducts[$productType][$pageNum][$id] = $name;
+              if(count($pagedProducts[$productType][$pageNum]) == 9)
+              {
+                $pageNum++;
+              }
+            }
+
+        }
+        $cPageNum = 1;
+        foreach ($allClientInOrders as $client) {
+
+            $clientOrder = $client->orders()->where('date',$orderDate)->first();
+            $pagedClients[$cPageNum][$client->name]['clientInfo'] = $client;
+            foreach ($allProductsInOrders as $orderItem) {
+              $quantity = 0;
+            $clientOrderItem =   $clientOrder->orderItems()->where('product_id',$orderItem->product_id)->first();
+              if($clientOrderItem !== null ){
+                $quantity = $clientOrderItem->quantity;
+              }
+                $pagedClients[$cPageNum][$client->name]['qtys'][$orderItem->product_id] = $quantity;
+            }
+
+            if(count($pagedClients[$cPageNum]) == 30){
+              $cPageNum++;
+            }
 
 
-    foreach($products_array as $productId){
-        if( Product::find($productId)->type == 1){
-            $productNames['daily'][$productId] = Product::find($productId)->name;
-        }elseif(Product::find($productId)->type == 0){
-            $productNames['shabbos'][$productId] = Product::find($productId)->name;
-        }else{
-          $productNames['american'][$productId] = Product::find($productId)->name;
         }
 
-    }
-
-     foreach($allClients as $client){
-
-
-       // check if this client has any orders for the date which was clcked
-       if(!$client->orders()->where('date',$orderDate)->first() == null){
-           //get order
-       $order = $client->orders()->where('date',$orderDate)->first();
-      //get all orderitems for this order
-        $orderItems[$client->name] =  orderItem::where('order_id',$order->id)->get();
-       $currentlist = $orderItems[$client->name];
-       $app = app();
-       $result = $app->make('stdClass');
-       //set name to client name
-       $result->name = $client->name;
 
 
 
-       $product_array['daily'] = [];
-       $product_array['shabbos'] = [];
-       $product_array['american'] = [];
-     // return $currentlist;
-      //initialize product array
+   $data = array(
+                'sums' => $sums,
+                'products' => $pagedProducts,
+                'clients' => $pagedClients,
+                'parsha' => $parsha,
+                'day' => $day,
+                'date' => Carbon::parse($orderDate)->format('d-m-Y')
 
-     //loop through products to create key of the array (so that all products come up , not just ordered items)
-       foreach($products_array as $product){
-           $product_id = $product;
-           //set default 0
-           $quantity = 0;
-           // loop thorugh orderitems
-           foreach($currentlist as $orderItem){
-               // find the product inside the orderitems , if exists
-               if($orderItem->product_id == $product_id ){
-                  //set to quantity
-                   $quantity = $orderItem->quantity;
-               }
-               //else its stays at default 0
-           }
+               );
 
-           //add item to product array
-          if(Product::find($product_id)->type == 1){
-            $product_array['daily'][$product_id] = $quantity;
+                $formattedDate =Carbon::parse($orderDate)->format('d-m-Y');
 
-          }elseif(Product::find($product_id)->type == 0){
-            $product_array['shabbos'][$product_id] = $quantity;
-          }else {
-            $product_array['american'][$product_id] = $quantity;
-          }
+             $mpdf = PDF::loadView('orders.pdfDaily', compact('data'));
+             $mpdf->save( storage_path('app/public/pdf/order'.$formattedDate.'.pdf')  );
 
-
-       }
-       ///add array to object
-       $result->products = $product_array;
-
-    //  return $result->products;
-    //    if( max($result->products['daily']) + max($result->products['shabbos']) > 0 ){
-    //     array_push($resultArray,$result);
-    //    }
-       array_push($resultArray,$result);
-
-// return $resultArray;
-        }
-
-     }
-//return $sums;
-      $data =   array(
-        'sums' => $sums,
-        'products' =>  $products,
-        'productNames' =>  $productNames,
-        'clientsWithOrders' => $resultArray,
-        'date' =>  Carbon::parse($orderDate)->format('d-m-Y'),
-        'day' => $day,
-        'parsha' => $parsha,
-        'suppliers' => $suppliers
-
-      );
-   $this->pdfDownload($data);
     }
 
 
@@ -447,85 +406,6 @@ class ordersController extends Controller
     public function pdfDownload( $data)
     {
 
-           $mpdf = new \Mpdf\Mpdf( );
-       //   $data =  json_decode($request->pdf,true);
-     $products = $data['productNames'];
-
-
-
-
-    $productNameArray['daily'] = [];
-    $productNameArray['shabbos'] = [];
-      $productNameArray['american'] = [];
-
-
-
-
-    $route['daily'] = [];
-    $route['shabbos'] = [];
-    $route['american'] = [];
-
-
-
-
-    $routes['daily'] = [];
-    $routes['shabbos'] = [];
-    $routes['american'] = [];
-    foreach($products as $productType => $array){
-
-
-        $routeNum = 1;
- foreach($data['clientsWithOrders'] as $client){
-  //  return $routeNum;
-
-  $productNamePage = 1;
-    $productPage = 1;
- $routes[$productType][$routeNum][] = $client;
-
-    foreach( $client->products[$productType] as $productsid => $qty){
-    $route[$productType][$routeNum][$client->name]['products'][$productPage][$productsid ] = $qty;
-    if(count( $route[$productType][$routeNum][$client->name]['products'][$productPage]) == 9){
-        $productPage++;
-     }
-    }
-    if(count($routes[$productType][$routeNum]) == 35){
-        $routeNum++;
- }
-
- }
-//return $t;
-    foreach($products[$productType] as $productid => $name){
-
-     $productNameArray[$productType][$productNamePage][] = $name;
-   //  return  $productNameArray;
-     if(count($productNameArray[$productType][$productNamePage]) == 9){
-        $productNamePage++;
-     }
-
-
-
-    }
-
-
-}
-
-    foreach ($data['sums'] as $ordertype => $sumArray) {
-      $sumPage = 1;
-    foreach ($sumArray as $name => $sum) {
-      $pagedSums[$ordertype][$sumPage][Product::where('name',$name)->first()->name] = $sum;
-    if(count($pagedSums[$ordertype][$sumPage]) == 9){
-      $sumPage++;
-    }
-}
-
-
-  // code...
-}
-
-         $date =  $data['date'];
-         $data['productNameArray'] = $productNameArray;
-      $data['route'] = (array)$route;
-   $data['sums'] = $pagedSums;
 
   //  return $data;
          $mpdf = PDF::loadView('orders.pdfDaily', compact('data'));
@@ -651,13 +531,9 @@ class ordersController extends Controller
         // $products =  Product::where('active', 1)->get();
         foreach($products as $key => $product_id){
           if($request->input('sum_'.$product_id) > 0 ){
-            if( Product::find($product_id)->type == 1){
-             $sums['daily'][Product::find($product_id)->name] = $request->input('sum_'.$product_id);
-         }elseif(Product::find($product_id)->type == 0){
-            $sums['shabbos'][Product::find($product_id)->name] = $request->input('sum_'.$product_id);
-         }else{
-           $sums['american'][Product::find($product_id)->name] = $request->input('sum_'.$product_id);
-         }
+
+             $sums[Product::find($product_id)->name] = $request->input('sum_'.$product_id);
+
           }
 
 
@@ -821,7 +697,7 @@ class ordersController extends Controller
        $orders[$client->name]['clientInfo'] = $client;
         $orders[$client->name]['orderInfo'] = $order;
       }
- 
+
     //  $mpdf = PDF::stream('orders.pdfDaily');
            $pdf = PDF::loadView('orders.receiptsPdf', compact('orders'));
   	return $pdf->stream('receiptsPdf.pdf');

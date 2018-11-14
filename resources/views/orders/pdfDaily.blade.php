@@ -29,14 +29,18 @@ table{
 }
 </style>
 
-@foreach($data['route'] as $orderType  => $route)
- @foreach($route as $routeNum => $clientOrder)
-@foreach($data['productNameArray'][$orderType] as $pageNum  => $nameArray)
+
+@foreach ($data['clients'] as $routeNum => $clients)
+@foreach ($data['products'] as $productType => $productPages)
+@foreach ($productPages as $page => $products)
+
 <div style="float:left;width:80%;">       פרשת: {{$data['parsha']}} יום: {{$data['day']}}</div>
 <div style="float:right;width:20%;">  תאריך: {{$data['date']}}  </div>
 
   <br>
-<h2>{{ucfirst(__('products.'.$orderType)) }}</h2>  Route :{{$routeNum}}/{{count($data['route'][$orderType])}}  -    Page: {{$pageNum}}/{{count($data['productNameArray'][$orderType])}}
+  <h1 style="text-align:center;">{{ucfirst(__('products.'.$productType))}}</h1>
+  <h4>Route{{$routeNum}}/{{count($data['clients'])}} | Page {{$page}}/{{count($productPages)}}</h4>
+
 
 <div class="table-responsive ">
 
@@ -44,40 +48,23 @@ table{
     <thead>
       <tr>
           <th>לקוחות</th>
-  @if(count($data['productNames'][$orderType]) > 0 )
-
-    @foreach($nameArray as  $name)
-
-
-      <th>{{$name}}</th>
+        @foreach ($products as $id => $name)
+          <th>{{$name}}</th>
+        @endforeach
 
 
-    @endforeach
-
-  @else
-    <p> No Products </p>
-  @endif
 </tr>
 </thead>
 
 <tbody>
-
-    @foreach($clientOrder as $client => $products)
-    @if(max($clientOrder[$client]['products'][$pageNum]) > 0)
+  @foreach ($clients as  $client)
     <tr>
-
-        <td>{{$client}}</td>
-
-        @foreach($products as $array => $pages )
-        @foreach($pages[$pageNum] as  $product => $qty)
-
-        <td> {{$qty}} </td>
-
+        <td>{{$client['clientInfo']->name}}</td>
+        @foreach ($products as $id => $name)
+            <td> {{$client['qtys'][$id]}}</td>
         @endforeach
-         @endforeach
 
       </tr>
-      @endif
   @endforeach
 
 
@@ -85,25 +72,29 @@ table{
 <tfoot>
   <tr>
       <th>לקוחות</th>
-      @foreach( $nameArray as  $name)
+      @foreach ($products as $id => $name)
+        <th>{{$name}}</th>
+      @endforeach
 
 
-      <th>{{$name}}</th>
 
 
-    @endforeach
+
+
   </tr>
   <tr>
-    {{-- <th>סה"כ</th>
-    @foreach( $nameArray as  $name)
+    <th>סה"כ</th>
+    @foreach ($products as $id => $name)
+      <th>{{$data['sums'][$name]}}</th>
+    @endforeach
 
 
-    <th>{{$data['sums'][$orderType][$pageNum][$name]}}</th>
 
 
-  @endforeach
 
-</tr> --}}
+
+
+</tr>
 </tfoot>
 </table>
 

@@ -7,7 +7,7 @@
       overflow: initial;
   /* margin-left:15em; */
     }
-  
+
     thead th {
       position: sticky; top: 0; z-index: 100;
     }

@@ -86,8 +86,7 @@ class SuppliersController extends Controller
 
        }
 
-       $currentMonthOrders = Order::whereBetween('date',[$from_date,$to_date])
-       ->get();
+
 
        $currentMonthMissing = MissingProduct::whereBetween('date',[$from_date,$to_date])
         ->get();
@@ -103,11 +102,17 @@ foreach ($currentMonthMissing as $missingDay) {
     $totalsArray[$missingDay->id] = array_sum($dayTotals);
 
 }
-$totalMissingCost = array_sum($totalsArray);
+  $totalMissingCost = array_sum($totalsArray);
 
+  $currentMonthOrders = Order::whereBetween('date',[$from_date,$to_date])
+  ->get();
               $supplier = Supplier::find($id);
-              $products = $supplier->products()->where('active', 1)->get();
+           $products = $supplier->products()->where('active', 1)->get();
 
+              // $orderItems = orderItem::whereIn('order_id' , $currentMonthOrders)->whereIn( 'product_id' , $supplierProducts)->get();
+              // $costForProduct = $orderItems->sum(function($t){
+              // return $t->quantity * $t->c_supplier_price;
+              // });
               foreach ($currentMonthOrders as $order) {
                 $allProductAmount = [];
               $orders =   $order->orderItems()->whereIn('product_id',$supplierProducts)->get();
@@ -119,7 +124,6 @@ $totalMissingCost = array_sum($totalsArray);
                $orderTotalsArray[$order->id] = array_sum($allProductAmount);
 
               }
-
 
 
   $totalDebtToSupplier = array_sum($orderTotalsArray)  ;
@@ -218,7 +222,12 @@ $totalMissingCost = array_sum($totalsArray);
             $missingCosts =[];
             $ordersCost =[];
             $names = [];
+          //  $supplierProducts =   Product::where('supplier_id', $supplier_id)->where('active',1)->pluck('id')->toArray();
               $currentMonthOrdersIds = Order::whereBetween('date',[$from_date,$to_date])->pluck('id')->toArray();
+            //   $orderItems = orderItem::whereIn('order_id' , $currentMonthOrdersIds)->whereIn( 'product_id' , $supplierProducts)->get();
+            // return  $costForProduct = $orderItems->sum(function($t){
+            //   return $t->quantity * $t->c_supplier_price;
+            //   });
              $productIds =  orderItem::whereIn('order_id',$currentMonthOrdersIds)->pluck('product_id')->toArray();
               $allProductsInOrders =  array_unique($productIds);
             $productsInOrders =  Product::whereIn('id',$allProductsInOrders)->where('supplier_id',$supplier_id)->pluck('id')->toArray();
@@ -253,19 +262,17 @@ $totalMissingCost = array_sum($totalsArray);
 
               //return $missingProducts;
               $currentMonthOrders = Order::whereBetween('date',[$from_date,$to_date])->groupBy('date')->get();
-               //$monthOrdersIds = Order::whereBetween('date',[$from_date,$to_date])->pluck('id')->toArray();
 
+              // $monthOrdersIds = Order::whereBetween('date',[$from_date,$to_date])->pluck('id')->toArray();
+               $quantity = 0;
               foreach ($currentMonthOrders as $order) {
                   $currentOrderDate = Order::where('date',$order->date)->pluck('id')->toArray();
-              //  $currentOrderItems =   orderItem::whereIn('order_id', $currentOrderDate)->get();
-
-
 
                   foreach ($productsInOrders as $key => $productId) {
 
-                      $quantity = 0;
 
-                      if(!$order->orderItems()->where('product_id' , $productId)->first() == ''){
+
+                      if(!orderItem::whereIn('order_id', $currentOrderDate)->where('product_id',$productId)->first() == ''){
                    $orderItems =  orderItem::whereIn('order_id', $currentOrderDate)->where('product_id',$productId)->get();
 
                     $costForProduct = $orderItems->sum(function($t){
@@ -294,7 +301,7 @@ $totalMissingCost = array_sum($totalsArray);
     }
 
 
-            $data = array(
+          $data = array(
                 'totalmProductsCosts' => $totalmProductsCosts,
                'totaloProductsCosts' => $totaloProductsCosts,
                   'from_date' => $from_date,

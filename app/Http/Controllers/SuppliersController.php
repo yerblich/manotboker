@@ -252,25 +252,31 @@ $totalMissingCost = array_sum($totalsArray);
             //  return $missingCosts;
 
               //return $missingProducts;
-                $currentMonthOrders = Order::whereBetween('date',[$from_date,$to_date])->get();
+              $currentMonthOrders = Order::whereBetween('date',[$from_date,$to_date])->groupBy('date')->get();
                //$monthOrdersIds = Order::whereBetween('date',[$from_date,$to_date])->pluck('id')->toArray();
 
               foreach ($currentMonthOrders as $order) {
+                  $currentOrderDate = Order::where('date',$order->date)->pluck('id')->toArray();
+              //  $currentOrderItems =   orderItem::whereIn('order_id', $currentOrderDate)->get();
 
-                $monthOrdersIds = Order::where('date',$order->date)->pluck('id')->toArray();
+
+
                   foreach ($productsInOrders as $key => $productId) {
 
                       $quantity = 0;
 
                       if(!$order->orderItems()->where('product_id' , $productId)->first() == ''){
-                       $orderItem =  $order->orderItems()->where('product_id' , $productId)->first();
+                   $orderItems =  orderItem::whereIn('order_id', $currentOrderDate)->where('product_id',$productId)->get();
 
-                       $supplierPrice = $orderItem->c_supplier_price;
-                       $quantity = orderItem::whereIn('order_id', $monthOrdersIds)->where('product_id',$productId)->sum('quantity');
+                    $costForProduct = $orderItems->sum(function($t){
+                    return $t->quantity * $t->c_supplier_price;
+                    });
 
-                     $ordersCost[Carbon::parse($order->date)->format('d-m-Y')][$productId] = $quantity * $supplierPrice;
+
+                    $quantity = orderItem::whereIn('order_id', $currentOrderDate)->where('product_id',$productId)->sum('quantity');
+
+                     $ordersCost[Carbon::parse($order->date)->format('d-m-Y')][$productId] = $costForProduct;
                    }
-
                    $orders[Carbon::parse($order->date)->format('d-m-Y')][$productId] = $quantity;
                   }
 
@@ -288,7 +294,7 @@ $totalMissingCost = array_sum($totalsArray);
     }
 
 
-          $data = array(
+            $data = array(
                 'totalmProductsCosts' => $totalmProductsCosts,
                'totaloProductsCosts' => $totaloProductsCosts,
                   'from_date' => $from_date,
@@ -301,7 +307,7 @@ $totalMissingCost = array_sum($totalsArray);
                   'names' => $names
               );
               //return $data;
-            $pdfData =   $this->pdfWrapper($data, $supplier,$from_date,$to_date);
+          $pdfData =   $this->pdfWrapper($data, $supplier,$from_date,$to_date);
               $mpdf = new \Mpdf\Mpdf();
               $mpdf = PDF::loadView('missingProducts.missingProductsPdf', compact('pdfData'));
               $mpdf->save( storage_path('app/public/missingReportsPdf/mReport'.$from_date. '~~' . $to_date .'.pdf')  );

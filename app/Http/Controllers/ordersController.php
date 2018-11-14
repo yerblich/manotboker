@@ -103,44 +103,34 @@ class ordersController extends Controller
 
   $order =  $client->orders()->where('date',$newDateformat)->first();
 
-  if($order !== null){
-   $orderItems =   $order->orderItems()->get();
-    foreach($orderItems as $orderItem){
-        if(Product::find($orderItem->product_id)->type == 0 ){
-          $orders['shabbos'][$orderItem->product_id] = $orderItem->quantity;
-        }elseif(Product::find($orderItem->product_id)->type == 1){
-          $orders['daily'][$orderItem->product_id] = $orderItem->quantity;
-        }else{
-          $orders['american'][$orderItem->product_id] = $orderItem->quantity;
+
+
+  foreach($products as $orderType => $productsArray){
+
+      foreach($productsArray as $product){
+        $quantity = 0;
+        if($order !== null){
+          $orderItem = $order->orderItems()->where('product_id', $product->id)->first();
+          if ($orderItem !== null ) {
+            $quantity = $orderItem->quantity;
+          }else{
+
+          }
         }
 
-    }
+          if($product->type == 0 ){
+              $orders['shabbos'][$product->id] = $quantity;
+            }elseif($product->type == 1){
+              $orders['daily'][$product->id] = $quantity;
+            }else {
+            $orders['american'][$product->id] = $quantity;
+            }
+      }
 
 
+  }
+  $clientList[$client->name] = $orders;
 
-   $clientList[$client->name] = $orders;
-
-
-   } else{
-    foreach($products as $orderType => $productsArray){
-        foreach($productsArray as $product){
-            if($product->type == 0 ){
-                $orders['shabbos'][$product->id] = 0;
-              }elseif($product->type == 1){
-                $orders['daily'][$product->id] = 0;
-              }else {
-              $orders['american'][$product->id] = 0;
-              }
-        }
-
-
-    }
-    $clientList[$client->name] = $orders;
-   }
-}
-
-   // get all products in order to create form
-   //$products = Product::where('active', 1)->orderBy('type', 'desc')->orderBy('supplier_id')->get();
 
          $data = array(
 
@@ -403,16 +393,7 @@ class ordersController extends Controller
 
 
 
-    public function pdfDownload( $data)
-    {
 
-
-  //  return $data;
-         $mpdf = PDF::loadView('orders.pdfDaily', compact('data'));
-         $mpdf->save( storage_path('app/public/pdf/order'.$date.'.pdf')  );
-
-
-    }
     /**
      * Display the specified resource.
      *

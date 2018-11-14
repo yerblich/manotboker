@@ -1,4 +1,4 @@
-  <!-- Breadcrumbs-->
+   <!-- Breadcrumbs-->
   <style>
   .returnsBg{
     background-color: #dc354547;
@@ -94,8 +94,11 @@ table, th, td {
                       <tr>
                         <th>תאריך</th>
         @foreach ($pdfData['names'][$page] as  $name => $id)
+
                       <th>{{$name}}</th>
                       <th class= "returnsBg">ח</th>
+                    
+
 
         @endforeach
       </tr>

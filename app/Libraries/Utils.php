@@ -102,9 +102,12 @@ class Utils
     }
 
 public static function prefix_product($supplierName,$productNameInput,$type){
-    $prefix = $supplierName;
-      if(!strpos( $productNameInput,$prefix) === 0 ){
-        $productFix  = $prefix .'_'. str_replace(' ', '_', $productNameInput)     ;
+  $prefix = $supplierName;
+
+
+      if(strpos($productNameInput,$prefix) === false){
+
+      $productFix  = $prefix .'_'. str_replace(' ', '_', $productNameInput)     ;
       }  else{
           $productFix = $productNameInput;
       }

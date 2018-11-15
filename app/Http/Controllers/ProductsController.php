@@ -70,7 +70,7 @@ class ProductsController extends Controller
      $clients =  Client::orderBy('route', 'asc')->get();
       $supplierName = Supplier::find($request->input("supplier"))->name;
 
-      $productFix =   Utils:: prefix_product($supplierName, $request->input("productName"),$type);
+     $productFix =   Utils:: prefix_product($supplierName, $request->input("productName"),$type);
 
      $exist = Product::where('name', $productFix )->first();
        if($exist == ''){
@@ -205,7 +205,8 @@ class ProductsController extends Controller
       }
       $supplier_id =   $product->supplier_id;
       $supplierName =  Supplier::find($supplier_id)->name;
-      $productName  =   Utils::prefix_product($supplierName, $productName,$type);
+
+   $productName  =   Utils::prefix_product($supplierName, $productName,$type);
      $duplicate =   Product::where('name',$productName)->first();
     if($productName !== $product->name &&  $duplicate !== null){
         return redirect()->route('products.edit',$product->id)->with('error','מוצר קיים, לא ניתן להשתמש בשם זה');

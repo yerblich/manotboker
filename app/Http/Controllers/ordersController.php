@@ -38,7 +38,7 @@ class ordersController extends Controller
 
 
     $orderArray = [];
-          $allOrders =   Order::distinct()->get(['date']);
+          $allOrders =   Order::distinct()->orderBy('date')->get(['date']);
 
             foreach($allOrders as $order){
 

@@ -72,7 +72,7 @@
   <hr>
 
 
-  {!! Form::open(['action'=> 'ordersController@store', 'method' => 'POST'],['class' => 'form-group']) !!}
+  {!! Form::open(['action'=> 'ordersController@store', 'method' => 'POST','class' => 'form-group order' ]) !!}
  <div class="row form-group">
     <div class="col-4">{{Form::text('day', null, ['placeholder'=>'יום', 'class'=> 'text-right form-control','required' => 'required'])}}   </div>
 <div class="col-4">  {{Form::text('parsha', null,['placeholder'=>'פרשת','class'=> 'text-right form-control','required' => 'required'])}}  </div>
@@ -182,7 +182,7 @@
 @endif
  @endforeach
 
-{{Form::submit('שמור', ['class' => 'btn btn-primary  ' ,'id'=>"progress"])}}
+{{Form::submit('שמור', ['class' => 'btn btn-primary  ' ,'id'=>"progress"] )}}
 {!! Form::close() !!}
 
 <div id="modalbar" class="modal" tabindex="-1" role="dialog">
@@ -208,6 +208,13 @@
       @endsection
 
       @section('js')
+{{-- var surl = '{{url('/orders')}}'; --}}
+{{-- <script>
+var token = '{{Session::token()}}';
+var url  = '{{ route("storeOrder")}}';
+
+</script> --}}
+         {{-- <script src={{ asset('storage/js/order.js') }}></script> --}}
       <script src={{ asset('storage/js/sum.js') }}></script>
         <script src={{ asset('storage/js/isNumberKey.js') }}></script>
 

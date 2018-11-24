@@ -23,6 +23,10 @@ Route::get('/orders/pdfDownload', "ordersController@pdfDownload");
 Route::post('/orders/pdfSave', "ordersController@pdfSave");
 Route::post('/orders/pdfSend', "ordersController@pdfSend");
 Route::post('/orders/receipts', "ordersController@receipts");
+//Route::post('/orders/ajax', "ordersController@store")->name('storeOrder');
+
+
+
 
 
 

@@ -20,12 +20,11 @@
 
   </style>
 
-<h1><div style="text-align:center">הופמן</div></h1>
+<h1><div style="text-align:center">הופמן</div><div style="text-align:center">חשבונית מס</div></h1>
 
 <div class=" heb wrapper">
 <div class="">
-   <h1 class=""><strong></strong></h1>
-<h1 class=""><strong> </strong></h1>
+
 
 
   @if(!$data['orders'] == '')
@@ -33,11 +32,11 @@
         <table class="clientInfo td-right heb table  table" id="dataTable" width="100%" cellspacing="0">
           <tr>
             @if(array_key_exists("invoiceId",$data))
-              <th>{{$data['invoiceId']}} : חשבונית מס</th>
+              <th>{{$data['invoiceId']}} : חשבונית מס׳</th>
               @else
-                <th>000000 : חשבונית מס</th>
+                <th>000000 : חשבונית מס׳</th>
             @endif
-          <th>    661519595 -  ע.מ</th>
+          <th>    661519595 -  ע.מ </th>
 
           </tr>
           <tr>
@@ -62,7 +61,7 @@
 
         <tr class="">
             <th>סה"כ לתשלום</th>
-            <th>  <img  class="img" src="{{asset('storage/images/shekel.png')}}" >  מחיר</th>
+            <th>    מחיר</th>
             <th>סה"כ</th>
             <th>חזרות</th>
             <th>כמות</th>
@@ -92,15 +91,15 @@
 
 
 
-            <td><img  class="img" src="{{asset('storage/images/shekel.png')}}" > {{$infoArray['totalToPayForProduct'] }}</td>
+            <td> {{$infoArray['totalToPayForProduct']  - ($infoArray['totalToPayForProduct'] * .17)}}</td>
 
             <td>
                 @foreach($infoArray['price'] as $price => $amount)
 
                 @if(count((array)$infoArray['price']) > 1)
-               | {{$amount}} - <img  class="img" src="{{asset('storage/images/shekel.png')}}" > {{$price}} |
+               | {{$amount}} -  {{$price - ($price * 0.17)}} |
                @else
-               <img  class="img" src="{{asset('storage/images/shekel.png')}}" >{{$price}}
+               {{$price - ($price * 0.17)}}
                @endif
                 @endforeach
               </td>
@@ -124,13 +123,13 @@
   <tfoot>
 
 <tr class="table-danger">
-    <td><img  class="img" src="{{asset('storage/images/shekel.png')}}" >{{$data['totalToPay'] }} </td>
+    <td>{{$data['totalToPay']  - ($data['totalToPay'] * .17)}} </td>
   <td >סה"כ</td>
 
 
 </tr>
 <tr class="table-success">
-  <td><img  class="img" src="{{asset('storage/images/shekel.png')}}" >{{$data['totalToPay'] * .17 }}</td>
+  <td>{{$data['totalToPay'] * .17 }}</td>
 <td > 17%  מע״מ </td>
 
 
@@ -138,14 +137,14 @@
 
 @if($data['client']['credit']  > 0 )
 <tr class="table-success">
-    <td><img  class="img" src="{{asset('storage/images/shekel.png')}}" >{{$data['client']['credit'] }}</td>
+    <td>{{$data['client']['credit'] }}</td>
     <td>    זכות </td>
 
 
 </tr>
 
 <tr class="table-success">
-    <td><img  class="img" src="{{asset('storage/images/shekel.png')}}" >{{($data['totalToPay'] * 1.17) - $data['client']['credit'] }}</td>
+    <td>{{($data['totalToPay']) - $data['client']['credit'] }}</td>
   <td >     יתרה לתשלום </td>
 
 
@@ -153,21 +152,21 @@
 @elseif($data['client']['debt'] > 0 )
 
 <tr class="table-danger">
-  <td><img  class="img" src="{{asset('storage/images/shekel.png')}}" >{{$data['client']['debt']}}</td>
+  <td>{{$data['client']['debt']}}</td>
   <td>    חוב </td>
 
 
 </tr>
 
 <tr class="table-success">
-  <td><img  class="img" src="{{asset('storage/images/shekel.png')}}" >{{($data['totalToPay'] * 1.17) + $data['client']['debt'] }}</td>
+  <td>{{$data['totalToPay'] + $data['client']['debt'] }}</td>
 <td >    יתרה לתשלום </td>
 
 
 </tr>
 @else
   <tr class="table-success">
-    <td><img  class="img" src="{{asset('storage/images/shekel.png')}}" >{{$data['totalToPay'] * 1.17  }}</td>
+    <td>{{$data['totalToPay'] }}</td>
   <td >    יתרה לתשלום </td>
 
 

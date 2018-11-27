@@ -666,7 +666,9 @@ class ordersController extends Controller
       unset($request['_token'],$request['date'],$request['checkAll']);
 
      $clients = $request->all();
-
+            // $clientsIds = array_keys($clients);
+            // $allOrders = Order::whereIn('client_id',$clientsIds)->where('date', $date)->pluck('id')->toArray();
+            // $allOrderItems = OrderItem::whereIn('order_id', $allOrders )->
 if(count($clients) == 0 ){
   return redirect()->back();
 }
@@ -676,6 +678,7 @@ if(count($clients) == 0 ){
        $client = Client::find($clientId);
        $order = $client->orders()->where('date',$date)->first();
        $orderItems = OrderItem::where(['order_id'=> $order->id])->get();
+
        foreach ($orderItems as $orderItem) {
          $product = Product::find($orderItem->product_id);
          $orders[$client->name]['products'][$product->name]['qty'] = $orderItem->quantity;
@@ -686,8 +689,11 @@ if(count($clients) == 0 ){
        }
        $orders[$client->name]['clientInfo'] = $client;
         $orders[$client->name]['orderInfo'] = $order;
+        $orders[$client->name]['totalCost'] = $orderItems->sum(function($t){
+        return $t->quantity * $t->currentPrice;
+        });
       }
-
+//return $orders;
     //  $mpdf = PDF::stream('orders.pdfDaily');
            $pdf = PDF::loadView('orders.receiptsPdf', compact('orders'));
   	return $pdf->stream('receiptsPdf.pdf');

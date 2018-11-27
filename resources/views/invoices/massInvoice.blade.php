@@ -9,6 +9,9 @@
     בחר לקוחות
   </button>
   <div style="" class="dropdown-menu ddpad" aria-labelledby="dropdownMenuButton">
+    {{ Form::checkbox('checkAll' ,'Clear/Fill','checked',['id' => 'checkAll','class' => 'menu-item'])}}
+    {{ Form::label('checkAll', 'Clear/Fill', ['class' => 'menu-item']) }}<br>
+<hr>
     @foreach($data['clients'] as $client)
     {{ Form::checkbox($client->id, $client->name,['class' => 'menu-item'])}}
 
@@ -64,5 +67,6 @@
         var token = '{{Session::token()}}';
         var url = '{{ route("checkExistingInvoice")}}'
     </script>
+    <script src={{ asset('storage/js/checkAll.js') }}></script>
 <script src={{ asset('storage/js/invoiceCheck.js') }}></script>
 @stop

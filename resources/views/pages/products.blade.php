@@ -36,7 +36,7 @@
               </div>
         </div>
         <div class=" form-group input-group   ">
-            {!! Form::input('number','price','',['step'=>"0.1",'onkeypress'=> "return isNumberKey(event)",'placeholder' => 'מחיר','class' => 'text-right form-control'] ) !!}
+            {!! Form::input('number','price','',['step'=>"0.01",'onkeypress'=> "return isNumberKey(event)",'placeholder' => 'מחיר','class' => 'text-right form-control'] ) !!}
 
             <div class="input-group-append">
                 <span class="input-group-text">&#8362;</span>

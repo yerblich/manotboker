@@ -81,13 +81,13 @@
   @endif
 </tr>
 <tr>
-  <td></td>
+
   <td class="fillBg">Fill</td>
   @foreach($data['products'] as $product)
 
 
     <td class="fillBg"> {{Form::input('number',$product->id ,null ,
-      ['step'=>'0.1','onkeypress'=> "return isNumberKey(event)",'class' => $product->id. ' fill form-control col-12' ,'style' => 'padding:1px; text-align:center'])}}
+      ['step'=>'0.01','onkeypress'=> "return isNumberKey(event)",'class' => $product->id. ' fill form-control col-12' ,'style' => 'padding:1px; text-align:center'])}}
     </td>
 
 @endforeach
@@ -102,13 +102,13 @@
     <tr>
 
         <td class="headcol">{{$client}}</td>
-        <td class="fillBg"> {{Form::input('number',$client ,null ,
-          ['step'=>'0.1','onkeypress'=> "return isNumberKey(event)",'class' => $client. ' fill form-control col-12' ,'style' => 'padding:1px; text-align:center'])}} </td>
+        {{-- <td class="fillBg"> {{Form::input('number',$client ,null ,
+          ['step'=>'0.01','onkeypress'=> "return isNumberKey(event)",'class' => $client. ' fill form-control col-12' ,'style' => 'padding:1px; text-align:center'])}} </td> --}}
 
         @foreach($priceList as $product => $price)
 
         <td > {{Form::input('number',$client . "_" . $product,  $price,
-          ['step'=>'0.1','onkeypress'=> "return isNumberKey(event)",'class' => $client. ' form-control col-12 ' . $product ,'style' => 'padding:1px; text-align:center'])}} </td>
+          ['step'=>'0.01','onkeypress'=> "return isNumberKey(event)",'class' => $client. ' form-control col-12 ' . $product ,'style' => 'padding:1px; text-align:center'])}} </td>
 
 
 
@@ -123,6 +123,7 @@
 <tfoot>
   <tr>
       <th class="headcol">Clients</th>
+      {{-- <th class="headcol">Fill      </th> --}}
       @foreach($data['products'] as $product)
 
 

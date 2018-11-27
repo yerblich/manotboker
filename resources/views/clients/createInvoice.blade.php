@@ -112,13 +112,13 @@
                         @foreach($infoArray['price'] as $price => $amount)
 
                         @if(count($infoArray['price']) > 1)
-                       | {{$amount}} - &#8362;{{$price}} |
+                       | {{$amount}} - &#8362;{{$price - ($price * .17)}} |
                        @else
-                       &#8362;{{$price}}
+                       &#8362;{{$price - ($price * .17)}}
                        @endif
                         @endforeach
                       </td>
-                      <td> &#8362;{{$infoArray['totalToPayForProduct'] }}</td>
+                      <td> &#8362;{{$infoArray['totalToPayForProduct'] - ($infoArray['totalToPayForProduct'] * .17) }}</td>
             {{-- <td class="table-danger">{{$order->return[$product->name]}}</td> --}}
 
 
@@ -141,7 +141,7 @@
    <td></td>
    <td></td>
    <td></td>
-  <td>&#8362;{{$data['totalToPay']}} </td>
+  <td>&#8362;{{$data['totalToPay']  - ($data['totalToPay'] * .17)}} </td>
 
   <tr class="table-danger">
     <td > 17%  מע״מ </td>
@@ -173,7 +173,7 @@
     <td></td>
     <td></td>
     <td></td>
-    <td>&#8362;{{($data['totalToPay'] * 1.17) - $data['client']['credit'] }}</td>
+    <td>&#8362;{{$data['totalToPay'] - $data['client']['credit'] }}</td>
 
 
 
@@ -195,7 +195,7 @@
     <td></td>
     <td></td>
     <td></td>
-    <td>&#8362;{{($data['totalToPay'] * 1.17) + $data['client']['debt']  }}</td>
+    <td>&#8362;{{$data['totalToPay']  + $data['client']['debt']  }}</td>
 </tr>
 @else
   <tr class="table-success">
@@ -204,7 +204,7 @@
     <td></td>
     <td></td>
     <td></td>
-    <td>&#8362;{{$data['totalToPay'] * 1.17  }}</td>
+    <td>&#8362;{{$data['totalToPay'] }}</td>
   <td >    יתרה לתשלום </td>
 
 

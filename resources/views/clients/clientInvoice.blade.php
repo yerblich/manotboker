@@ -76,7 +76,7 @@
     {!! Form::hidden('client_id',$client->id) !!}
   {!! Form::hidden('from_date',$from_date) !!}
   {!! Form::hidden('to_date',$to_date) !!}
-    {!! Form::input('number','amountPaid', $invoice->paid,['step'=>'0.1', 'onkeypress'=> "return isNumberKey(event)",]) !!}
+    {!! Form::input('number','amountPaid', $invoice->paid,['step'=>'0.01', 'onkeypress'=> "return isNumberKey(event)",]) !!}
     {{Form::submit(' ביצוע תשלום',  ['name' => 'paid','class' => 'btn btn-primary'])}}
     @method('PUT')
     {!! Form::close() !!}</div>

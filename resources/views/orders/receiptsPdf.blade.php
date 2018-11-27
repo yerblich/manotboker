@@ -25,17 +25,21 @@ table, th, td {
 }
 body{
   font-size:12pt;
-
+text-align:center;
 
 }
 .td-right td{
-  text-align:right;
+  text-align:center;
 
 }
 .clientInfo td{
   width: 50%;
   font-size:12pt
 
+}
+.img{
+  width:2%;
+  height:2%;
 }
 
 </style>
@@ -77,12 +81,13 @@ body{
   <table class=" pdf table  td-right table-bordered" id="dataTable" width="100%" cellspacing="0" autosize="1">
     <thead>
       <tr >
-          <td>סה״כ לתשלום</td>
-          <td>מחיר ליחידה</td>
-          <td>סה״כ כמות</td>
-          <td>כמות באריזה</td>
-          <td>אריזות</td>
-          <td>מוצרים</td>
+          <th>סה״כ לתשלום </th>
+          <th>מע״מ</th>
+          <th>מחיר ליחידה</th>
+          <th>סה״כ כמות</th>
+          <th>כמות באריזה</th>
+          <th>אריזות</th>
+          <th>מוצרים</th>
 
 
 
@@ -97,7 +102,8 @@ body{
 @foreach ($array['products'] as $name => $array)
   <tr>
       <td>{{$array['totalUnits'] * $array['unitCost']}}</td>
-      <td>{{$array['unitCost']}}</td>
+      <td>{{$array['unitCost'] * .17}}</td>
+      <td>{{$array['unitCost']- ($array['unitCost'] * .17)}}</td>
       <td>{{$array['totalUnits']}}</td>
       <td>{{$array['units']}}</td>
       <td>{{$array['qty']}}</td>
@@ -107,9 +113,14 @@ body{
 
 
     </tr>
+
 @endforeach
 
+<tr>
 
+  <th>{{$orders[$clientName]['totalCost']}}</th>
+  <th>סה״כ</th>
+</tr>
 
 
 

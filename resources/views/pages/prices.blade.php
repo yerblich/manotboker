@@ -82,7 +82,7 @@
 </tr>
 <tr>
   <td></td>
-  <td>Fill</td>
+  <td class="fillBg">Fill</td>
   @foreach($data['products'] as $product)
 
 

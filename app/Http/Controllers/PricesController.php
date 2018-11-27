@@ -25,7 +25,7 @@ class PricesController extends Controller
 
         $products = Product::where('active', 1)->get();
 
-        $clients =  Client::orderBy('route', 'asc')->get();
+        $clients =  Client::orderBy('name', 'asc')->get();
       //  return $prices;
 //return $products->count();
 

@@ -91,7 +91,7 @@ class ordersController extends Controller
            $orders = [];
      $clientList = [];
      $clientIds = [];
-     $allClients = Client::orderBy('route', 'asc')->get();
+     $allClients = Client::orderBy('name', 'asc')->get();
     //      loop through clients and create array of the orders from yeserdays order in order to fill the form
   //  if client does not have any orders a blank array will return
    foreach($allClients as $client){

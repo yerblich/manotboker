@@ -84,7 +84,7 @@ class PricesController extends Controller
 
     //                     $prices->save();
     //    }else{
-           $prices =      DB::table('prices')->where(['client_id' => $client->id, 'active' => 1])->get();
+//$prices =      DB::table('prices')->where(['client_id' => $client->id, 'active' => 1])->get();
 
         foreach($products as $product){
 

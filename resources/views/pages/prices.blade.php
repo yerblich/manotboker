@@ -66,7 +66,7 @@
     <thead class="thead-light">
       <tr>
           <th class="headcol">לקוחות</th>
-          <th class="headcol"></th>
+          
   @if(count($data) > 0 )
 
     @foreach($data['products'] as $product)

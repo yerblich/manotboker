@@ -202,7 +202,7 @@ class InvoiceController extends Controller
 
      $from_date = Carbon::parse($data['from_date'])->format('Y-m-d') ;
      $to_date =  Carbon::parse($data['to_date'])->format('Y-m-d') ;
-        $debt = $data['totalToPay'];
+        $debt = $data['totalToPay'] * 1.17;
 
       $exist =   Invoice::where(['client_id' => $clientId,'from_date' => $from_date , 'to_date' => $to_date])->first();
     // return $clientId;
@@ -227,6 +227,7 @@ class InvoiceController extends Controller
             {
               File::makeDirectory($path, $mode = 0777, true, true);
             }
+            $data['invoiceId'] = $invoice->id;
         $pdf = PDF::loadView('clients.pdfInvoice', compact('data'))
         ->save( storage_path('app/public/pdfInvoices/'.$client->name.'/invoice'.$invoice->id.'.pdf')  );
 
@@ -594,7 +595,7 @@ public function saveMassInvoice(Request $request){
 
         $from_date = Carbon::parse($clientArray['from_date'])->format('Y-m-d') ;
         $to_date =  Carbon::parse($clientArray['to_date'])->format('Y-m-d') ;
-           $debt = $clientArray['totalToPay'];
+           $debt = $clientArray['totalToPay'] * 1.17;
 
 
 

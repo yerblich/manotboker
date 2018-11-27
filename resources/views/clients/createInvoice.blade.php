@@ -143,7 +143,17 @@
    <td></td>
   <td>&#8362;{{$data['totalToPay']}} </td>
 
+  <tr class="table-danger">
+    <td > 17%  מע״מ </td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>&#8362;{{$data['totalToPay'] * .17 }}</td>
 
+
+
+  </tr>
 
 
 </tr>
@@ -163,7 +173,7 @@
     <td></td>
     <td></td>
     <td></td>
-    <td>&#8362;{{$data['totalToPay'] - $data['client']->credit }}</td>
+    <td>&#8362;{{($data['totalToPay'] * 1.17) - $data['client']['credit'] }}</td>
 
 
 
@@ -185,8 +195,20 @@
     <td></td>
     <td></td>
     <td></td>
-    <td>&#8362;{{$data['client']->debt + $data['totalToPay'] }}</td>
+    <td>&#8362;{{($data['totalToPay'] * 1.17) + $data['client']['debt']  }}</td>
 </tr>
+@else
+  <tr class="table-success">
+      <td >    יתרה לתשלום </td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>&#8362;{{$data['totalToPay'] * 1.17  }}</td>
+  <td >    יתרה לתשלום </td>
+
+
+  </tr>
 
 @endif
 {{--

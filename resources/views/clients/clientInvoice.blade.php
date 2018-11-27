@@ -34,14 +34,14 @@
 
 
 
-      <div class="col-1 " >
+      {{-- <div class="col-1 " >
           {!! Form::open(['action'=> ['InvoiceController@destroy',$invoice->id ], 'method' => 'POST']) !!}
           @method('DELETE')
           {{ csrf_field() }}
           {{Form::submit('הסר',  ['class' => 'deleteAlert btn btn-primary'])}}
           {!! Form::close() !!}
-        </div>
-    <div class="col-md-2 text-left" >
+        </div> --}}
+    <div class="col-md-3 text-left" >
   {!! Form::open(['action'=> 'InvoiceController@pdfSend', 'method' => 'POST']) !!}
   {{ csrf_field() }}
   {!! Form::hidden('client_id',$client->id) !!}

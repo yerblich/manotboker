@@ -3,7 +3,7 @@
   tr:nth-child(odd) {background: #FFF}
   table, th, td {
      border: 1px solid black;
-
+     white-space: nowrap;
   }
   .img{
     width:2%;
@@ -19,28 +19,38 @@
   }
 
   </style>
-<div class=""></div>
+
+<h1><div style="text-align:center">הופמן</div></h1>
 
 <div class=" heb wrapper">
 <div class="">
-   <h1 class=""><strong> הופמן</strong>
-
+   <h1 class=""><strong></strong></h1>
+<h1 class=""><strong> </strong></h1>
 
 
   @if(!$data['orders'] == '')
     <div class="table-responsive row centerTable col-12 ">
         <table class="clientInfo td-right heb table  table" id="dataTable" width="100%" cellspacing="0">
           <tr>
-              <td> : דואר</td>
+            @if(array_key_exists("invoiceId",$data))
+              <th>{{$data['invoiceId']}} : חשבונית מס</th>
+              @else
+                <th>000000 : חשבונית מס</th>
+            @endif
+          <th>    661519595 -  ע.מ</th>
+
+          </tr>
+          <tr>
+              <td> {{$data['client']['email']}}: מייל</td>
           <td>   שם לקוח :{{$data['client']['name']}}</td>
           </tr>
           <tr>
-              <td> : כתובת</td>
+              <td>{{$data['client']['address']}} : כתובת</td>
               <td> {{$data['client']['id']}}: מספר לקוח</td>
 
               </tr>
           <tr>
-              <td>: טלפון</td>
+              <td>{{$data['client']['number']}}: טלפון</td>
               <td >{{$data['to_date']}}   -<strong>  תאריך:</strong>
                  {{$data['from_date']}}<strong> - ל  </strong> </td>
 
@@ -114,12 +124,14 @@
   <tfoot>
 
 <tr class="table-danger">
-    <td><img  class="img" src="{{asset('storage/images/shekel.png')}}" >{{$data['totalToPay']}} </td>
+    <td><img  class="img" src="{{asset('storage/images/shekel.png')}}" >{{$data['totalToPay'] }} </td>
   <td >סה"כ</td>
 
 
-
-
+</tr>
+<tr class="table-success">
+  <td><img  class="img" src="{{asset('storage/images/shekel.png')}}" >{{$data['totalToPay'] * .17 }}</td>
+<td > 17%  מע״מ </td>
 
 
 </tr>
@@ -131,30 +143,51 @@
 
 
 </tr>
+
 <tr class="table-success">
-    <td><img  class="img" src="{{asset('storage/images/shekel.png')}}" >{{$data['totalToPay'] - $data['client']['credit'] }}</td>
+    <td><img  class="img" src="{{asset('storage/images/shekel.png')}}" >{{($data['totalToPay'] * 1.17) - $data['client']['credit'] }}</td>
   <td >     יתרה לתשלום </td>
 
 
 </tr>
 @elseif($data['client']['debt'] > 0 )
+
 <tr class="table-danger">
-  <td><img  class="img" src="{{asset('storage/images/shekel.png')}}" >{{$data['client']['debt'] }}</td>
+  <td><img  class="img" src="{{asset('storage/images/shekel.png')}}" >{{$data['client']['debt']}}</td>
   <td>    חוב </td>
 
 
 </tr>
+
 <tr class="table-success">
-  <td><img  class="img" src="{{asset('storage/images/shekel.png')}}" >{{$data['totalToPay'] + $data['client']['debt'] }}</td>
+  <td><img  class="img" src="{{asset('storage/images/shekel.png')}}" >{{($data['totalToPay'] * 1.17) + $data['client']['debt'] }}</td>
 <td >    יתרה לתשלום </td>
 
 
 </tr>
+@else
+  <tr class="table-success">
+    <td><img  class="img" src="{{asset('storage/images/shekel.png')}}" >{{$data['totalToPay'] * 1.17  }}</td>
+  <td >    יתרה לתשלום </td>
+
+
+  </tr>
 @endif
 
   </tfoot>
   </table>
-  </div>
+</div>
+<br>
+  <table width="100%" border="0">
+<tr>
+  <thead>
+<th> ________________:שם המקבל:________________ חתימה </th>
+
+<th>{{date("d/m/Y")}}   :תאריך רישום</th>
+</thead>
+</tr>
+  </table>
+
   @else
   <br>
   No orders

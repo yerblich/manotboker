@@ -61,11 +61,12 @@
 {!! Form::open(['action'=> ['PricesController@store','1' ],'method' => 'POST']) !!}
 {{ csrf_field() }}
 
-  <div class="table-responsive blueScroll tableWrapper">
+  <div class=" table-responsive blueScroll tableWrapper">
   <table class="table table-striped table-bordered table-responsive" id="dataTable" width="100%" cellspacing="0">
     <thead class="thead-light">
       <tr>
           <th class="headcol">לקוחות</th>
+          <th class="headcol"></th>
   @if(count($data) > 0 )
 
     @foreach($data['products'] as $product)
@@ -76,9 +77,20 @@
 
     @endforeach
 
-  @else
-    <p> לא נמצא מוצרים </p>
+
   @endif
+</tr>
+<tr>
+  <td></td>
+  <td>Fill</td>
+  @foreach($data['products'] as $product)
+
+
+    <td class="fillBg"> {{Form::input('number',$product->id ,null ,
+      ['step'=>'0.1','onkeypress'=> "return isNumberKey(event)",'class' => $product->id. ' fill form-control col-12' ,'style' => 'padding:1px; text-align:center'])}}
+    </td>
+
+@endforeach
 </tr>
 </thead>
 
@@ -86,13 +98,17 @@
 
 
   @foreach($data['allPrices'] as $client => $priceList)
+
     <tr>
 
         <td class="headcol">{{$client}}</td>
+        <td class="fillBg"> {{Form::input('number',$client ,null ,
+          ['step'=>'0.1','onkeypress'=> "return isNumberKey(event)",'class' => $client. ' fill form-control col-12' ,'style' => 'padding:1px; text-align:center'])}} </td>
+
         @foreach($priceList as $product => $price)
 
-        <td> {{Form::input('number',$client . "_" . $product,  $price,
-          ['step'=>'0.1','onkeypress'=> "return isNumberKey(event)",'class' => 'form-control col-12' ,'style' => 'padding:1px; text-align:center'])}} </td>
+        <td > {{Form::input('number',$client . "_" . $product,  $price,
+          ['step'=>'0.1','onkeypress'=> "return isNumberKey(event)",'class' => $client. ' form-control col-12 ' . $product ,'style' => 'padding:1px; text-align:center'])}} </td>
 
 
 
@@ -121,13 +137,18 @@
 <br/>
 {{Form::submit('עדכון', ['class' => 'btn btn-primary'])}}
 {!! Form::close() !!}
+<div id="form" class=" table-responsive blueScroll tableWrapper"> </div>
 @endif
       @endsection
       @section('js')
+        <script>
+        var data = @json($data);
+      var action =   '{{action('PricesController@store','1')}}'
+        </script>
 
         <script src={{ asset('storage/js/isNumberKey.js') }}></script>
-
-
+{{-- <script src={{ asset('storage/js/inputs.js') }}></script> --}}
+<script src={{ asset('storage/js/fill.js') }}></script>
 
 
       @stop

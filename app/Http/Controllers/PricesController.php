@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Price;
 use App\Client;
 use App\Product;
+use DB;
 
 class PricesController extends Controller
 {
@@ -16,22 +17,29 @@ class PricesController extends Controller
      */
     public function index()
     {
+
+
         $currentPriceList = [];
         $allPrices = [];
-       $prices = Price::where('active', 1)->get();
+      // $prices = Price::where('active', 1)->get();
+
         $products = Product::where('active', 1)->get();
+
         $clients =  Client::orderBy('route', 'asc')->get();
       //  return $prices;
 //return $products->count();
+
         foreach($clients as $client){
-        $priceList =   $client->prices()->where('active', 1)->get();
+
+                    //$client->prices()->where('active', 1)->get();
+       $priceList =  DB::table('prices')->select('product_id','price')->where(['client_id' => $client->id, 'active' => 1])->get();
 
          foreach($priceList as $product){
              $currentPriceList[$product->product_id] = $product->price;
          }
              $allPrices[$client->name] = $currentPriceList;
         }
-        //return $allPrices;
+
 
        $data = array(
            'allPrices' => $allPrices,
@@ -76,10 +84,11 @@ class PricesController extends Controller
 
     //                     $prices->save();
     //    }else{
-           $prices = $client->prices()->get();
+           $prices =      DB::table('prices')->where(['client_id' => $client->id, 'active' => 1])->get();
+
         foreach($products as $product){
 
-            $priceItem  =     Price::where(['client_id' => $client->id , 'product_id' => $product->id])
+            $priceItem  =    DB::table('prices')->where(['client_id' => $client->id , 'product_id' => $product->id])
             ->update(['price' => $request->input($client->name ."_". $product->id )]);
 
             //  $prices->update([$product->id =>  $request->input($client->name ."_". $product->id)]);

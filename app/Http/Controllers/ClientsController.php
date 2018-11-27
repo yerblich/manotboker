@@ -487,6 +487,7 @@ class ClientsController extends Controller
     public function destroy($id)
     {
         Client::find($id)->delete();
+        Price::where('client_id',$id)->delete();
         return redirect()->route('clients.index')->with('success','לקוח נמחק');
 
     }

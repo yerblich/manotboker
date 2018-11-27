@@ -23,10 +23,11 @@ table, th, td {
 
 
 }
-table{
 
 
-}
+.table-responsive {
+
+    }
 </style>
 
 
@@ -44,7 +45,7 @@ table{
 
 <div class="table-responsive ">
 
-  <table class="table table-bordered" id="dataTable" width="100px" cellspacing="0" autosize="1">
+  <table class="table table-bordered" id="dataTable"  cellpadding="1px" autosize="1" border="1" width="100%" style="overflow: wrap" >
     <thead>
       <tr>
           <th>לקוחות</th>
@@ -58,6 +59,7 @@ table{
 
 <tbody>
   @foreach ($clients as  $client)
+    
     <tr>
         <td>{{$client['clientInfo']->name}}</td>
         @foreach ($products as $id => $name)

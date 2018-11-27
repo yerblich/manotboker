@@ -42,6 +42,9 @@
       צור תעודת משלוח
       </button>
       <div class="dropdown-menu ddpad" aria-labelledby="dropdownMenuButton">
+        {{ Form::checkbox('checkAll' ,'Clear/Fill','checked',['id' => 'checkAll','class' => 'menu-item'])}}
+        {{ Form::label('checkAll', 'Clear/Fill', ['class' => 'menu-item']) }}<br>
+        <hr>
         @foreach($data['clients'] as $client)
         {{ Form::checkbox($client->id, $client->name,['class' => 'menu-item'])}}
         {{ Form::label($client->id, $client->name, ['class' => 'menu-item']) }}<br>
@@ -118,7 +121,7 @@
       @section('js')
 
       <script src={{ asset('storage/js/deleteAlert.js') }}></script>
-
+      <script src={{ asset('storage/js/checkAll.js') }}></script>
 
 
 

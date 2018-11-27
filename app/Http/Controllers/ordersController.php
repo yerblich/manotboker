@@ -660,12 +660,16 @@ class ordersController extends Controller
 
     public function receipts(Request $request)
     {
+
+
       $date = Carbon::parse($request->input('date'))->format('Y-m-d');
-      unset($request['_token'],$request['date']);
+      unset($request['_token'],$request['date'],$request['checkAll']);
 
-      $clients = $request->all();
+     $clients = $request->all();
 
-
+if(count($clients) == 0 ){
+  return redirect()->back();
+}
 
       foreach ($clients as $clientId => $name) {
 

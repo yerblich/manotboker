@@ -199,13 +199,13 @@
 </tr>
 @else
   <tr class="table-success">
-      <td >    יתרה לתשלום </td>
+  <td >    יתרה לתשלום </td>
     <td></td>
     <td></td>
     <td></td>
     <td></td>
     <td>&#8362;{{$data['totalToPay'] }}</td>
-  <td >    יתרה לתשלום </td>
+
 
 
   </tr>
@@ -303,14 +303,15 @@
 
 
     <div class="col-12  ">
-      <div class="float-right ">
-      {!! Form::open(['action'=>[ 'InvoiceController@store', $data['client']->id ],'method' => 'POST','onSubmit' =>' $(window).unbind("beforeunload")']) !!}
+      <button id= "printInvoice" class="button btn-primary">הדפס</button>
+      <div  style="display:none" class="float-right ">
+      {!! Form::open(['action'=>[ 'InvoiceController@store', $data['client']->id ], 'id'=> 'postPrint','method' => 'POST','onSubmit' =>' $(window).unbind("beforeunload")']) !!}
       {{ csrf_field() }}
 
       {!! Form::hidden('data', json_encode($data,true)) !!}
 
       {{Form::submit('Save',  ['name' => 'save','class' => 'progressMI btn btn-primary'])}}
-      {{Form::submit('שלח Pdf',  ['name' => 'send','class' => 'progressMI btn btn-primary'])}}
+      {{-- {{Form::submit('שלח Pdf',  ['name' => 'send','class' => 'progressMI btn btn-primary'])}} --}}
       {!! Form::close() !!}
       </div>
 
@@ -341,7 +342,7 @@
 
   <div class="col-12">
 <object  data="{{asset("storage/pdfInvoices/invoicePreview.pdf")}}" type="application/pdf" width="100%" height="500">
-  <iframe src="{{asset("storage/pdfInvoices/invoicePreview.pdf")}}" width="100%" height="600"></iframe>
+  <iframe id = "pdfFrame" name="pdfFrame" src="{{asset("storage/pdfInvoices/invoicePreview.pdf")}}" width="100%" height="600"></iframe>
 </object>
 </div>
 </div>
@@ -349,12 +350,14 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">טעינה</h5>
+        <h5 class="modal-title"></h5>
 
       </div>
       <div class="modal-body">
 
-        <div style="display:none" id="progressbar"></div>
+        Print Success ? press yes to confirm
+        <button onclick="printSuccess()"> Yes </button> <button onclick="printFail()"> No </button>
+
       </div>
       <div class="modal-footer">
 
@@ -367,4 +370,5 @@
 
 
       <script src={{ asset('storage/js/checkSave.js') }}></script>
+      <script src={{ asset('storage/js/printInvoice.js') }}></script>
       @stop

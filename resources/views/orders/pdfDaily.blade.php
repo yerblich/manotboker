@@ -45,10 +45,10 @@ table, th, td {
 
 <div class="table-responsive ">
 
-  <table class="table table-bordered" id="dataTable"  cellpadding="1px" autosize="1" border="1" width="100%" style="overflow: wrap" >
+  <table class="table table-bordered" id="dataTable"  cellpadding="1px"  border="1" width="100%"  style="overflow: wrap"  >
     <thead>
       <tr>
-          <th>לקוחות</th>
+          <th width = "150px">לקוחות</th>
         @foreach ($products as $id => $name)
           <th>{{$name}}</th>
         @endforeach
@@ -59,9 +59,9 @@ table, th, td {
 
 <tbody>
   @foreach ($clients as  $client)
-    
+
     <tr>
-        <td>{{$client['clientInfo']->name}}</td>
+        <td  style="overflow:nowrap; !important">{{$client['clientInfo']->name}}</td>
         @foreach ($products as $id => $name)
             <td> {{$client['qtys'][$id]}}</td>
         @endforeach

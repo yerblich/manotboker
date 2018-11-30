@@ -15,7 +15,8 @@ class Product extends Model
         'supplier_price',
         'type',
         'image',
-        'units'
+        'units',
+        'barcode'
 
     ];
 

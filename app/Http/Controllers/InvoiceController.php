@@ -13,6 +13,7 @@ use App\Supplier;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use PDF;
+use DB;
 use Input;
 use App\Charts\ClientChart;
 use Lava;
@@ -22,6 +23,7 @@ use Schema;
 use App\Order;
 use Illuminate\Support\Facades\Storage;
 use File;
+use InvoiceFactory;
 //use Illuminate\Support\Facades\Request;
 
 class InvoiceController extends Controller
@@ -52,8 +54,10 @@ class InvoiceController extends Controller
     public function create(Request $request)
     {
 
+
+      $invoiceId = InvoiceFactory::getCurrentIncrement();
         //get client ids and dates
-       $req =  array('data' => json_decode($request->data));
+    $req =  array('data' => json_decode($request->data));
    $clientId =  $req['data']->client->id;
   $from_date = Carbon::parse($req['data']->from_date)->format('Y-m-d') ;
    $to_date =  Carbon::parse($req['data']->to_date)->format('Y-m-d') ;
@@ -62,124 +66,13 @@ class InvoiceController extends Controller
  // dates and wants to overwrite
    $invoice_exists = Invoice::where(['client_id' => $clientId, 'from_date' => $from_date, 'to_date' => $to_date])->first();
  if($invoice_exists !== null ){
- $invoice_exists->delete();
+
+return redirect()->route('invoices.show', [$invoice_exists->id])->with('error','חשבונית כבר קיימת');
+
  }
- //update the clients balance according to new invoice
- $this->updateBalance($clientId);
+   $data =  InvoiceFactory::generateInvoice($clientId,$from_date,$to_date,$invoiceId);
 
 
-
- $client = Client::find($clientId);
-    //get all orders between date of created invoice
-       $orders = $client->orders()->whereBetween('date',[$from_date,$to_date])->get();
-        //get ids of all orders
-     $orderIds = $client->orders()->whereBetween('date',[$from_date,$to_date])->pluck('id')->toArray();
-    //""
-     $returns = $client->returns()->whereBetween('date',[$from_date,$to_date])->get();
-    $returnIds = $client->returns()->whereBetween('date',[$from_date,$to_date])->pluck('id')->toArray();
-
-     //initialize
-     $totalToPay = [];
-        $products = Product::all();
-        $productTotal = [];
-        $productReturnTotal = [];
-        $products_array = [];
-        $orders_array = [];
-        $returns_array = [];
-
-        // get all products that exist in this invoice
-       $allProductsInInvoice = orderItem::whereIn('order_id', $orderIds)->pluck('product_id')->toArray();
-       //remove duplicates
-       $products_array  = array_unique($allProductsInInvoice);
-        //go through each product , and find any price changes within the orders and return array
-        foreach($products_array as $productId){
-            $totalTemp = [];
-           $qtyOfItemOrdered[$productId] =   array_sum(orderItem::whereIn('order_id', $orderIds)->where('product_id', $productId)->pluck('quantity')->toArray()) ;
-
-           $qtyOfReturns[$productId] =   array_sum(returnItem::whereIn('product_return_id', $returnIds)->where('product_id', $productId)->pluck('quantity')->toArray()) ;
-
-           $priceChanges = orderItem::whereIn('order_id', $orderIds)->where('product_id', $productId)->pluck('currentPrice')->toArray();
-            $priceAndQty = [];
-            // go through the price changes -
-            foreach(array_unique($priceChanges) as $prc){
-               //and find quantity of this product from all orders
-
-           $orderQtys =  orderItem::whereIn('order_id', $orderIds)->where(['product_id' => $productId, 'currentPrice' => $prc])->pluck('quantity')->toArray();
-             $returnQtys =  returnItem::whereIn('product_return_id', $returnIds)->where(['product_id' => $productId, 'currentPrice' => $prc])->pluck('quantity')->toArray();
-           // sum them up , and put into array
-            $priceAndQty[$prc] = array_sum($orderQtys) -   array_sum($returnQtys);
-            }
-
-
-            foreach($priceAndQty as $price => $qty){
-
-              array_push($totalTemp,$price * $qty);
-            }
-
-           $total =  array_sum($totalTemp);
-             // make new array with product containing price:quantity
-            $allCurrentPrices[$productId] = $priceAndQty;
-            $totalToPay[$productId]['totalToPay'] = $total;
-               }
-
-
-
-    //  get names of products in order to fill form
-        foreach($products_array as $productId){
-
-            $productNames[$productId] = Product::find($productId)->name;
-             $productNames;
-        }
-
-
-
-
-    foreach($products_array as $product_id ){
-
-        $name =   Product::find($product_id)->name;
-         $totalToPayForProduct = $totalToPay[$product_id]['totalToPay'];
-     //    return $allCurrentPrices[$product_id];
-        $invoiceInfo[$name] = array(
-             'price' =>$allCurrentPrices[$product_id],
-             'ordered' => $qtyOfItemOrdered[$product_id],
-             'returns' => $qtyOfReturns[$product_id],
-             'totalSold' => $qtyOfItemOrdered[$product_id] - $qtyOfReturns[$product_id],
-             'totalToPayForProduct' => $totalToPayForProduct
-         );
-
-       //  $totalToPay[$product_id] = $totalToPayForProduct;
-
-       }
-
-    $totalToPay =  array_sum(array_column($totalToPay, 'totalToPay'));
-//     $invoice->update(['debt' =>  $totalToPay]);
-//     $allDebt = Invoice::all()->pluck('debt')->toArray();
-//     $allPaid = Invoice::all()->pluck('paid')->toArray();
-//    $balance =  array_sum($allDebt)  - array_sum($allPaid);
-//      if($balance < 0){
-//         Client::find($invoice->client_id)->update(['credit' => abs($balance), 'debt' => 0]);
-
-//      }elseif($balance > 0 ){
-//         Client::find($invoice->client_id)->update(['debt' => $balance, 'credit' => 0]);
-
-//      }else{
-//         Client::find($invoice->client_id)->update(['debt' => 0, 'credit' => 0]);
-//      }
-
-
-
-     $data = array(
-         // 'paid' => $invoice->paid,
-
-        'client' => $client,
-        'orders' => $orders,
-        'productNames' =>  $productNames,
-        'products'=> $products,
-        'from_date' => Carbon::parse($from_date)->format('d-m-Y'),
-        'to_date' => Carbon::parse($to_date)->format('d-m-Y'),
-        'invoiceInfo' => $invoiceInfo,
-        'totalToPay' => $totalToPay
-    );
   //return $data;
 
   $pdf = PDF::loadView('clients.pdfInvoice', compact('data'))->save( storage_path('app/public/pdfInvoices/invoicePreview.pdf')  );
@@ -216,6 +109,7 @@ class InvoiceController extends Controller
         $invoice->from_date = $from_date;
         $invoice->to_date = $to_date;
         $invoice->debt = $debt;
+          $invoice->printed = true;
 
         $invoice->paid = 0;
 
@@ -228,6 +122,7 @@ class InvoiceController extends Controller
               File::makeDirectory($path, $mode = 0777, true, true);
             }
             $data['invoiceId'] = $invoice->id;
+            $data['isOriginal'] = false;
         $pdf = PDF::loadView('clients.pdfInvoice', compact('data'))
         ->save( storage_path('app/public/pdfInvoices/'.$client->name.'/invoice'.$invoice->id.'.pdf')  );
 
@@ -469,118 +364,43 @@ public function generateMassInvoice(Request $request){
       $from_date =  Carbon::parse( $request->from_date)->format('Y-m-d');
       $to_date = Carbon::parse( $request->to_date)->format('Y-m-d');
         $all = [];
+
+
+          $invoiceId = InvoiceFactory::getCurrentIncrement();
+
+
      foreach ($clients as $clientId) {
 
 
+       $invoiceId++;
         $invoice_exists = Invoice::where(['client_id' => $clientId, 'from_date' => $from_date, 'to_date' => $to_date])->first();
         if($invoice_exists !== null ){
-        $invoice_exists->delete();
+        return redirect()->back()->with('error',' אחד או יותר חשבונית כבר קיימת ');
         }
 
-        //update the clients balance according to new invoice
-        $this->updateBalance($clientId);
-
-
-
-
       $client = Client::find($clientId);
-      $all[$client->name]['from_date'] = $from_date;
-      $all[$client->name]['to_date'] = $to_date;
-      $all[$client->name]['client'] = $client;
+
         //get all orders between date of created invoice
-        $orders = $client->orders()->whereBetween('date',[$from_date,$to_date])->get();
-      if($orders->count()){
-        $all[$client->name]['orders'] = $orders;
-      }else{
-        $all[$client->name]['orders'] = null;
-      }
 
-            //get ids of all orders
-         $orderIds = $client->orders()->whereBetween('date',[$from_date,$to_date])->pluck('id')->toArray();
-        //""
-         $returns = $client->returns()->whereBetween('date',[$from_date,$to_date])->get();
-        $returnIds = $client->returns()->whereBetween('date',[$from_date,$to_date])->pluck('id')->toArray();
-
-         //initialize
-         $totalToPay = [];
-            $products = Product::all();
-            $productTotal = [];
-            $productReturnTotal = [];
-            $products_array = [];
-            $orders_array = [];
-            $returns_array = [];
-
-            // get all products that exist in this invoice
-           $allProductsInInvoice = orderItem::whereIn('order_id', $orderIds)->pluck('product_id')->toArray();
-           //remove duplicates
-           $products_array  = array_unique($allProductsInInvoice);
-            //go through each product , and find any price changes within the orders and return array
-            foreach($products_array as $productId){
-                $totalTemp = [];
-               $qtyOfItemOrdered[$productId] =   array_sum(orderItem::whereIn('order_id', $orderIds)->where('product_id', $productId)->pluck('quantity')->toArray()) ;
-
-               $qtyOfReturns[$productId] =   array_sum(returnItem::whereIn('product_return_id', $returnIds)->where('product_id', $productId)->pluck('quantity')->toArray()) ;
-
-               $priceChanges = orderItem::whereIn('order_id', $orderIds)->where('product_id', $productId)->pluck('currentPrice')->toArray();
-                $priceAndQty = [];
-                // go through the price changes -
-                foreach(array_unique($priceChanges) as $prc){
-                   //and find quantity of this product from all orders
-
-               $orderQtys =  orderItem::whereIn('order_id', $orderIds)->where(['product_id' => $productId, 'currentPrice' => $prc])->pluck('quantity')->toArray();
-                 $returnQtys =  returnItem::whereIn('product_return_id', $returnIds)->where(['product_id' => $productId, 'currentPrice' => $prc])->pluck('quantity')->toArray();
-               // sum them up , and put into array
-                $priceAndQty[$prc] = array_sum($orderQtys) -   array_sum($returnQtys);
-                }
-
-             $priceAndQty;
-                foreach($priceAndQty as $price => $qty){
-
-                  array_push($totalTemp,$price * $qty);
-                }
-
-               $total =  array_sum($totalTemp);
-                 // make new array with product containing price:quantity
-                $allCurrentPrices[$productId] = $priceAndQty;
-                $totalToPay[$productId]['totalToPay'] = $total;
-                   }
+        $data =  InvoiceFactory::generateInvoice($clientId,$from_date,$to_date,$invoiceId);
 
 
-
-        //  get names of products in order to fill form
-            foreach($products_array as $productId){
-
-                $productNames[$productId] = Product::find($productId)->name;
-                 $productNames;
-            }
-
-
-
-
-        foreach($products_array as $product_id ){
-
-            $name =   Product::find($product_id)->name;
-             $totalToPayForProduct = $totalToPay[$product_id]['totalToPay'];
-         //    return $allCurrentPrices[$product_id];
-            $all[$client->name]['invoiceInfo'][$name] = array(
-                 'price' =>$allCurrentPrices[$product_id],
-                 'ordered' => $qtyOfItemOrdered[$product_id],
-                 'returns' => $qtyOfReturns[$product_id],
-                 'totalSold' => $qtyOfItemOrdered[$product_id] - $qtyOfReturns[$product_id],
-                 'totalToPayForProduct' => $totalToPayForProduct
-             );
-
-           //  $totalToPay[$product_id] = $totalToPayForProduct;
-
-           }
-        $all[$client->name]['totalToPay'] =  array_sum(array_column($totalToPay, 'totalToPay'));
-        $all[$client->name]['from_date'] = Carbon::parse($from_date)->format('d-m-Y') ;
-        $all[$client->name]['to_date'] = Carbon::parse($to_date)->format('d-m-Y') ;
+        $all[$client->name]['orders'] = $data['orders'];
+        $all[$client->name]['invoiceInfo'] = $data['invoiceInfo'];
+         $all[$client->name]['from_date'] = $data['from_date'];
+         $all[$client->name]['to_date'] = $data['to_date'];
+         $all[$client->name]['client'] = $client;
+        $all[$client->name]['totalToPay'] =  $data['totalToPay'];
+        $all[$client->name]['invoiceId'] =  $data['invoiceId'];
+        $all[$client->name]['isOriginal'] =  $data['isOriginal'];
      }
     // return $all;
 
 
-    $pdf =  PDF::loadView('invoices.pdfMassInvoice', compact('all'))->save( storage_path('app/public/pdfInvoices/pdfMassInvoicePreview.pdf')  );
+
+  $pdf = PDF::loadView('invoices.pdfMassInvoice', compact('all'));
+  // $pdf->SetProtection(['fill-forms'], '', 'pass');
+  $pdf->save( storage_path('app/public/pdfInvoices/pdfMassInvoicePreview.pdf')  );
  return view('invoices.massInvoicePreview')->with('data',$all);
 }
 
@@ -609,6 +429,7 @@ public function saveMassInvoice(Request $request){
             $invoice->to_date = $to_date;
             $invoice->debt = $debt;
             $invoice->paid = 0;
+            $invoice->printed = true;
 
             $invoice->save();
            }else{
@@ -625,6 +446,7 @@ public function saveMassInvoice(Request $request){
               File::makeDirectory($path, $mode = 0777, true, true);
             }
             $data['invoiceId'] = $invoice->id;
+              $data['isOriginal'] = false;
            $pdf = PDF::loadView('clients.pdfInvoice', compact('data'))
                ->save( storage_path('app/public/pdfInvoices/'.$clientArray['client']['name'].'/invoice'.$invoice->id.'.pdf')  );
 
@@ -661,6 +483,133 @@ public function saveMassInvoice(Request $request){
 
 
      return redirect()->route('invoices.index')->with($messageType,$messageText);
+
+}
+public function originalCopy(Request $request){
+
+   $from_date = $request->input('from_date');
+   $to_date = $request->input('to_date');
+
+  $client = Client::find($request->input('client_id'));
+  $invoiceId = $request->input('invoice_id');
+
+
+
+  $orders = $client->orders()->whereBetween('date',[$from_date,$to_date])->get();
+   //get ids of all orders
+$orderIds = $client->orders()->whereBetween('date',[$from_date,$to_date])->pluck('id')->toArray();
+//""
+$returns = $client->returns()->whereBetween('date',[$from_date,$to_date])->get();
+$returnIds = $client->returns()->whereBetween('date',[$from_date,$to_date])->pluck('id')->toArray();
+
+//initialize
+$totalToPay = [];
+   $products = Product::all();
+   $productTotal = [];
+   $productReturnTotal = [];
+   $products_array = [];
+   $orders_array = [];
+   $returns_array = [];
+
+   // get all products that exist in this invoice
+  $allProductsInInvoice = orderItem::whereIn('order_id', $orderIds)->pluck('product_id')->toArray();
+  //remove duplicates
+  $products_array  = array_unique($allProductsInInvoice);
+   //go through each product , and find any price changes within the orders and return array
+   foreach($products_array as $productId){
+       $totalTemp = [];
+      $qtyOfItemOrdered[$productId] =   array_sum(orderItem::whereIn('order_id', $orderIds)->where('product_id', $productId)->pluck('quantity')->toArray()) ;
+
+      $qtyOfReturns[$productId] =   array_sum(returnItem::whereIn('product_return_id', $returnIds)->where('product_id', $productId)->pluck('quantity')->toArray()) ;
+
+      $priceChanges = orderItem::whereIn('order_id', $orderIds)->where('product_id', $productId)->pluck('currentPrice')->toArray();
+       $priceAndQty = [];
+       // go through the price changes -
+       foreach(array_unique($priceChanges) as $prc){
+          //and find quantity of this product from all orders
+
+      $orderQtys =  orderItem::whereIn('order_id', $orderIds)->where(['product_id' => $productId, 'currentPrice' => $prc])->pluck('quantity')->toArray();
+        $returnQtys =  returnItem::whereIn('product_return_id', $returnIds)->where(['product_id' => $productId, 'currentPrice' => $prc])->pluck('quantity')->toArray();
+      // sum them up , and put into array
+       $priceAndQty[$prc] = array_sum($orderQtys) -   array_sum($returnQtys);
+       }
+
+
+       foreach($priceAndQty as $price => $qty){
+
+         array_push($totalTemp,$price * $qty);
+       }
+
+      $total =  array_sum($totalTemp);
+        // make new array with product containing price:quantity
+       $allCurrentPrices[$productId] = $priceAndQty;
+       $totalToPay[$productId]['totalToPay'] = $total;
+          }
+
+
+
+//  get names of products in order to fill form
+   foreach($products_array as $productId){
+
+       $productNames[$productId] = Product::find($productId)->name;
+        $productNames;
+   }
+
+
+
+
+foreach($products_array as $product_id ){
+
+   $name =   Product::find($product_id)->name;
+    $totalToPayForProduct = $totalToPay[$product_id]['totalToPay'];
+//    return $allCurrentPrices[$product_id];
+   $invoiceInfo[$name] = array(
+        'price' =>$allCurrentPrices[$product_id],
+        'ordered' => $qtyOfItemOrdered[$product_id],
+        'returns' => $qtyOfReturns[$product_id],
+        'totalSold' => $qtyOfItemOrdered[$product_id] - $qtyOfReturns[$product_id],
+        'totalToPayForProduct' => $totalToPayForProduct
+    );
+
+  //  $totalToPay[$product_id] = $totalToPayForProduct;
+
+  }
+
+$totalToPay =  array_sum(array_column($totalToPay, 'totalToPay'));
+//     $invoice->update(['debt' =>  $totalToPay]);
+//     $allDebt = Invoice::all()->pluck('debt')->toArray();
+//     $allPaid = Invoice::all()->pluck('paid')->toArray();
+//    $balance =  array_sum($allDebt)  - array_sum($allPaid);
+//      if($balance < 0){
+//         Client::find($invoice->client_id)->update(['credit' => abs($balance), 'debt' => 0]);
+
+//      }elseif($balance > 0 ){
+//         Client::find($invoice->client_id)->update(['debt' => $balance, 'credit' => 0]);
+
+//      }else{
+//         Client::find($invoice->client_id)->update(['debt' => 0, 'credit' => 0]);
+//      }
+
+
+
+$data = array(
+    // 'paid' => $invoice->paid,
+    'isOriginal' => true,
+   'invoiceId' => $invoiceId,
+   'client' => $client,
+   'orders' => $orders,
+   'productNames' =>  $productNames,
+   'products'=> $products,
+   'from_date' => Carbon::parse($from_date)->format('d-m-Y'),
+   'to_date' => Carbon::parse($to_date)->format('d-m-Y'),
+   'invoiceInfo' => $invoiceInfo,
+   'totalToPay' => $totalToPay
+);
+
+
+$pdf = PDF::loadView('invoices.originalCopyPdf', compact('data'));
+$pdf->stream( 'originalCopyPdf.pdf'  );
+
 
 }
 

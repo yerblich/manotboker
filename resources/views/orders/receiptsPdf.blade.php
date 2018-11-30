@@ -25,11 +25,11 @@ table, th, td {
 }
 body{
   font-size:12pt;
-text-align:center;
+
 
 }
-.td-right td{
-  text-align:center;
+.td-right th{
+  text-align:right;
 
 }
 .clientInfo td{
@@ -51,23 +51,30 @@ text-align:center;
   <br>
 
 @foreach ($orders as $clientName => $array)
+
 <div class="logo" style="text-align: center; "> <h1>הופמן עוגות אמריקאיות</h1>
-| 0527135921a@gmail.com |
+@if ($typeOfDocument == 'quote')
+  <h2><div>הצעת מחיר</div></h2>
+@else
+  <h2><div>תעודת משלוח</div></h2>
+@endif
+
+<div>| 0527135921a@gmail.com |</div>
 </div><br>
   <div class="table-responsive ">
-    <table class="clientInfo td-right heb table  table" id="dataTable" width="100%" cellspacing="0">
+    <table class="clientInfo td-right hebtable  table" id="dataTable" width="100%" cellspacing="0">
       <tr>
-          <td> {{$array['clientInfo']['email']}} : מייל</td>
-      <td>   שם לקוח : {{$array['clientInfo']['name']}}</td>
+          <th> {{$array['clientInfo']['email']}} : מייל</th>
+      <th>   שם לקוח : {{$array['clientInfo']['name']}}</th>
       </tr>
       <tr>
-          <td>  כתובת: {{$array['clientInfo']['address']}}</td>
-          <td> {{$array['clientInfo']['id']}}: מספר לקוח</td>
+          <th> : כתובת {{$array['clientInfo']['thress']}}</th>
+          <th> {{$array['clientInfo']['th']}}: מספר לקוח</th>
 
           </tr>
       <tr>
-          <td>{{$array['clientInfo']['number']}}: טלפון</td>
-          <td >{{$array['orderInfo']['date']->format('d-m-Y')}}   <strong>: תאריך</strong>
+          <th>{{$array['clientInfo']['number']}}: טלפון</th>
+          <th >{{$array['orderInfo']['date']->format('d-m-Y')}}   <strong>: תאריך</strong></th>
 
 
         </tr>
@@ -81,13 +88,14 @@ text-align:center;
   <table class=" pdf table  td-right table-bordered" id="dataTable" width="100%" cellspacing="0" autosize="1">
     <thead>
       <tr >
-          <th>סה״כ לתשלום </th>
-          <th>מע״מ</th>
-          <th>מחיר ליחידה</th>
+          <th>סה״כ </th>
+          <th>מחיר ליח׳ אחרי מע''מ</th>
+          <th>מחיר ליח׳</th>
           <th>סה״כ כמות</th>
           <th>כמות באריזה</th>
           <th>אריזות</th>
           <th>מוצרים</th>
+            <th>ברקוד</th>
 
 
 
@@ -102,12 +110,13 @@ text-align:center;
 @foreach ($array['products'] as $name => $array)
   <tr>
       <td>{{$array['totalUnits'] * $array['unitCost']}}</td>
-      <td>{{$array['unitCost'] * .17}}</td>
-      <td>{{$array['unitCost']- ($array['unitCost'] * .17)}}</td>
+      <td>{{$array['unitCost']}}</td>
+      <td>{{number_format($array['unitCost'] / 1.17,2)}}</td>
       <td>{{$array['totalUnits']}}</td>
       <td>{{$array['units']}}</td>
       <td>{{$array['qty']}}</td>
       <td>{{$name}}</td>
+      <td>{{$array['barcode']}}</td>
 
 
 
@@ -116,11 +125,7 @@ text-align:center;
 
 @endforeach
 
-<tr>
 
-  <th>{{$orders[$clientName]['totalCost']}}</th>
-  <th>סה״כ</th>
-</tr>
 
 
 
@@ -133,6 +138,14 @@ text-align:center;
 <td>סה"כ</td>
 </tr> --}}
 </tfoot>
+</table>
+<br>
+<table id="dataTable" width="50%" cellspacing="0" autosize="1">
+  <tr>
+
+    <th>{{$orders[$clientName]['totalCost']}}</th>
+    <th>סה״כ לתשלום </th>
+  </tr>
 </table>
 
 </div>

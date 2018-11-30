@@ -9,7 +9,8 @@ class Invoice extends Model
     protected $fillable = [
         'debt',
         'paid',
-        'sent'
+        'sent',
+        'printed'
 
 
     ];

@@ -220,7 +220,7 @@ return [
         'Lava' => Khill\Lavacharts\Laravel\LavachartsFacade::class,
         'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class,
         'Utils' => App\Libraries\Utils::class,
-
+        'InvoiceFactory' => App\Libraries\InvoiceFactory::class,
     ],
 
 ];

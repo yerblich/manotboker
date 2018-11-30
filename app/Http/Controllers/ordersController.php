@@ -661,9 +661,9 @@ class ordersController extends Controller
     public function receipts(Request $request)
     {
 
-
+ $typeOfDocument = $request->input('typeOfDocument');
       $date = Carbon::parse($request->input('date'))->format('Y-m-d');
-      unset($request['_token'],$request['date'],$request['checkAll']);
+      unset($request['_token'],$request['date'],$request['checkAll'],$request['typeOfDocument']);
 
      $clients = $request->all();
             // $clientsIds = array_keys($clients);
@@ -685,6 +685,7 @@ if(count($clients) == 0 ){
          $orders[$client->name]['products'][$product->name]['units'] = Product::find($orderItem->product_id)->units;
          $orders[$client->name]['products'][$product->name]['totalUnits'] = $orderItem->quantity * Product::find($orderItem->product_id)->units;
          $orders[$client->name]['products'][$product->name]['unitCost'] = $orderItem->currentPrice;
+         $orders[$client->name]['products'][$product->name]['barcode'] = $product->barcode;
 
        }
        $orders[$client->name]['clientInfo'] = $client;
@@ -693,9 +694,10 @@ if(count($clients) == 0 ){
         return $t->quantity * $t->currentPrice;
         });
       }
+
 //return $orders;
     //  $mpdf = PDF::stream('orders.pdfDaily');
-           $pdf = PDF::loadView('orders.receiptsPdf', compact('orders'));
+           $pdf = PDF::loadView('orders.receiptsPdf', ['orders' => $orders, 'typeOfDocument'=> $typeOfDocument]);
   	return $pdf->stream('receiptsPdf.pdf');
 
 

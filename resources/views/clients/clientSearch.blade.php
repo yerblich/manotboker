@@ -73,7 +73,7 @@
          {!! Form::hidden('data', json_encode($data,TRUE)) !!}
 
         {{-- <a class="btn btn-primary" href="{{ url('/orders/pdf')}}">Download</a> --}}
-       {{Form::submit('ליצור חשבונית',  ['name' => 'create','class' => 'progressBar overwriteAlert btn btn-primary'])}}
+       {{Form::submit('ליצור חשבונית',  ['name' => 'create','class' => 'progressBar  btn btn-primary'])}}
         {!! Form::close() !!}
  </div>
 

@@ -42,9 +42,13 @@
       צור תעודת משלוח
       </button>
       <div class="dropdown-menu ddpad" aria-labelledby="dropdownMenuButton">
+        {{ Form::radio('typeOfDocument', 'quote' , true) }}  הצעת מחיר
+        <br>
+          {{ Form::radio('typeOfDocument', 'delivery' , false) }}  תעודת משלוח
+        <hr>
         {{ Form::checkbox('checkAll' ,'Clear/Fill','checked',['id' => 'checkAll','class' => 'menu-item'])}}
         {{ Form::label('checkAll', 'Clear/Fill', ['class' => 'menu-item']) }}<br>
-        <hr>
+      <hr>
         @foreach($data['clients'] as $client)
         {{ Form::checkbox($client->id, $client->name,['class' => 'menu-item'])}}
         {{ Form::label($client->id, $client->name, ['class' => 'menu-item']) }}<br>

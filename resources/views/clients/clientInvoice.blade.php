@@ -41,6 +41,16 @@
           {{Form::submit('הסר',  ['class' => 'deleteAlert btn btn-primary'])}}
           {!! Form::close() !!}
         </div> --}}
+        <div style="display:none" class=" col-md-2 text-left" >
+      {!! Form::open(['action'=> ['InvoiceController@originalCopy',$invoice->id], 'method' => 'POST', 'class'=> 'postPrint']) !!}
+      {{ csrf_field() }}
+      {!! Form::hidden('client_id',$client->id) !!}
+      {!! Form::hidden('from_date',$from_date) !!}
+      {!! Form::hidden('to_date',$to_date) !!}
+      {!! Form::hidden('invoice_id',$invoice->id) !!}
+      {{Form::submit(' הדפס העתק נאמן למקור',  [ 'class' => 'btn btn-primary' ])}}
+      {!! Form::close() !!}
+    </div>
     <div class="col-md-3 text-left" >
   {!! Form::open(['action'=> 'InvoiceController@pdfSend', 'method' => 'POST']) !!}
   {{ csrf_field() }}
@@ -48,11 +58,11 @@
   {!! Form::hidden('from_date',$from_date) !!}
   {!! Form::hidden('to_date',$to_date) !!}
   {!! Form::hidden('invoice_id',$invoice->id) !!}
-  {{Form::submit('שלח PDF',  ['class' => 'btn btn-primary'])}}
+  {{Form::submit('שלח ',  ['class' => 'btn btn-primary'])}}
   {!! Form::close() !!}
 </div>
 
-<div class="col-md-3 text-center">
+<div class="col-md-4 text-center">
  @if ($paid >= $debt)
  <div class="badge badge-pill badge-success"> שולם </div>
  @else
@@ -70,7 +80,7 @@
 
   @endif
 </div>
-<div  class="col-md-6 text-right"> {!! Form::open(['action'=>[ 'InvoiceController@update',  $invoice->id ],'method' => 'POST']) !!}
+<div  class="col-md-5 text-right"> {!! Form::open(['action'=>[ 'InvoiceController@update',  $invoice->id ],'method' => 'POST']) !!}
     {{ csrf_field() }}
 
     {!! Form::hidden('client_id',$client->id) !!}
@@ -88,15 +98,33 @@
 
     <div class="col-12">
   <object  data="{{asset("storage/pdfInvoices/".$client->name."/invoice".$invoice->id.".pdf")}}" type="application/pdf" width="100%" height="500">
-    <iframe src="{{asset("storage/pdfInvoices/".$client->name."/invoice".$invoice->id.".pdf")}}" width="100%" height="600"></iframe>
+    <iframe id = "pdfFrame" name="pdfFrame"    src="{{asset("storage/pdfInvoices/".$client->name."/invoice".$invoice->id.".pdf")}}" width="100%" height="600"></iframe>
   </object>
   </div>
+  </div>
+  <div id="modalbar" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"></h5>
+
+        </div>
+        <div class="modal-body">
+          Print Success ? press yes to confirm
+          <button onclick="printSuccess()"> Yes </button> <button onclick="printFail()"> No </button>
+
+        </div>
+        <div class="modal-footer">
+
+        </div>
+      </div>
+    </div>
   </div>
       @endsection
       @section('js')
 
       <script src={{ asset('storage/js/deleteAlert.js') }}></script>
-
+      <script src={{ asset('storage/js/printInvoice.js') }}></script>
 
 
 

@@ -35,8 +35,8 @@
        {!! Form::text('to_date',null,['placeholder'=>'לתאריך','class' => ' form-control datepicker ', 'autocomplete' => 'off'] ) !!}
     </div>
     <div class="col-md-2">
-
-            <button id="modalpress" onclick="return false" class=" btn btn-primary  ">ליצור חשבוניות מרובות</button>
+{{-- id="modalpress" onclick="return false" --}}
+            <button  class=" btn btn-primary  ">ליצור חשבוניות מרובות</button>
 
     </div>
     <div id="modalbar" class="modal" tabindex="-1" role="dialog">

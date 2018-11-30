@@ -42,6 +42,13 @@
                 <span class="input-group-text">&#8362;</span>
               </div>
         </div>
+        <div class=" form-group input-group   ">
+            {!! Form::input('number','barcode','',['onkeypress'=> "return isNumberKey(event)",'placeholder' => 'ברקוד','class' => 'text-right form-control'] ) !!}
+
+            <div class="input-group-append">
+                <span class="input-group-text">ברקוד</span>
+              </div>
+        </div>
 
         <div class=" form-group input-group   ">
            {!! Form::select('type',[

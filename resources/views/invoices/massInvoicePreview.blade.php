@@ -12,19 +12,19 @@
 
   </ol>
   <div class="row">
+    <div class="col-md-1 text-left" >
+      <button id= "printInvoice" class="button btn-primary">הדפס</button>
 
-
-
-
+</div>
         <div class="col-12  ">
-          <div class="float-right ">
-          {!! Form::open(['action'=> 'InvoiceController@saveMassInvoice','onSubmit' =>' $(window).unbind("beforeunload")' ,'id'=> 'saveMassInvoice','method' => 'POST']) !!}
+          <div  style="display:none" class="float-right ">
+          {!! Form::open(['action'=> 'InvoiceController@saveMassInvoice','onSubmit' =>' $(window).unbind("beforeunload")' ,'id'=> 'postPrint','method' => 'POST']) !!}
           {{ csrf_field() }}
 
           {!! Form::hidden('data', json_encode($data,true)) !!}
 
           {{Form::submit('שמור',  ['id'=> 'save','name' => 'save','class' => 'progressMI btn btn-primary'])}}
-          {{Form::submit('שלח Pdf',  ['id'=> 'save','name' => 'send','class' => 'progressMI btn btn-primary'])}}
+          {{-- {{Form::submit('שלח Pdf',  ['id'=> 'save','name' => 'send','class' => 'progressMI btn btn-primary'])}} --}}
           {!! Form::close() !!}
           </div>
 
@@ -91,8 +91,8 @@
 <div class="row">
 
         <div class="col-12">
-      <object  data="{{asset("storage/pdfInvoices/pdfMassInvoicePreview.pdf")}}" type="application/pdf" width="100%" height="500">
-        <iframe src="{{asset("storage/pdfInvoices/pdfMassInvoicePreview.pdf")}}" width="100%" height="600"></iframe>
+      <object  data="{{asset("storage/pdfInvoices/pdfMassInvoicePreview.pdf#toolbar=0")}}" type="application/pdf" width="100%" height="500">
+        <iframe id = "pdfFrame" name="pdfFrame" src="{{asset("storage/pdfInvoices/pdfMassInvoicePreview.pdf")}}" width="100%" height="600"></iframe>
       </object>
       </div>
       </div>
@@ -100,12 +100,14 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Creating invoices</h5>
+        <h5 class="modal-title"></h5>
 
       </div>
       <div class="modal-body">
 
-        <div style="display:none" id="progressbar"></div>
+        Print Success ? press yes to confirm
+        <button onclick="printSuccess()"> Yes </button> <button onclick="printFail()"> No </button>
+
       </div>
       <div class="modal-footer">
 
@@ -119,4 +121,5 @@
 
 
 <script src={{ asset('storage/js/checkSave.js') }}></script>
+<script src={{ asset('storage/js/printInvoice.js') }}></script>
 @stop

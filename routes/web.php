@@ -70,6 +70,7 @@ Route::get('clocker/delete/{id}', 'ClockerController@destroy');
 Route::resource('returns', 'ReturnsController');
 Route::resource('invoices', 'InvoiceController');
 Route::post('/invoices/create', "InvoiceController@create");
+Route::post('/invoices/originalCopy/{id}', "InvoiceController@originalCopy");
 //Route::resource('invoices', 'InvoiceController');
 Route::get('/invoice/MassInvoice', "InvoiceController@MassInvoice");
 Route::post('/invoice/checkExistingInvoice', "InvoiceController@checkExistingInvoice")->name('checkExistingInvoice');

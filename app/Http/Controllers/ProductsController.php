@@ -63,6 +63,7 @@ class ProductsController extends Controller
     public function store(Request $request)
     {
       $supplierId =  $request->input("supplier");
+      $barcode =  $request->input("barcode");
      $type =  $request->input("type");
      $weight =  $request->input("weight");
      $price =  $request->input("price");
@@ -83,6 +84,7 @@ class ProductsController extends Controller
         $product->supplier_price = $price;
         $product->weight = $weight;
         $product->units = $units;
+        $product->barcode = $barcode;
         $product->save();
 
         foreach($clients as $client){
@@ -146,6 +148,7 @@ class ProductsController extends Controller
     }
         $data = array(
             'id' => $id,
+            'barcode' => $product->barcode,
             'name' => $product->name,
             'imageName' => $product->image,
             'supplier' => $supplier->name,
@@ -174,6 +177,7 @@ class ProductsController extends Controller
 
            $data = array(
                'id' => $id,
+               'barcode' => $product->barcode,
                'name' => $product->name,
                'imageName' => $product->image,
                'supplier' => $supplier->name,
@@ -198,6 +202,7 @@ class ProductsController extends Controller
 
       $product =  Product::find($id);
       $type = $request->input('type');
+      $barcode = $request->input('barcode');
       if($request->input('productName') !== null){
         $productName = $request->input('productName');
       }else{
@@ -224,6 +229,7 @@ class ProductsController extends Controller
 
 
          $product->update([
+            'barcode' => $barcode,
              'name' => $productName,
              'weight' => $request->input('weight'),
              'units' => $request->input('units'),

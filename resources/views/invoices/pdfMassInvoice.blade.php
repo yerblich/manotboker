@@ -89,7 +89,8 @@
                 <th>כמות באריזה</th>
                 <th>אריזות</th>
                 <th>מוצר</th>
-
+                <th  >ברקוד</th>
+                  <th  >#</th>
 
 
 
@@ -125,6 +126,8 @@
                 <td>{{$infoArray['ordered']}}</td>
 
                 <td  style="text-align: right;width:40%;">{{$name}}</td>
+                <td>{{$infoArray['barcode']}}</td>
+                <td>{{$infoArray['row']}}</td>
             </tr>
 
 

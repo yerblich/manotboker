@@ -393,12 +393,12 @@ public function generateMassInvoice(Request $request){
         $all[$client->name]['totalToPay'] =  $data['totalToPay'];
         $all[$client->name]['invoiceId'] =  $data['invoiceId'];
         $all[$client->name]['isOriginal'] =  $data['isOriginal'];
-$invoiceId++;
+    $invoiceId++;
      }
     // return $all;
 
 
-
+ clearstatcache();
   $pdf = PDF::loadView('invoices.pdfMassInvoice', compact('all'));
   // $pdf->SetProtection(['fill-forms'], '', 'pass');
   $pdf->save( storage_path('app/public/pdfInvoices/pdfMassInvoicePreview.pdf')  );

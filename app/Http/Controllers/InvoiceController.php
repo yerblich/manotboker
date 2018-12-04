@@ -372,7 +372,7 @@ public function generateMassInvoice(Request $request){
      foreach ($clients as $clientId) {
 
 
-       $invoiceId++;
+
         $invoice_exists = Invoice::where(['client_id' => $clientId, 'from_date' => $from_date, 'to_date' => $to_date])->first();
         if($invoice_exists !== null ){
         return redirect()->back()->with('error',' אחד או יותר חשבונית כבר קיימת ');
@@ -393,6 +393,7 @@ public function generateMassInvoice(Request $request){
         $all[$client->name]['totalToPay'] =  $data['totalToPay'];
         $all[$client->name]['invoiceId'] =  $data['invoiceId'];
         $all[$client->name]['isOriginal'] =  $data['isOriginal'];
+
      }
     // return $all;
 

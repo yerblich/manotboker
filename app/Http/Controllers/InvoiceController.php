@@ -393,7 +393,7 @@ public function generateMassInvoice(Request $request){
         $all[$client->name]['totalToPay'] =  $data['totalToPay'];
         $all[$client->name]['invoiceId'] =  $data['invoiceId'];
         $all[$client->name]['isOriginal'] =  $data['isOriginal'];
-
+$invoiceId++;
      }
     // return $all;
 

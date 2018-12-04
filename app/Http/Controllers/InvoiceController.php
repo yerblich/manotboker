@@ -55,7 +55,7 @@ class InvoiceController extends Controller
     {
 
 
-    return  $invoiceId = InvoiceFactory::getCurrentIncrement();
+     $invoiceId = InvoiceFactory::getCurrentIncrement();
         //get client ids and dates
     $req =  array('data' => json_decode($request->data));
    $clientId =  $req['data']->client->id;

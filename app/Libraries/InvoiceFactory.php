@@ -17,7 +17,7 @@ class InvoiceFactory{
 public static function getCurrentIncrement(){
   $tableStatus =   DB::select("show table status where name='invoices' ");
   $currentIncrement =  $tableStatus[0]->Auto_increment;
-  $invoiceId = $currentIncrement - 1;
+  $invoiceId = $currentIncrement ;
   return $invoiceId;
 }
 

@@ -39,7 +39,7 @@
      <div class=" hebwrapper">
 
 
-       <h1 class=""><strong>הופמן </strong></h1>
+       <h1><div style="text-align:center">הופמן</div><div style="text-align:center">חשבונית מס</div></h1>
 <table id="dataTable" width="100%"   autosize="1" cellspacing="0">
   <tr class="topHeader">
     @if($data["isOriginal"] == true)

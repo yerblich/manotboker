@@ -55,7 +55,7 @@ class InvoiceController extends Controller
     {
 
 
-      $invoiceId = InvoiceFactory::getCurrentIncrement();
+    return  $invoiceId = InvoiceFactory::getCurrentIncrement();
         //get client ids and dates
     $req =  array('data' => json_decode($request->data));
    $clientId =  $req['data']->client->id;
@@ -605,10 +605,27 @@ $data = array(
    'invoiceInfo' => $invoiceInfo,
    'totalToPay' => $totalToPay
 );
+$config = ['instanceConfigurator' => function($mpdf) {
+    $mpdf->SetImportUse();
+    $mpdf->percentSubset = 0;
+    $search = array(
+	'834'
+
+);
+
+$replacement = array(
+	'835',
+
+);
+    $mpdf->OverWrite('invoices.originalCopyPdf', $search, $replacement, 'I');
+}];
 
 
-$pdf = PDF::loadView('invoices.originalCopyPdf', compact('data'));
+
+$pdf = PDF::loadView('invoices.originalCopyPdf', compact('data'), [], $config);
+
 $pdf->stream( 'originalCopyPdf.pdf'  );
+
 
 
 }

@@ -111,7 +111,7 @@ body{
   <tr>
       <td>{{$array['qty'] * $array['unitCost']}}</td>
       <td>{{$array['unitCost'] / $array['units'] }}</td>
-      <td>{{number_format($array['unitCost'] $array['units'] / 1.17,2)}}</td>
+      <td>{{number_format($array['unitCost'] / $array['units'] / 1.17,2)}}</td>
       <td>{{$array['totalUnits']}}</td>
       <td>{{$array['units']}}</td>
       <td>{{$array['qty']}}</td>

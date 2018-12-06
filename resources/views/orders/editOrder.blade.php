@@ -12,6 +12,7 @@
       position: sticky; top: 0; z-index: 100;
     }
 
+
   </style>
   <ol class="breadcrumb">
     <li class="breadcrumb-item">
@@ -39,10 +40,10 @@
  @foreach($data['products'] as $orderType => $products)
 <h1>{{ ucfirst($orderType)}}</h1>
  <div class=" tableWrapper blueScroll table-responsive form-group">
-  <table class=" sticky table table-striped table-bordered table-responsive" id="dataTable" width="100%" cellspacing="0">
+  <table class="  table table-striped table-bordered " id="dataTable" width="100%" cellspacing="0">
     <thead class="thead-light">
       <tr>
-          <th class="headcol">לקוחות</th>
+          <th style="z-index: 1000;" class="headcol">לקוחות</th>
 
           {{-- itirate through alll products and create header  --}}
   @if(count( $products) > 0 )

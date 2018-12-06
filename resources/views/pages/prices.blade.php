@@ -13,6 +13,7 @@
     thead th {
       position: sticky; top: 0; z-index: 100;
     }
+
   </style>
   <ol class="breadcrumb">
     <li class="breadcrumb-item">
@@ -62,11 +63,11 @@
 {{ csrf_field() }}
 
   <div class=" table-responsive blueScroll tableWrapper">
-  <table class="table table-striped table-bordered table-responsive" id="dataTable" width="100%" cellspacing="0">
+  <table class="table table-striped table-bordered " id="dataTable" width="100%" cellspacing="0">
     <thead class="thead-light">
       <tr>
-          <th class="headcol">לקוחות</th>
-          
+          <th style="z-index: 1000;" class="headcol">לקוחות</th>
+
   @if(count($data) > 0 )
 
     @foreach($data['products'] as $product)
@@ -82,7 +83,7 @@
 </tr>
 <tr>
 
-  <td class="fillBg">Fill</td>
+  <td class="fillBg headcol">Fill</td>
   @foreach($data['products'] as $product)
 
 
@@ -138,7 +139,7 @@
 <br/>
 {{Form::submit('עדכון', ['class' => 'btn btn-primary'])}}
 {!! Form::close() !!}
-<div id="form" class=" table-responsive blueScroll tableWrapper"> </div>
+
 @endif
       @endsection
       @section('js')

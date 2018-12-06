@@ -14,15 +14,10 @@
     .datepicker{
       z-index: 1000;
     }
-    /* .headcol {
-      text-align: center;
-      height: 49px;
-    position: absolute;
-    width: 15.3em;
-    margin-left: -219px;
-    background-color: white;
-    z-index: 1;
-    } */
+
+
+
+
   </style>
   <ol class="breadcrumb">
     <li class="breadcrumb-item">
@@ -85,15 +80,15 @@
  @if(count($data['products'][$orderType]))
    <div class="row">
      <div class="col-11"><h1>{{ ucfirst($orderType)}}</h1></div>
-     <div class="col-1"><button id = {{$orderType}} class="reset btn btn-primary">לאפס</button></div>
+     <div class="col-1"><div id = {{$orderType}} onclick="return false"class="reset btn btn-primary">לאפס</div></div>
    </div>
 
 
  <div class="tableWrapper blueScroll table-responsive form-group">
-  <table class="table-striped sticky table table-bordered table-responsive" id="dataTable" width="100%" cellspacing="0">
+  <table class="table-striped sticky table table-bordered " id="dataTable" width="100%" cellspacing="0">
     <thead class="thead-light">
       <tr>
-          <th class="headcol">Clients</th>
+          <th style="z-index: 1000;"class="headcol">Clients</th>
 
           {{-- itirate through alll products and create header  --}}
   @if(count( $products) > 0 )

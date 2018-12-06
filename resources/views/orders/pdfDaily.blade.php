@@ -59,14 +59,21 @@ table, th, td {
 
 <tbody>
   @foreach ($clients as  $client)
+    @if (array_sum($client['qtys'][$productType]) > 0 )
+      <tr>
+          <td  style="overflow:nowrap; !important">{{$client['clientInfo']->name}}</td>
+          @foreach ($products as $id => $name)
+            @if (array_key_exists($id, $client['qtys'][$productType]))
+                <td> {{$client['qtys'][$productType][$id]}}</td>
+              @else
+                  <td>0</td>
+            @endif
 
-    <tr>
-        <td  style="overflow:nowrap; !important">{{$client['clientInfo']->name}}</td>
-        @foreach ($products as $id => $name)
-            <td> {{$client['qtys'][$id]}}</td>
-        @endforeach
+          @endforeach
 
-      </tr>
+        </tr>
+    @endif
+
   @endforeach
 
 

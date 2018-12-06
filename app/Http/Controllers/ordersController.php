@@ -289,7 +289,7 @@ class ordersController extends Controller
 
             }
 
-     $this->createOrderPdf($newDateformat,$sums);
+    return $this->createOrderPdf($newDateformat,$sums);
 
      }else{
     $messageCode = 'error';
@@ -355,18 +355,37 @@ class ordersController extends Controller
 
         }
         $cPageNum = 1;
-        foreach ($allClientInOrders as $client) {
 
+        foreach ($allClientInOrders as $client) {
+          $productType = "";
             $clientOrder = $client->orders()->where('date',$orderDate)->first();
             $pagedClients[$cPageNum][$client->name]['clientInfo'] = $client;
             foreach ($allProductsInOrders as $orderItem) {
+              $product = Product::find($orderItem->product_id);
+              if($product->type == 1)
+              {
+                $productType = "daily";
+
+
+              }
+              elseif ($product->type == 0)
+              {
+                $productType = "shabbos";
+
+              }
+              else
+              {
+                 $productType = "american";
+
+              }
+
               $quantity = 0;
             $clientOrderItem =   $clientOrder->orderItems()->where('product_id',$orderItem->product_id)->first();
               if($clientOrderItem !== null ){
                 $quantity = $clientOrderItem->quantity;
               }
 
-                $pagedClients[$cPageNum][$client->name]['qtys'][$orderItem->product_id] = $quantity;
+                $pagedClients[$cPageNum][$client->name]['qtys'][$productType][$orderItem->product_id] = $quantity;
             }
 
             if(count($pagedClients[$cPageNum]) == 20){
@@ -379,7 +398,7 @@ class ordersController extends Controller
 
 
 
-   $data = array(
+  return $data = array(
                 'sums' => $sums,
                 'products' => $pagedProducts,
                 'clients' => $pagedClients,

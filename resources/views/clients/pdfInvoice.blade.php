@@ -66,13 +66,13 @@
       <thead class="thead-light">
 
         <tr class="">
-            <th>סה"כ לתשלום</th>
-            <th>    מחיר</th>
-            <th>סה"כ</th>
-            <th>חזרות</th>
-            <th>כמות</th>
-
-          <th  >מוצר</th>
+          <th>סה"כ </th>
+          <th>מחיר ליח׳</th>
+          <th>סה"כ כמות</th>
+          <th>חזרות</th>
+          <th>כמות באריזה</th>
+          <th>אריזות</th>
+          <th>מוצר</th>
           <th  >ברקוד</th>
             <th  >#</th>
 
@@ -89,36 +89,30 @@
 
           @foreach($data['invoiceInfo'] as  $name => $infoArray)
 
-    <tr>
+            <tr>
 
+                    <td> {{number_format($infoArray['totalToPayForProduct'] / 1.17 , 2) }}</td>
 
+                    <td>
+                        @foreach($infoArray['price'] as $price => $amount)
 
+                        @if(count((array)$infoArray['price']) > 1)
+                       | {{$amount}} -  {{number_format($price / 1.17/$infoArray['units'],2)}} |
+                       @else
+                       {{number_format($price / 1.17/$infoArray['units'],2)}}
+                       @endif
+                        @endforeach
+                      </td>
 
+                    <td>{{$infoArray['totalSold'] * $infoArray['units'] }}</td>
+                    <td>{{$infoArray['returns']}}</td>
+                    <td>{{$infoArray['units'] }}</td>
+                    <td>{{$infoArray['ordered']}}</td>
 
-
-
-
-            <td> {{$infoArray['totalToPayForProduct']  - ($infoArray['totalToPayForProduct'] * .17)}}</td>
-
-            <td>
-                @foreach($infoArray['price'] as $price => $amount)
-
-                @if(count((array)$infoArray['price']) > 1)
-               | {{$amount}} -  {{$price - ($price * 0.17)}} |
-               @else
-               {{$price - ($price * 0.17)}}
-               @endif
-                @endforeach
-              </td>
-
-            <td>{{$infoArray['totalSold']}}</td>
-            <td>{{$infoArray['returns']}}</td>
-            <td>{{$infoArray['ordered']}}</td>
-
-            <td>{{$name}}</td>
-              <td>{{$infoArray['barcode']}}</td>
-              <td>{{$infoArray['row']}}</td>
-        </tr>
+                    <td  style="text-align: right;width:40%;">{{$name}}</td>
+                    <td>{{$infoArray['barcode']}}</td>
+                    <td>{{$infoArray['row']}}</td>
+                </tr>
 
 
 

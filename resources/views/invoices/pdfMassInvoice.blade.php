@@ -120,7 +120,7 @@
                     @endforeach
                   </td>
 
-                <td>{{$infoArray['totalSold']}}</td>
+                <td>{{$infoArray['totalSold'] * $infoArray['units'] }}</td>
                 <td>{{$infoArray['returns']}}</td>
                 <td>{{$infoArray['units'] }}</td>
                 <td>{{$infoArray['ordered']}}</td>

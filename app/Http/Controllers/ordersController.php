@@ -289,7 +289,7 @@ class ordersController extends Controller
 
             }
 
-    return $this->createOrderPdf($newDateformat,$sums);
+   $this->createOrderPdf($newDateformat,$sums);
 
      }else{
     $messageCode = 'error';
@@ -398,7 +398,7 @@ class ordersController extends Controller
 
 
 
-  return $data = array(
+   $data = array(
                 'sums' => $sums,
                 'products' => $pagedProducts,
                 'clients' => $pagedClients,

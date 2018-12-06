@@ -83,7 +83,12 @@
 {{-- create table for each type of product i.e shabbos and daily  --}}
  @foreach($data['products'] as $orderType => $products)
  @if(count($data['products'][$orderType]))
-<h1>{{ ucfirst($orderType)}}</h1>
+   <div class="row">
+     <div class="col-11"><h1>{{ ucfirst($orderType)}}</h1></div>
+     <div class="col-1"><button id = {{$orderType}} class="reset btn btn-primary">לאפס</button></div>
+   </div>
+
+
  <div class="tableWrapper blueScroll table-responsive form-group">
   <table class="table-striped sticky table table-bordered table-responsive" id="dataTable" width="100%" cellspacing="0">
     <thead class="thead-light">
@@ -112,7 +117,7 @@
         @foreach($products  as $product)
 
 
-        <td >{{Form::text('sum_'.$product->id,'',['class' => 'sum_'.$product->id.'  form-control col-12' ,'style' => 'padding:1px; text-align:center','readonly'])}} </td>
+        <td >{{Form::text('sum_'.$product->id,'',['class' => 'sum_'.$product->id.'  form-control col-12 '.$orderType ,'style' => 'padding:1px; text-align:center','readonly'])}} </td>
 
 
       @endforeach
@@ -138,7 +143,7 @@
 
       @foreach($products as $product)
       @if(isset($orderInfo[$orderType][$product->id]))
-      <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id, $orderInfo[$orderType][$product->id],[ 'onkeypress'=> "return isNumberKey(event)",'class' => 'amount_'. $product->id.' test form-control col-12' ,'style' => 'padding:1px; text-align:center'])}} </td>
+      <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id, $orderInfo[$orderType][$product->id],[ 'onkeypress'=> "return isNumberKey(event)",'class' => 'amount_'. $product->id.' test form-control col-12 '.$orderType ,'style' => 'padding:1px; text-align:center'])}} </td>
    @else
    <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id, '',['onkeypress'=> "return isNumberKey(event)",'class' => 'amount_'.$product->id.' test form-control col-12' ,'style' => 'padding:1px; text-align:center'])}} </td>
       @endif
@@ -217,7 +222,7 @@ var url  = '{{ route("storeOrder")}}';
          {{-- <script src={{ asset('storage/js/order.js') }}></script> --}}
       <script src={{ asset('storage/js/sum.js') }}></script>
         <script src={{ asset('storage/js/isNumberKey.js') }}></script>
-
+<script src={{ asset('storage/js/reset.js') }}></script>
 
 
 

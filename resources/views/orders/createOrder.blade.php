@@ -145,14 +145,14 @@
       @if(isset($orderInfo[$orderType][$product->id]))
       <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id, $orderInfo[$orderType][$product->id],[ 'onkeypress'=> "return isNumberKey(event)",'class' => 'amount_'. $product->id.' test form-control col-12 '.$orderType ,'style' => 'padding:1px; text-align:center'])}} </td>
    @else
-   <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id, '',['onkeypress'=> "return isNumberKey(event)",'class' => 'amount_'.$product->id.' test form-control col-12' ,'style' => 'padding:1px; text-align:center'])}} </td>
+   <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id, '',['onkeypress'=> "return isNumberKey(event)",'class' => 'amount_'.$product->id.' test form-control col-12 '.$orderType ,'style' => 'padding:1px; text-align:center'])}} </td>
       @endif
       @endforeach
 
       @else
       @foreach($products as $product)
 
-      <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id,'',['onkeypress'=> "return isNumberKey(event)",'class' => 'amount_'.$product->id.' test form-control col-12' ,'style' => 'padding:0px;  text-align:center'])}} </td>
+      <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id,'',['onkeypress'=> "return isNumberKey(event)",'class' => 'amount_'.$product->id.' test form-control col-12 '.$orderType ,'style' => 'padding:0px;  text-align:center'])}} </td>
       @endforeach
       @endif
 

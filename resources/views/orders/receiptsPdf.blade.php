@@ -109,7 +109,7 @@ body{
 
 @foreach ($array['products'] as $name => $array)
   <tr>
-      <td>{{$array['totalUnits'] * $array['unitCost']}}</td>
+      <td>{{$array['qty'] * $array['unitCost']}}</td>
       <td>{{$array['unitCost'] / $array['units'] }}</td>
       <td>{{number_format($array['unitCost'] / 1.17,2)}}</td>
       <td>{{$array['totalUnits']}}</td>

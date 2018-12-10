@@ -171,7 +171,7 @@
 
         <tr class="table-success">
           <td>{{($data['totalToPay']) - $data['client']['credit'] }}</td>
-        <td >     יתרה לתשלום </td>
+        <td >    סה״כ לתשלום </td>
 
 
         </tr>
@@ -186,14 +186,14 @@
 
         <tr class="table-success">
         <td>{{$data['totalToPay'] + $data['client']['debt'] }}</td>
-        <td >    יתרה לתשלום </td>
+        <td >   סה״כ לתשלום</td>
 
 
         </tr>
         @else
         <tr class="table-success">
         <td>{{$data['totalToPay'] }}</td>
-        <td >    יתרה לתשלום </td>
+        <td >   סה״כ לתשלום </td>
 
 
         </tr>

@@ -24,7 +24,7 @@ class ReturnsController extends Controller
     public function index()
     {
         $returnArray = [];
-        $allReturns =   ProductReturn::distinct()->get(['date']);
+        $allReturns =   ProductReturn::distinct()->orderBy('date')->get(['date']);
         foreach($allReturns as $return){
 
             $currentDate[$return->date->format('m-Y')][]  = $return;

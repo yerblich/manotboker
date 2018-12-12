@@ -218,9 +218,11 @@ class ClientsController extends Controller
 
     public function search(Request $request ,$id){
 
+      $oids   =  Order::all()->pluck('id')->toArray();
 
+       returnItem::whereNotIn('product_return_id', $oids)->update(['test' => 'Delete']);
       returnItem::where('test', 'Delete')->delete();
-          ProductReturn::where('test', 'Delete')->delete();
+        
   return      $from_date =  date('Y-m-d',strtotime($request->input('from_date')));
         $to_date = date('Y-m-d',strtotime($request->input('to_date'))) ;
         if ($request->isMethod('get')) {

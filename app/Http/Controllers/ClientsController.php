@@ -291,7 +291,7 @@ class ClientsController extends Controller
                 $qty = 0;
                 if(!$return == ''){
                 foreach($returnItemlist as $returnItem){
-                    return $returnItem;
+                     $returnItem;
 
                         // find the product inside the orderitems , if exists
                         if($returnItem->product_id == $product_id ){
@@ -369,7 +369,7 @@ class ClientsController extends Controller
  //return $productNames;
 
        //  return $allOrdersArray;
-    return   $data = array(
+    $data = array(
         'overWriteAlert' => $overWriteAlert,
            'client' => $client,
            'orders' => $orders,

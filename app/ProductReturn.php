@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductReturn extends Model
 {
+  protected $fillable = [
+      'test'
+
+
+  ];
+
+
     protected $dates = ['date'];
     public function order(){
         return $this->hasOne('App\Order');

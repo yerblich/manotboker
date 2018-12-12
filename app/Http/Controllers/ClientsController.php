@@ -9,6 +9,8 @@ use App\Price;
 use App\Invoice;
 use App\orderItem;
 use App\returnItem;
+use App\ProductReturn;
+use App\Order;
 use PDF;
 use Input;
 use Carbon\Carbon;
@@ -216,8 +218,14 @@ class ClientsController extends Controller
 
     public function search(Request $request ,$id){
 
+    
+      $oids   =  Order::all()->pluck('id')->toArray();
+      ProductReturn::whereNotIn('id', $oids)->update(['test' => 'Delete']);
 
-        $from_date =  date('Y-m-d',strtotime($request->input('from_date')));
+    $rids   =  ProductReturn::where('test', 'Delete')->pluck('id')->toArray();
+            returnItem::where('product_return_id', $rids)->update(['test' => 'Delete']);
+
+  return      $from_date =  date('Y-m-d',strtotime($request->input('from_date')));
         $to_date = date('Y-m-d',strtotime($request->input('to_date'))) ;
         if ($request->isMethod('get')) {
             $from_date = date('Y-m-d',strtotime($request->data['from_date']));
@@ -288,7 +296,7 @@ class ClientsController extends Controller
                 $qty = 0;
                 if(!$return == ''){
                 foreach($returnItemlist as $returnItem){
-
+                    return $returnItem;
 
                         // find the product inside the orderitems , if exists
                         if($returnItem->product_id == $product_id ){
@@ -366,7 +374,7 @@ class ClientsController extends Controller
  //return $productNames;
 
        //  return $allOrdersArray;
-       $data = array(
+    return   $data = array(
         'overWriteAlert' => $overWriteAlert,
            'client' => $client,
            'orders' => $orders,

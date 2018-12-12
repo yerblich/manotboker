@@ -45,14 +45,14 @@ table, th, td {
 
 <div class="table-responsive ">
 
-  <table class="table table-bordered" id="dataTable"  cellpadding="1px"  border="1" width="100%"  style="overflow: wrap"  >
+  <table class="table table-bordered" id="dataTable"  cellpadding="1px"  border="1" width="100%"  style=""  >
     <thead>
       <tr>
           <th width = "150px">לקוחות</th>
         @foreach ($products as $id => $name)
-          <th>{{$name}}</th>
+          <th >{{str_replace("_"," ",$name)}}</th>
         @endforeach
-
+        <th >סה״כ</th>
 
 </tr>
 </thead>
@@ -70,7 +70,7 @@ table, th, td {
             @endif
 
           @endforeach
-
+          <td>{{$client['clientSum']}}</td>
         </tr>
     @endif
 
@@ -82,9 +82,9 @@ table, th, td {
   <tr>
       <th>לקוחות</th>
       @foreach ($products as $id => $name)
-        <th>{{$name}}</th>
+        <th>{{str_replace("_"," ",$name)}}</th>
       @endforeach
-
+      <th>סה״כ</th>
 
 
 
@@ -96,7 +96,7 @@ table, th, td {
     @foreach ($products as $id => $name)
       <th>{{$data['sums'][$name]}}</th>
     @endforeach
-
+<td>0</td>
 
 
 

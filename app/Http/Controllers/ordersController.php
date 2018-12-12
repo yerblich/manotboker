@@ -289,7 +289,7 @@ class ordersController extends Controller
 
             }
 
-   $this->createOrderPdf($newDateformat,$sums);
+ $this->createOrderPdf($newDateformat,$sums);
 
      }else{
     $messageCode = 'error';
@@ -358,7 +358,10 @@ class ordersController extends Controller
 
         foreach ($allClientInOrders as $client) {
           $productType = "";
+
             $clientOrder = $client->orders()->where('date',$orderDate)->first();
+          $clientSum =  $clientOrder->orderItems()->sum('quantity');
+          $pagedClients[$cPageNum][$client->name]['clientSum'] = $clientSum;
             $pagedClients[$cPageNum][$client->name]['clientInfo'] = $client;
             foreach ($allProductsInOrders as $orderItem) {
               $product = Product::find($orderItem->product_id);

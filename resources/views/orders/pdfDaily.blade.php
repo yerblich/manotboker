@@ -13,7 +13,7 @@
 
 </head> --}}
 
-<div class="logo" style="float:right"><h1>משווק מנות בוקר</h1></div>
+<div class="logo" style="text-align:center"><h5 style="display:inline">משווק מנות בוקר</h5></div>
 
 <style>
   tr:nth-child(even) {background: #CCC}
@@ -38,8 +38,8 @@ table, th, td {
 <div style="float:left;width:80%;">       פרשת: {{$data['parsha']}} יום: {{$data['day']}}</div>
 <div style="float:right;width:20%;">  תאריך: {{$data['date']}}  </div>
 
-  <br>
-  <h1 style="text-align:center;">{{ucfirst(__('products.'.$productType))}}</h1>
+
+  <div style="text-align:center; font-size:40px;">{{ucfirst(__('products.'.$productType))}}</div>
   <h4>Route{{$routeNum}}/{{count($data['clients'])}} | Page {{$page}}/{{count($productPages)}}</h4>
 
 

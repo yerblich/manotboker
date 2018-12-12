@@ -243,7 +243,7 @@ class ClientsController extends Controller
 //    }
 
         $client = Client::find($id);
-        $orders = $client->orders()->whereBetween('date',[$from_date,$to_date])->get();
+        $orders = $client->orders()->whereBetween('date',[$from_date,$to_date])->orderBy('date')->get();
         if(!count($orders)){
             return redirect()->route('clients.show',$id)->with('error','לא נמצאו הזמנות לתאריכים אלה');
         }

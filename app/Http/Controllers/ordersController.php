@@ -388,7 +388,7 @@ class ordersController extends Controller
                 $pagedClients[$cPageNum][$client->name]['qtys'][$productType][$orderItem->product_id] = $quantity;
             }
 
-            if(count($pagedClients[$cPageNum]) == 20){
+            if(count($pagedClients[$cPageNum]) == 30){
               $cPageNum++;
             }
 

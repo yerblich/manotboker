@@ -133,13 +133,13 @@
     <table id="dataTable" width="50%"   autosize="1" cellspacing="0">
 
       <tr class="table-danger">
-          <td>{{$data['totalToPay']  - ($data['totalToPay'] * .17)}} </td>
+          <td>{{number_format($data['totalToPay']  / 1.17,2)}} </td>
         <td >סה"כ</td>
 
 
       </tr>
       <tr class="table-success">
-        <td>{{$data['totalToPay'] * .17 }}</td>
+        <td>{{ number_format(($data['totalToPay'] /  1.17) * .17,2) }}</td>
       <td > 17%  מע״מ </td>
 
 

@@ -47,7 +47,7 @@
   <table class="table table-bordered table-striped table-responsive" id="dataTable" width="100%" cellspacing="0">
     <thead class="thead-light">
       <tr>
-          <th class="headcol">לקוחות</th>
+          <th style="z-index: 1000;" class="headcol">לקוחות</th>
   @if(count($products) > 0 )
 
     @foreach($products as $product)

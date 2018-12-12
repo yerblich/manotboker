@@ -43,7 +43,7 @@
 @foreach($data['products'] as $orderType => $products)
 @if(count($data['products'][$orderType]))
 <h1>{{ ucfirst($orderType)}}</h1>
-<div class="table-responsive">
+<div class="tableWrapper blueScroll table-responsive form-group">
   <table class="table table-bordered table-striped table-responsive" id="dataTable" width="100%" cellspacing="0">
     <thead class="thead-light">
       <tr>

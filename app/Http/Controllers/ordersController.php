@@ -184,7 +184,7 @@ class ordersController extends Controller
 
         Mail::send('orders.supplierEmail', $data, function($message) use ($data){
 
-            $message->from('0527135921a@gmail.com');
+            $message->from('sales@manotboker.com');
             $message->to($data['supplier']->email);
             if( $data['timesSent'] > 0){
                 $message->subject('order '. $data['date'].'('. $data['timesSent'].')');

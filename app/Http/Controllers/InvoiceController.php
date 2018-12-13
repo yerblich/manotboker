@@ -37,7 +37,7 @@ class InvoiceController extends Controller
     {
 //         $allInvoices =   Invoice::all();
 //    return $allInvoices;
-        $clients = Client::orderBy('route', 'asc')->get();
+        $clients = Client::orderBy('name', 'asc')->get();
         $allInvoices =[];
         foreach($clients as $client){
             $allInvoices[$client->name] = $client->invoices()->get();

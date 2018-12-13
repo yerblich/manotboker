@@ -73,7 +73,7 @@
     @foreach($data['products'] as $product)
 
 
-      <th>{{$product->name}}</th>
+      <th >{{$product->name}}</th>
 
 
     @endforeach

@@ -96,7 +96,7 @@ table, th, td {
     @foreach ($products as $id => $name)
       <th>{{$data['sums'][$name]}}</th>
     @endforeach
-<td>0</td>
+<td>{{$data['totalSum']}}</td>
 
 
 

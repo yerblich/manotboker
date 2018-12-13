@@ -184,7 +184,7 @@ class ordersController extends Controller
 
         Mail::send('orders.supplierEmail', $data, function($message) use ($data){
 
-            $message->from('sales@manotboker.com');
+            $message->from('0527135921a@gmail.com');
             $message->to($data['supplier']->email);
             if( $data['timesSent'] > 0){
                 $message->subject('order '. $data['date'].'('. $data['timesSent'].')');
@@ -240,6 +240,7 @@ class ordersController extends Controller
 
 
         }
+
 
         //  foreach($request as $key => $value) {
         //      if (strpos($key, 'sum_') === 0) {
@@ -399,9 +400,10 @@ class ordersController extends Controller
         }
 
 
-
+        $totalSum =  array_sum($sums);
 
    $data = array(
+                'totalSum' => $totalSum,
                 'sums' => $sums,
                 'products' => $pagedProducts,
                 'clients' => $pagedClients,

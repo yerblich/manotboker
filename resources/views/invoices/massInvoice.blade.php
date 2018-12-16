@@ -9,8 +9,14 @@
     בחר לקוחות
   </button>
   <div style="" class="dropdown-menu ddpad" aria-labelledby="dropdownMenuButton">
+    {{ Form::radio('typeOfDocument', 'receipt' , true) }}  קבלה
+    <br>
+      {{ Form::radio('typeOfDocument', 'invoice' , false) }}  חשבונית
+      <hr>
+
     {{ Form::checkbox('checkAll' ,'Clear/Fill','checked',['id' => 'checkAll','class' => 'menu-item'])}}
     {{ Form::label('checkAll', 'Clear/Fill', ['class' => 'menu-item']) }}<br>
+
 <hr>
     @foreach($data['clients'] as $client)
     {{ Form::checkbox($client->id, $client->name,['class' => 'menu-item'])}}

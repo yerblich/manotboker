@@ -39,24 +39,36 @@
      <div class=" hebwrapper">
 
 
-       <h1><div style="text-align:center">הופמן</div><div style="text-align:center">חשבונית מס</div></h1>
+       <h1><div style="text-align:center">הופמן</div></h1>
+         @if ($data['typeOfDocument'] == 'invoice')
+            <h1><div style="text-align:center">חשבונית מס</div></h1>
+        @else
+          <h1><div style="text-align:center">קבלה</div></h1>
+
+       @endif
+
+
+     @if ($data['typeOfDocument'] == 'invoice')
 <table id="dataTable" width="100%"   autosize="1" cellspacing="0">
   <tr class="topHeader">
-    @if($data["isOriginal"] == true)
-      <th> מקור</th>
-      <th>{{$data['invoiceId']}} : חשבונית מס</th>
-    @else
-      <th> העתק</th>
-      <th>{{$data['invoiceId']}} : חשבונית מס</th>
 
-    @endif
+          @if($data["isOriginal"] == true)
+            <th> מקור</th>
+            <th>{{$data['invoiceId']}} : חשבונית מס</th>
+          @else
+            <th> העתק</th>
+            <th>{{$data['invoiceId']}} : חשבונית מס</th>
+
+          @endif
+
+
   <th>    661519595 -  ע.מ</th>
 
   </tr>
 
 </table>
 
-
+ @endif
 
         <div class="table-responsive row centerTable col-12 ">
             <table class="clientInfo td-right heb  table" id="dataTable" width="100%"   autosize="1" cellspacing="1px">
@@ -201,18 +213,20 @@
 
 
 </table>
+
       </div>
       <br>
-        <table class="tfooter" width="100%" cellspacing="1"style=" border:none !important;">
-      <tr>
-        <thead>
-      <th> ________________:שם המקבל:________________ חתימה </th>
+       @if ($data['typeOfDocument'] == 'invoice')
+            <table class="tfooter" width="100%" cellspacing="1"style=" border:none !important;">
+          <tr>
+            <thead>
+          <th> ________________:שם המקבל:________________ חתימה </th>
 
-      <th>{{date("d/m/Y")}}   :תאריך רישום</th>
-      </thead>
-      </tr>
-        </table>
-
+          <th>{{date("d/m/Y")}}   :תאריך רישום</th>
+          </thead>
+          </tr>
+            </table>
+      @endif
     </div>
 
     <pagebreak>

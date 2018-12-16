@@ -382,9 +382,9 @@ public function generateMassInvoice(Request $request){
 
         //get all orders between date of created invoice
 
-        $data =  InvoiceFactory::generateInvoice($clientId,$from_date,$to_date,$invoiceId);
+      $data =  InvoiceFactory::generateInvoice($clientId,$from_date,$to_date,$invoiceId);
 
-
+        $all[$client->name]['typeOfDocument'] = $request->input('typeOfDocument');
         $all[$client->name]['orders'] = $data['orders'];
         $all[$client->name]['invoiceInfo'] = $data['invoiceInfo'];
          $all[$client->name]['from_date'] = $data['from_date'];
@@ -395,7 +395,7 @@ public function generateMassInvoice(Request $request){
         $all[$client->name]['isOriginal'] =  $data['isOriginal'];
     $invoiceId++;
      }
-    // return $all;
+
 
 
  clearstatcache();

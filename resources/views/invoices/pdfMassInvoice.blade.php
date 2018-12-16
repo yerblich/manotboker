@@ -43,7 +43,7 @@
          @if ($data['typeOfDocument'] == 'invoice')
             <h1><div style="text-align:center">חשבונית מס</div></h1>
         @else
-          <h1><div style="text-align:center">קבלה</div></h1>
+          <h1><div style="text-align:center">חשבונית</div></h1>
 
        @endif
 

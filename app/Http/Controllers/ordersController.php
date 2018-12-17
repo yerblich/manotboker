@@ -556,10 +556,10 @@ class ordersController extends Controller
 
      $orders =  Order::where('date', $orderDate)->get();
 
-     foreach($orders as $order){
-         $order->orderItems()->delete();
-         $order->delete();
-     }
+     // foreach($orders as $order){
+     //     $order->orderItems()->delete();
+     //     $order->delete();
+     // }
 
 
              foreach($clients as $client){
@@ -570,14 +570,14 @@ class ordersController extends Controller
 
                 // return $client_order;
 
-                                 // after we see order is not empty check if it already exists , if not ...
-                                   if(Order::where(['date' => $orderDate, 'client_id' => $client])->first()){
+                                //if client made order in original order
+                                   if(Order::where(['date' => $orderDate, 'client_id' => $client])->first() != ''){
+
                                     $order =  Order::where(['date' => $orderDate, 'client_id' => $client])->first();
                                     $return = ProductReturn::where('order_id' , $order->id)->first();
-                                    $order->update(['client_id' => $client]);
 
-
-                                       $orderItems = $order->orderItems()->get();
+                                    // if user delete product from order erase order item and return item
+                                    $orderItems = $order->orderItems()->get();
                                        foreach ($orderItems as $orderItem) {
                                         if(!array_key_exists($orderItem->product_id,$client_order)){
 
@@ -586,20 +586,25 @@ class ordersController extends Controller
                                                 }
 
                                        }
+                                    ////////
 
+                                    //////got through updated client order
                                          foreach($client_order as $product_id => $quantity){
+                                      ////check if product was alreayd part of order
                                          $orderItem =    orderItem::where(['order_id' => $order->id, 'product_id' => $product_id])->first();
                                            if(!$orderItem == ''){
+                                             ///update qty
                                             $orderItem->update(['quantity' => $quantity]);
                                            }else{
+                                             ///if its new add a order item
                                             $orderItem = new orderItem;
                                             $orderItem->order_id = $order->id;
                                             $orderItem->product_id = $product_id;
                                              $orderItem->quantity = $quantity;
-
-                                          $orderItem->currentPrice = Price::where(['client_id' => $client, 'product_id' => $product_id])->first()->price;
+                                            $orderItem->currentPrice = Price::where(['client_id' => $client, 'product_id' => $product_id])->first()->price;
                                             $orderItem->save();
 
+                                              /////add return item
                                             $returnItem = new returnItem;
                                             $returnItem->order_items_id = $orderItem->id;
                                             $returnItem->product_return_id = $return->id;
@@ -607,13 +612,13 @@ class ordersController extends Controller
                                             $returnItem->quantity = 0;
                                             $returnItem->currentPrice = Price::where(['client_id' => $client, 'product_id' => $product_id])->first()->price;
                                             $returnItem->save();
+
+
                                            }
-
-
-
 
                                          }
                                         }else{
+                                          //////if client did not make exist in orgiinal order
                                             if( isset($client_order) && !$client_order == "" ){
 
 

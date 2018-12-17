@@ -28,8 +28,23 @@ class ClientsController extends Controller
      */
     public function index()
     {
-      $r = "P";
-        $clients =  Client::orderBy('route', 'asc')->get();
+///removes extra returns created by mistake
+    $oids =  Order::all()->pluck('id')->toArray();
+    $prids =  ProductReturn::all()->pluck('id')->toArray();
+    foreach ($prids as $id) {
+      if(in_array($id, $oids)){
+        continue;
+      }else{
+        returnItem::where('product_return_id',$id)->delete();
+        ProductReturn::find($id)->delete();
+      }
+
+      // code...
+    }
+
+return "done";
+
+        $clients =  Client::orderBy('name', 'asc')->get();
         return view('pages.clients')->with('clients', $clients);
     }
 

@@ -9,13 +9,11 @@
   </ol>
   <div class="row">
   <div class="col-md-9" >
-      {{-- {!! Form::open(['action'=> 'ordersController@pdfSend', 'method' => 'POST']) !!}
-      {{ csrf_field() }}
+    <a class="" href="{{ url('invoices/info/allClientDebts')}}">
+      <button type="button" class="btn btn-primary">הדפס מצב חובות</button>
+    </a>
 
-      {!! Form::text('Search','',[ 'class' => ' liveFilter'] ) !!}
-   <div class="btn btn-primary">  חפש לקוחות </div>
 
-      {!! Form::close() !!} --}}
     </div>
   <div class=" col-md-3 float-rigth">
   <a class="" href="{{ url('invoice/MassInvoice')}}">
@@ -23,6 +21,8 @@
   </a>
   </div>
 </div>
+<br>
+<hr>
 
   @if(count($invoices) > 0 )
 

@@ -1,46 +1,46 @@
    <!-- Breadcrumbs-->
   <style>
-  .returnsBg{
-    background-color: #dc354547;
-  }
+          .returnsBg{
+            background-color: #dc354547;
+          }
 
- .totalsBg{
-    background-color: #60ef7159;
-  }
-    .headcol {
-      text-align: center;
-      height: 49px;
-    position: absolute;
-    width: 15.3em;
-    margin-left: -219px;
-    background-color: white;
-    z-index: 1;
-    }
-    tr:nth-child(even) {background: #CCC}
-tr:nth-child(odd) {background: #FFF}
-table, th, td {
-   border: 1px solid black;
+         .totalsBg{
+            background-color: #60ef7159;
+          }
+            .headcol {
+              text-align: center;
+              height: 49px;
+            position: absolute;
+            width: 15.3em;
+            margin-left: -219px;
+            background-color: white;
+            z-index: 1;
+            }
+            tr:nth-child(even) {background: #CCC}
+        tr:nth-child(odd) {background: #FFF}
+        table, th, td {
+           border: 1px solid black;
 
 
-}
-.img{
-        width:2%;
-        height:2%;
-      }
-      .td-right td{
-        text-align:right;
-        border:none;
-      }
-      .clientInfo td{
-        width: 50%;
+        }
+        .img{
+                width:2%;
+                height:2%;
+              }
+              .td-right td{
+                text-align:right;
+                border:none;
+              }
+              .clientInfo td{
+                width: 50%;
 
-      }
+              }
   </style>
 
   <div class="table-responsive row centerTable col-12 ">
       <table class="clientInfo td-right heb  table" id="dataTable" width="100%" cellspacing="0">
         <tr>
-            <td> {{$pdfData['supplier']->email}} : מייל</td>
+            <td> {{ $pdfData['supplier']->email}} : מייל</td>
         <td>   שם לקוח  :{{$pdfData['supplier']->name}}</td>
         </tr>
         <tr>
@@ -80,7 +80,7 @@ table, th, td {
               </tfoot>
             </table>
 
-          </div>
+        </div>
           <br>
 
  @foreach ($pdfData['names'] as $page => $productArray)
@@ -89,16 +89,13 @@ table, th, td {
   <div class="table-responsive">
       <table class="table-bordered table table-striped" id="dataTable" width="100%" cellspacing="0">
 
-                  <thead>
-
-                      <tr>
-                        <th>תאריך</th>
+      <thead>
+        <tr>
+            <th>תאריך</th>
         @foreach ($pdfData['names'][$page] as  $name => $id)
 
-                      <th>{{$name}}</th>
-                      <th class= "returnsBg">ח</th>
-                    
-
+            <th>{{$name}}</th>
+            <th class= "returnsBg">ח</th>
 
         @endforeach
       </tr>
@@ -109,13 +106,13 @@ table, th, td {
               <tr>
               <th style="white-space:nowrap">{{$date}}</th>
               @foreach ($array[$page] as $id => $quantity)
-              <th>{{$quantity}}</th>
+              <td>{{$quantity}}</td>
               @if(array_key_exists($date,$pdfData['missingProducts']))
                 @if(array_key_exists($page,$pdfData['missingProducts'][$date]))
-              <th class= "returnsBg">{{$pdfData['missingProducts'][$date][$page][$id]}}</th>
-              @endif
+                  <td class= "returnsBg">{{$pdfData['missingProducts'][$date][$page][$id]}}</td>
+                @endif
               @else
-              <th class= "returnsBg">0</th>
+                <td class= "returnsBg">0</td>
               @endif
               @endforeach
             </tr>

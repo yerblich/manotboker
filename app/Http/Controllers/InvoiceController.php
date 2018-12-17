@@ -28,7 +28,9 @@ use InvoiceFactory;
 
 class InvoiceController extends Controller
 {
-    /**
+
+
+/**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -70,7 +72,7 @@ class InvoiceController extends Controller
 return redirect()->route('invoices.show', [$invoice_exists->id])->with('error','חשבונית כבר קיימת');
 
  }
-   $data =  InvoiceFactory::generateInvoice($clientId,$from_date,$to_date,$invoiceId);
+     $data =  InvoiceFactory::generateInvoice($clientId,$from_date,$to_date,$invoiceId);
 
 
   //return $data;
@@ -645,6 +647,27 @@ $pdf->stream( 'originalCopyPdf.pdf'  );
             Client::find($clientId)->update(['debt' => 0, 'credit' => 0]);
          }
        }
+
+       public function allClientDebts(){
+         $clients = Client::orderBy('name', 'asc')->get();
+         foreach ($clients as $client) {
+          $debt = 0;
+           $lastInvoice = Invoice::where('client_id', $client->id)->orderBy('created_at','asc')->first();
+
+           if ($lastInvoice != '') {
+             $debt = $lastInvoice->debt;
+           }
+
+           $allDebts[$client->name]['lastInvoice'] = $debt ;
+           $allDebts[$client->name]['totalDebt'] = $client->debt;
+         }
+         PDF::loadView('clients.allClientDebtsPdf', compact('allDebts'))
+          ->save( storage_path('app/public/admin/allClientDebts.pdf')  );
+                 return view('clients.allClientDebts');
+//return $allDebts;
+       }
+
+
 
 
 }

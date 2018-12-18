@@ -193,6 +193,15 @@
   </div>
 </div>
 
+<div class="row">
+
+  <div class="col-12">
+<object  data="{{asset("storage/pdfInvoices/detailedInvoice.pdf")}}" type="application/pdf" width="100%" height="500">
+  <iframe src="{{asset("storage/pdfInvoices/detailedInvoice.pdf")}}" width="100%" height="600"></iframe>
+</object>
+</div>
+</div>
+
       @endsection
       @section('overwriteAlert')
 

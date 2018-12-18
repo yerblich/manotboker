@@ -384,7 +384,7 @@ class ClientsController extends Controller
  //return $productNames;
 
        //  return $allOrdersArray;
-    $data = array(
+       $data = array(
         'overWriteAlert' => $overWriteAlert,
            'client' => $client,
            'orders' => $orders,
@@ -395,6 +395,56 @@ class ClientsController extends Controller
            'from_date' => Carbon::parse($from_date)->format('d-m-Y'),
            'to_date' => Carbon::parse($to_date)->format('d-m-Y')
        );
+
+       /////for pdf 
+$namePage = 1;
+foreach ($productNames as $id => $name) {
+  $pagedNames[$namePage][$id] = $name;
+  if(count($pagedNames[$namePage]) == 7){
+    $namePage++;
+  }
+}
+//return $pagedNames;
+
+       foreach ($allOrdersArray as $date => $array) {
+$ordersPage = 1;
+         foreach ($array['orders'] as $productId => $qty) {
+
+           $pagedOrders[$date]['orders'][$ordersPage][$productId] = $qty;
+           if (count($pagedOrders[$date]['orders'][$ordersPage]) == 7){
+             $ordersPage++;
+           }
+         }
+       $returnsPage = 1;
+         foreach ($array['returns'] as $productId => $qty) {
+
+           $pagedOrders[$date]['returns'][$returnsPage][$productId] = $qty;
+           if (count($pagedOrders[$date]['returns'][$returnsPage]) == 7){
+             $returnsPage++;
+           }
+         }
+
+       }
+       $otPagen= 1;
+       foreach ($productOrderTotals as $productId => $array) {
+         $pagedOrderTotals[$otPagen][$productId] = $array;
+         if(count($pagedOrderTotals[$otPagen]) == 7){
+           $otPagen++;
+         }
+       }
+
+    //    return $pagedOrders;
+       $data['pagedOrderTotals'] = $pagedOrderTotals;
+       $data['pagedNames'] =$pagedNames;
+       $data['pagedOrders'] =$pagedOrders;
+// return $data;
+       $pdf = PDF::loadView('clients.detailedInvoice', compact('data'),[],
+        [
+
+          'format' => 'A4-L',
+          'orientation' => 'L'
+        ])->save( storage_path('app/public/pdfInvoices/detailedInvoice.pdf')  );
+
 
        return view('clients.clientSearch')->with('data', $data);
     }

@@ -45,7 +45,7 @@ class MissingProductsController extends Controller
      */
     public function create(Request $request )
     {
-      // $request ;
+    // $request ;
        $supplierId =$request->input('supplierId');
        $date =   Carbon::parse($request->input('date'))->format('Y-m-d');
        $exist = MissingProduct::where(['supplier_id'=> $supplierId, 'date' => $date])->first();

@@ -61,7 +61,7 @@
   <tbody>
 
 
-
+{{--  --}}
     @foreach($data['pagedOrders'] as $orderDate => $orderAndReturns)
 
        <tr>
@@ -70,7 +70,7 @@
 
                         @foreach($orderAndReturns['orders'][$page] as $productId => $qty)
                       <td>{{$qty}}</td>
-                    @if(array_key_exists('returns', $orderAndReturns))
+                    @if(array_key_exists('returns', $orderAndReturns ))
                       <td class="table-danger">{{$orderAndReturns['returns'][$page][$productId]}}</td>
 
                       @else

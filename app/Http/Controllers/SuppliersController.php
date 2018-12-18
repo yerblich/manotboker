@@ -207,7 +207,6 @@ foreach ($currentMonthMissing as $missingDay) {
 
 
 
-      return "I still Need to do a couple of things for the reports , should be done today! --Yossi";
 
         $supplier = Supplier::find($supplier_id);
         $from_date = Carbon::parse($request->input('from_date'))->format('Y-m-d');
@@ -240,7 +239,7 @@ foreach ($currentMonthMissing as $missingDay) {
                   return redirect()->route('suppliers.show',$supplier->id)->with('error','לא נמצאו הזמנות בתאריכים אלו');
                 }
                foreach ($productsInOrders as $key => $productId) {
-                  $names[Product::find($productId)->name] = $productId;
+                $names[Product::find($productId)->name] = $productId;
                   }
 
                $currentMonthMissing = MissingProduct::whereBetween('date',[$from_date,$to_date])->get();
@@ -276,11 +275,11 @@ foreach ($currentMonthMissing as $missingDay) {
 
 
 
-                      if(!orderItem::whereIn('order_id', $currentOrderDate)->where('product_id',$productId)->first() == ''){
+                  //    if(!orderItem::whereIn('order_id', $currentOrderDate)->where('product_id',$productId)->first() == ''){
 
                    $orderItems =  orderItem::whereIn('order_id', $currentOrderDate)->where('product_id',$productId)->get();
 
-                    $costForProduct = $orderItems->sum(function($t){
+                 $costForProduct = $orderItems->sum(function($t){
                     return $t->quantity * $t->c_supplier_price;
                     });
 
@@ -288,13 +287,14 @@ foreach ($currentMonthMissing as $missingDay) {
                     $quantity = orderItem::whereIn('order_id', $currentOrderDate)->where('product_id',$productId)->sum('quantity');
 
                      $ordersCost[Carbon::parse($order->date)->format('d-m-Y')][$productId] = $costForProduct;
-                   }
-                   $orders[Carbon::parse($order->date)->format('d-m-Y')][$productId] = $quantity;
+                     $orders[Carbon::parse($order->date)->format('d-m-Y')][$productId] = $quantity;
                   }
 
 
 
+
               }
+
               foreach ($productsInOrders as $key => $productId) {
                   $missingSums[$productId] =  array_sum(array_column($missingProducts,$productId));
                  $orderSums[$productId] =  array_sum(array_column($orders,$productId));

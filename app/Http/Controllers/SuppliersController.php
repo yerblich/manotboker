@@ -205,6 +205,10 @@ foreach ($currentMonthMissing as $missingDay) {
     public function missingProductsReport(Request $request, $supplier_id)
     {
 
+
+
+      return "I still Need to do a couple of things for the reports , should be done today! --Yossi";
+
         $supplier = Supplier::find($supplier_id);
         $from_date = Carbon::parse($request->input('from_date'))->format('Y-m-d');
         $to_date = Carbon::parse($request->input('to_date'))->format('Y-m-d');
@@ -273,6 +277,7 @@ foreach ($currentMonthMissing as $missingDay) {
 
 
                       if(!orderItem::whereIn('order_id', $currentOrderDate)->where('product_id',$productId)->first() == ''){
+
                    $orderItems =  orderItem::whereIn('order_id', $currentOrderDate)->where('product_id',$productId)->get();
 
                     $costForProduct = $orderItems->sum(function($t){

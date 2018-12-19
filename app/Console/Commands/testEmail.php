@@ -37,6 +37,6 @@ class testEmail extends Command
      */
     public function handle()
     {
-      echo "testEmail";
+      echo "testEmail \n";
     }
 }

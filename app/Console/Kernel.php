@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('command:testEmail')
         ->appendOutputTo(storage_path() . '/queue.log')
-                 ->everyMinute()->withoutOverlapping();
+                 ->everyMinute();
 
 
             //      $schedule->command('queue:work --daemon --once  ')

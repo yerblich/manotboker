@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+ use Illuminated\Console\WithoutOverlapping;
 
 class Kernel extends ConsoleKernel
 {
@@ -25,7 +26,15 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('command:testEmail')
-                 ->everyMinute();
+        ->appendOutputTo(storage_path() . '/queue.log')
+                 ->everyMinute()->withoutOverlapping();
+
+
+            //      $schedule->command('queue:work --daemon --once  ')
+            //
+            // ->name('some_name')
+            // ->withoutOverlapping()->everyMinute();
+
     }
 
     /**

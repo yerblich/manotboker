@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-      
+
     ];
 
     /**
@@ -26,8 +26,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('command:testEmail')
-        ->appendOutputTo(storage_path() . '/queue.log')
-                 ->everyTenMinutes();
+    
 
 
                  $schedule->command('queue:work --daemon --once --tries=1 ')

@@ -19,6 +19,7 @@ use Lava;
 use Illuminate\Support\Facades\Mail;
 use Khill\Lavacharts\Lavacharts;
 
+
 class ClientsController extends Controller
 {
     /**
@@ -28,6 +29,7 @@ class ClientsController extends Controller
      */
     public function index()
     {
+
 /////////removes extra returns created by mistake
 //     $oids =  Order::all()->pluck('id')->toArray();
 //     $prids =  ProductReturn::all()->pluck('id')->toArray();
@@ -396,7 +398,7 @@ class ClientsController extends Controller
            'to_date' => Carbon::parse($to_date)->format('d-m-Y')
        );
 
-       /////for pdf 
+       /////for pdf
 $namePage = 1;
 foreach ($productNames as $id => $name) {
   $pagedNames[$namePage][$id] = $name;

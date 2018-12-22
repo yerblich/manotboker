@@ -27,14 +27,17 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('command:testEmail')
         ->appendOutputTo(storage_path() . '/queue.log')
-                 ->everyMinute();
+                 ->everyTenMinutes();
 
 
-            //      $schedule->command('queue:work --daemon --once  ')
-            //
-            // ->name('some_name')
-            // ->withoutOverlapping()->everyMinute();
+                 $schedule->command('queue:work --daemon --once --tries=1 ')
+                 ->everyMinute()
+                 ->appendOutputTo(storage_path() . '/queue.log');
 
+                 // $schedule->command('queue:work --daemon --tries=3  ')
+                 // ->everyMinute()
+                 // ->appendOutputTo(storage_path() . '/queue.log')
+                 // ->WithoutOverlapping();
     }
 
     /**

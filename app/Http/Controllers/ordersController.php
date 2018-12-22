@@ -11,7 +11,9 @@ use App\returnItem;
 use App\Price;
 use App\Client;
 use App\Supplier;
+use App\Jobs\sendOrderJob;
 use Carbon\Carbon;
+use App\Mail\sendOrder;
 use Utils;
 use Schema;
 use Illuminate\Support\Facades\Storage;
@@ -177,23 +179,25 @@ class ordersController extends Controller
 
          $data['suppliers'] =  Supplier::all();
          $date =  Carbon::parse($data['date'])->format('Y-m-d');
-        $data['timesSent']  = $timesSent =   Order::where('date',$date)->first()->sent;
-       foreach($data['suppliers'] as $data['supplier']){
-           if($request->input($data['supplier']->id) ){
 
+      $timesSent =   Order::where('date',$date)->first()->sent;
+       foreach($data['suppliers'] as $supplier){
+           if($request->input($supplier->id) ){
+        $attachment =       url('storage/pdf/order'. $data['date'].'.pdf');
+             dispatch(new sendOrderJob($supplier,$data['date'],$timesSent,$attachment));
 
-        Mail::send('orders.supplierEmail', $data, function($message) use ($data){
-
-            $message->from('sales@manotboker.com');
-            $message->to($data['supplier']->email);
-            if( $data['timesSent'] > 0){
-                $message->subject('order '. $data['date'].'('. $data['timesSent'].')');
-            }else{
-                $message->subject('order '. $data['date']);
-            }
-
-            $message->attach( url('storage/pdf/order'. $data['date'].'.pdf') );
-        });
+        // Mail::send('orders.supplierEmail', $data, function($message) use ($data){
+        //
+        //     $message->from('sales@manotboker.com');
+        //     $message->to($data['supplier']->email);
+        //     if( $data['timesSent'] > 0){
+        //         $message->subject('order '. $data['date'].'('. $data['timesSent'].')');
+        //     }else{
+        //         $message->subject('order '. $data['date']);
+        //     }
+        //
+        //     $message->attach( url('storage/pdf/order'. $data['date'].'.pdf') );
+        // });
     }
        }
 

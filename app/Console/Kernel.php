@@ -26,10 +26,10 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('command:testEmail')
-    
 
 
-                 $schedule->command('queue:work --daemon --once --tries=1 ')
+
+                 $schedule->command('queue:work --daemon --once --tries=2 ')
                  ->everyMinute()
                  ->appendOutputTo(storage_path() . '/queue.log');
 

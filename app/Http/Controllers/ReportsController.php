@@ -70,7 +70,7 @@ class ReportsController extends Controller
 
         $messageText = 'הדוח נשמר';
         $messageType = 'success';
-        if($request->input('send')){
+        if($request->input('send') != ''){
 
             $data = array(
                 'supplier' => $supplier,

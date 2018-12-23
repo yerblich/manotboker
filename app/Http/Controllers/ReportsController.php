@@ -13,6 +13,8 @@ use App\MissingProduct;
 use App\MissingProductItem;
 use App\MissingReport;
 use Illuminate\Support\Facades\Mail;
+use App\Jobs\sendEmailJob;
+use App\Mail\sendEmail;
 
 class ReportsController extends Controller
 {
@@ -78,14 +80,19 @@ class ReportsController extends Controller
                 'to_date' => $request->input('to_date')
 
             );
+              $contactInfo = $data['supplier'];
+              $view = 'emails.missingReport';
+              $attachmentUrl = url('storage/missingReportsPdf/mReport'.$data['from_date']. '~~' . $data['to_date'] .'.pdf');
+              $subject = 'Missing Products '. $data['from_date']. 'To'.$data['to_date'];
 
-            Mail::send('emails.missingReport', $data, function($message) use ($data){
-
-                $message->from('sales@manotboker.com');
-                $message->to($data['supplier']['email']);
-                $message->subject('Missing Products '. $data['from_date']. 'To'.$data['to_date'] );
-                $message->attach(  url('storage/missingReportsPdf/mReport'.$data['from_date']. '~~' . $data['to_date'] .'.pdf')  );
-            });
+               dispatch(new sendEmailJob($contactInfo,$view,$subject,$attachmentUrl));
+            // Mail::send('emails.missingReport', $data, function($message) use ($data){
+            //
+            //     $message->from('sales@manotboker.com');
+            //     $message->to($data['supplier']['email']);
+            //     $message->subject('Missing Products '. $data['from_date']. 'To'.$data['to_date'] );
+            //     $message->attach(  url('storage/missingReportsPdf/mReport'.$data['from_date']. '~~' . $data['to_date'] .'.pdf')  );
+            // });
             $messageText = 'דווח נשלח';
             $messageType = 'success';
         }

@@ -97,8 +97,8 @@
 <div class="row">
 
     <div class="col-12">
-  <object  data="{{asset("storage/pdfInvoices/".$client->name."/invoice".$invoice->id.".pdf")}}" type="application/pdf" width="100%" height="500">
-    <iframe id = "pdfFrame" name="pdfFrame"    src="{{asset("storage/pdfInvoices/".$client->name."/invoice".$invoice->id.".pdf")}}" width="100%" height="600"></iframe>
+  <object  data="{{asset("storage/pdfInvoices/".$client->id."/invoice".$invoice->id.".pdf")}}" type="application/pdf" width="100%" height="500">
+    <iframe id = "pdfFrame" name="pdfFrame"    src="{{asset("storage/pdfInvoices/".$client->id."/invoice".$invoice->id.".pdf")}}" width="100%" height="600"></iframe>
   </object>
   </div>
   </div>

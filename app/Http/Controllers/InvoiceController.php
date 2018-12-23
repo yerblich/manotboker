@@ -24,6 +24,8 @@ use App\Order;
 use Illuminate\Support\Facades\Storage;
 use File;
 use InvoiceFactory;
+use App\Jobs\sendEmailJob;
+use App\Mail\sendEmail;
 //use Illuminate\Support\Facades\Request;
 
 class InvoiceController extends Controller
@@ -117,7 +119,7 @@ return redirect()->route('invoices.show', [$invoice_exists->id])->with('error','
 
         $invoice->save();
 
-  	$path =  storage_path('app/public/pdfInvoices/'.$client->name) ;
+  	$path =  storage_path('app/public/pdfInvoices/'.$client->id) ;
 
            if (!File::exists($path))
             {
@@ -126,7 +128,7 @@ return redirect()->route('invoices.show', [$invoice_exists->id])->with('error','
             $data['invoiceId'] = $invoice->id;
             $data['isOriginal'] = false;
         $pdf = PDF::loadView('clients.pdfInvoice', compact('data'))
-        ->save( storage_path('app/public/pdfInvoices/'.$client->name.'/invoice'.$invoice->id.'.pdf')  );
+        ->save( storage_path('app/public/pdfInvoices/'.$client->id.'/invoice'.$invoice->id.'.pdf')  );
 
 
 
@@ -143,13 +145,21 @@ return redirect()->route('invoices.show', [$invoice_exists->id])->with('error','
         if(isset($sent)){
             $data['invoiceId'] = $invoice->id;
             $data['client'] = $client;
-        Mail::send('orders.supplierEmail', $data, function($message) use ($data){
 
-            $message->from('sales@manotboker.com');
-            $message->to($data['client']->email);
-            $message->subject('invoice '. $data['from_date']. 'To'.$data['to_date'] );
-            $message->attach(  url('storage/pdfInvoices/'.$data['client']->name.'/invoice'.$data['invoiceId'].'.pdf')  );
-        });
+            $contactInfo = $data['client'];
+            $view = 'orders.supplierEmail';
+            $attachmentUrl = url('storage/pdfInvoices/'.$data['client']->id.'/invoice'. $data['invoice_id'].'.pdf');
+            $subject = 'invoice '. $data['from_date']. 'To'.$data['to_date'];
+
+             dispatch(new sendEmailJob($contactInfo,$view,$subject,$attachmentUrl));
+
+        // Mail::send('orders.supplierEmail', $data, function($message) use ($data){
+        //
+        //     $message->from('sales@manotboker.com');
+        //     $message->to($data['client']->email);
+        //     $message->subject('invoice '. $data['from_date']. 'To'.$data['to_date'] );
+        //     $message->attach(  url('storage/pdfInvoices/'.$data['client']->id.'/invoice'.$data['invoiceId'].'.pdf')  );
+        // });
         $messageText = "חשבון נשלחה";
     $invoice->update(['sent' => 1]);
     }
@@ -198,14 +208,19 @@ return redirect()->route('invoices.show', [$invoice_exists->id])->with('error','
          $data['client'] =  Client::find($id);
        // return  $data['supplier']->email;
      //  foreach($data['suppliers'] as $data['supplier']){
+     $contactInfo = $data['client'];
+     $view = 'orders.supplierEmail';
+     $attachmentUrl = url('storage/pdfInvoices/'.$data['client']->id.'/invoice'. $data['invoice_id'].'.pdf');
+     $subject = 'invoice '. $data['from_date']. 'To'.$data['to_date'];
 
-        Mail::send('orders.supplierEmail', $data, function($message) use ($data){
-
-            $message->from('sales@manotboker.com');
-            $message->to($data['client']->email);
-            $message->subject('invoice '. $data['from_date']. 'To'.$data['to_date'] );
-            $message->attach(  asset('storage/pdfInvoices/'.$data['client']->name.'/invoice'. $data['invoice_id'].'.pdf')  );
-        });
+      dispatch(new sendEmailJob($contactInfo,$view,$subject,$attachmentUrl));
+        // Mail::send('orders.supplierEmail', $data, function($message) use ($data){
+        //
+        //     $message->from('sales@manotboker.com');
+        //     $message->to($data['client']->email);
+        //     $message->subject('invoice '. $data['from_date']. 'To'.$data['to_date'] );
+        //     $message->attach(  asset('storage/pdfInvoices/'.$data['client']->name.'/invoice'. $data['invoice_id'].'.pdf')  );
+        // });
        //}
        $findInvoiceID = Invoice::where([
         'client_id' => $data['client']->id,
@@ -441,7 +456,7 @@ public function saveMassInvoice(Request $request){
            }
 
 
-          $path =  storage_path('app/public/pdfInvoices/'.$clientArray['client']['name']) ;
+          $path =  storage_path('app/public/pdfInvoices/'.$clientArray['client']['id']) ;
 
            if (!File::exists($path))
             {
@@ -451,7 +466,7 @@ public function saveMassInvoice(Request $request){
             $data['invoiceId'] = $invoice->id;
               $data['isOriginal'] = false;
            $pdf = PDF::loadView('clients.pdfInvoice', compact('data'))
-               ->save( storage_path('app/public/pdfInvoices/'.$clientArray['client']['name'].'/invoice'.$invoice->id.'.pdf')  );
+               ->save( storage_path('app/public/pdfInvoices/'.$clientArray['client']['id'].'/invoice'.$invoice->id.'.pdf')  );
 
 
 
@@ -467,14 +482,22 @@ public function saveMassInvoice(Request $request){
            $sent = $request->input('send');
            if(isset($sent)){
                $data['invoiceId'] = $invoice->id;
-               $data['clientName'] = $clientArray['client']['name'];
-           Mail::send('orders.supplierEmail', $data, function($message) use ($data){
+               $data['clientId'] = $clientArray['client']['id'];
 
-               $message->from('sales@manotboker.com');
-               $message->to($data['client']['email']);
-               $message->subject('invoice '. $data['from_date']. 'To'.$data['to_date'] );
-               $message->attach(  url('storage/pdfInvoices/'.$data['clientName'].'/invoice'.$data['invoiceId'].'.pdf')  );
-           });
+
+               $contactInfo = $data['client'];
+               $view = 'orders.supplierEmail';
+               $attachmentUrl = url('storage/pdfInvoices/'. $data['clientId'].'/invoice'. $data['invoice_id'].'.pdf');
+               $subject = 'invoice '. $data['from_date']. 'To'.$data['to_date'];
+
+                dispatch(new sendEmailJob($contactInfo,$view,$subject,$attachmentUrl));
+           // Mail::send('orders.supplierEmail', $data, function($message) use ($data){
+           //
+           //     $message->from('sales@manotboker.com');
+           //     $message->to($data['client']['email']);
+           //     $message->subject('invoice '. $data['from_date']. 'To'.$data['to_date'] );
+           //     $message->attach(  url('storage/pdfInvoices/'.$data['clientId'].'/invoice'.$data['invoiceId'].'.pdf')  );
+           // });
            $messageText = "חשבונית נשלחה";
            $invoice->update(['sent' => 1]);
        }

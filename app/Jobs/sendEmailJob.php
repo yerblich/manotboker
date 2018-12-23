@@ -1,35 +1,34 @@
 <?php
 
 namespace App\Jobs;
-use App\Supplier;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\sendOrder;
+use App\Mail\sendEmail;
 
-class sendOrderJob implements ShouldQueue
+
+class sendEmailJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    protected $supplier;
-    protected $date;
-    protected $timesSent;
+    protected $contactInfo;
+    protected $view;
+    public $subject;
     protected $attachment;
-
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Supplier $supplier, $date, $timesSent,$attachment)
+    public function __construct($contactInfo,$view,$subject,$attachment)
     {
-      $this->supplier = $supplier;
-      $this->date = $date;
-      $this->timesSent = $timesSent;
-        $this->attachment = $attachment;
-
+      $this->contactInfo = $contactInfo;
+      $this->view = $view;
+      $this->subject = $subject;
+      $this->attachment = $attachment;
     }
 
     /**
@@ -39,7 +38,6 @@ class sendOrderJob implements ShouldQueue
      */
     public function handle()
     {
-
-        Mail::to(   $this->supplier->email)->send(new sendOrder($this->date, $this->timesSent,$this->attachment));
+          Mail::to(   $this->contactInfo->email)->send(new sendEmail($this->contactInfo, $this->view,$this->subject, $this->attachment));
     }
 }

@@ -37,7 +37,7 @@ class sendEmail extends Mailable
       return $this->view($this->view)
       ->from('sales@manotboker.com')
       ->subject($this->subject )
-      ->attach('http://manotboker.local/storage/pdfInvoices/test/invoice262.pdf' , [
+      ->attach($this->attachment , [
 
                         'mime' => 'application/pdf'
                     ]);

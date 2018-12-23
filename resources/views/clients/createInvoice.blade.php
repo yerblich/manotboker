@@ -26,16 +26,16 @@
     }
     </style>
   </ol>
-  <div class="row">
+  <div style="display:none" class="row">
 
-<!-- <div  class="col-md-5 text-right"> {!! Form::open(['action'=>[ 'InvoiceController@update', $data['client']->id ],'method' => 'POST']) !!}
+ <div  class="col-md-5 text-right"> {!! Form::open(['action'=>[ 'InvoiceController@store', $data['client']->id ],'onSubmit' =>' $(window).unbind("beforeunload")','id'=> 'postPrint','method' => 'POST']) !!}
     {{ csrf_field() }}
 
     {!! Form::hidden('data', json_encode($data,TRUE)) !!}
-    {!! Form::text('amountPaid') !!}
-    {{Form::submit(' שולם',  ['name' => 'paid','class' => 'btn btn-primary'])}}
-    @method('PUT')
-    {!! Form::close() !!}</div> -->
+
+    {{Form::submit('save',  ['name' => 'paid','class' => 'btn btn-primary'])}}
+
+    {!! Form::close() !!}</div>
 </div>
 
 <hr>
@@ -109,7 +109,7 @@
 <div class="row">
 
   <div class="col-12">
-<object  data="{{asset("storage/pdfInvoices/invoicePreview.pdf")}}" type="application/pdf" width="100%" height="500">
+<object  data="{{asset("storage/pdfInvoices/invoicePreview.pdf#toolbar=0")}}" type="application/pdf" width="100%" height="500">
   <iframe id = "pdfFrame" name="pdfFrame" src="{{asset("storage/pdfInvoices/invoicePreview.pdf")}}" width="100%" height="600"></iframe>
 </object>
 </div>

@@ -17,7 +17,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', "PagesController@index");
 Route::post('/orders/create', "ordersController@create");
 
-Route::post('/returns/create', "returnsController@create");
+Route::post('/returns/create', "ReturnsController@create");
 //Route::post('/orders/pdfDownload', "ordersController@pdfDownload");
 Route::get('/orders/pdfDownload', "ordersController@pdfDownload");
 Route::post('/orders/pdfSave', "ordersController@pdfSave");

@@ -44,7 +44,7 @@ class ReturnsController extends Controller
     public function create(Request $request)
     {
 
-
+//test
       $products['daily'] = Product::where(['active' => 1, 'type' => '1' ])->orderBy('type', 'desc')->get();
       $products['shabbos'] = Product::where(['active' => 1, 'type' => '0' ])->orderBy('type', 'desc')->get();
       $products['american'] = Product::where(['active' => 1, 'type' => '2' ])->orderBy('type', 'desc')->get();
@@ -192,7 +192,7 @@ class ReturnsController extends Controller
 
                                       foreach($client_return as $productId => $quantity){
                                        $returnItem =   returnItem::where(['product_return_id' => $returnCheck->id, 'product_id' => $productId ])->first();
-                                       
+
 
                                        if ($returnItem == '') {
                                            $returnItem = new returnItem;

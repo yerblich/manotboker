@@ -1,5 +1,16 @@
 @extends('layouts.main')
 @section('content')
+
+
+  <style>
+.datepicker{
+  width: 94%;
+padding: 1%;
+}
+.go{
+  padding: 1%;
+}
+  </style>
   <!-- Breadcrumbs-->
   <ol class="breadcrumb">
     <li class="breadcrumb-item">
@@ -7,25 +18,26 @@
     </li>
 
   </ol>
+
+
   <div class="row">
-      <div class=" col-md-9 ">
-          {{-- <a class="" href="{{ url('returns/create')}}">
-            <button type="button" class="btn btn-primary">Create Return</button>
-          </a> --}}
+      <div class=" col-md-12 ">
+        {!! Form::open(['action'=> 'ReturnsController@create', 'method' => 'POST']) !!}
+        {{ csrf_field() }}
+        {{Form::text('date',null,   ['class' => 'datepicker ', 'autocomplete' => 'off'])}}
+
+
+        {{ Form::button('<i class="fa fa-arrow-circle-right" aria-hidden="true"></i>', ['class' => 'btn btn-primary btn-lg ', 'type' => 'submit']) }}
+
+        {!! Form::close() !!}
           </div>
-  <div class="col-md-3 " >
-      {{-- {!! Form::open(['action'=> 'ordersController@pdfSend', 'method' => 'POST']) !!}
-      {{ csrf_field() }}
 
-      {{Form::submit('חפש',  ['class' => 'datepicker btn btn-primary'])}}
-      {!! Form::text('date',null,['class' => 'datepicker ', 'autocomplete' => 'off'] ) !!}
 
-      {!! Form::close() !!} --}}
-    </div>
+
 
 </div>
 
-
+{{--
 
     @if(count($returns) > 0 )
     @foreach($returns as $date => $object )
@@ -54,7 +66,7 @@
 
   @else
     <p class="text-right"> לא נמצאו חזרות </p>
-  @endif
+  @endif --}}
 
 
 
@@ -62,3 +74,8 @@
 
 
       @endsection
+      @section('js')
+
+
+
+    @stop

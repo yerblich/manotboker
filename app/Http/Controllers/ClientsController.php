@@ -289,7 +289,7 @@ class ClientsController extends Controller
             $productNames[$productId] = Product::find($productId)->name;
         }
         foreach($orders as $order){
-          $return = $order->return()->first();
+      $return = $client->returns()->where('date', $order->date)->first();
 
           $orderItems[$client->name] =  orderItem::where('order_id',$order->id)->get();
           if(!$return == ''){

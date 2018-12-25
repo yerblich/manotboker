@@ -46,11 +46,11 @@
         <br>
           {{ Form::radio('typeOfDocument', 'delivery' , false) }}  תעודת משלוח
         <hr>
-        {{ Form::checkbox('checkAll' ,'Clear/Fill','checked',['id' => 'checkAll','class' => 'menu-item'])}}
+        {{ Form::checkbox('checkAll' ,'Clear/Fill','checked',['id' => 'checkAll','class' => ' checkAll menu-item'])}}
         {{ Form::label('checkAll', 'Clear/Fill', ['class' => 'menu-item']) }}<br>
       <hr>
         @foreach($data['clients'] as $client)
-        {{ Form::checkbox($client->id, $client->name,['class' => 'menu-item'])}}
+        {{ Form::checkbox($client->id, $client->name,['class' => ' check menu-item'])}}
         {{ Form::label($client->id, $client->name, ['class' => 'menu-item']) }}<br>
 
         @endforeach
@@ -73,8 +73,11 @@
     שלח הזמנה
     </button>
     <div class="dropdown-menu ddpad" aria-labelledby="dropdownMenuButton">
+      {{ Form::checkbox('checkAll' ,'Clear/Fill','checked',['id' => 'checkAll','class' => ' checkAll menu-item'])}}
+      {{ Form::label('checkAll', 'Clear/Fill', ['class' => 'menu-item']) }}<br>
+    <hr>
       @foreach($data['suppliers'] as $supplier)
-      {{ Form::checkbox($supplier->id, $supplier->name,['class' => 'menu-item'])}}
+      {{ Form::checkbox($supplier->id, $supplier->name,['class' => 'check menu-item'])}}
       {{ Form::label($supplier->id, $supplier->name, ['class' => 'menu-item']) }}<br>
 
       @endforeach

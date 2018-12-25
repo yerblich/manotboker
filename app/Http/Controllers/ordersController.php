@@ -39,7 +39,7 @@ class ordersController extends Controller
 
 
 
-    $orderArray = [];
+          $orderArray = [];
           $allOrders =   Order::distinct()->orderBy('date')->get(['date']);
 
             foreach($allOrders as $order){
@@ -277,8 +277,8 @@ class ordersController extends Controller
                         if($orderCheck == null){
 
                             $order =   Utils::saveOrderToDatabase($newDateformat,$client,$parsha,$day);
-                            $return = Utils::saveReturnToDatabase($newDateformat,$client,$order);
-                            $orderItems = Utils::saveOrderItemsAndReturnItemsToDatabase($client_order,$order,$request,$client,$return);
+                          //  $return = Utils::saveReturnToDatabase($newDateformat,$client,$order);
+                            $orderItems = Utils::saveOrderItemsAndReturnItemsToDatabase($client_order,$order,$request,$client);
 
 
                             $messageCode = 'success';

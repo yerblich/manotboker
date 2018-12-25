@@ -24,10 +24,9 @@ class Utils
 
 
 
-      public static function saveReturnToDatabase($newDateformat,$client, $order){
+      public static function saveReturnToDatabase($newDateformat,$client){
         $return = new ProductReturn;
         $return->date = $newDateformat;
-        $return->order_id = $order->id;
         $return->client_id = $client;
         $return->save();
         return $return;
@@ -35,7 +34,7 @@ class Utils
 
 
 
-       public static function saveOrderItemsAndReturnItemsToDatabase($client_order,$order,$request,$client,$return){
+       public static function saveOrderItemsAndReturnItemsToDatabase($client_order,$order,$request,$client){
 
         foreach($client_order as $productId => $quantity){
             $orderItem = new orderItem;
@@ -46,11 +45,27 @@ class Utils
           $orderItem->currentPrice = Price::where(['client_id' => $client, 'product_id' => $productId])->first()->price;
             $orderItem->save();
 
+            // $returnItem = new returnItem;
+            // $returnItem->order_items_id = $orderItem->id;
+            // $returnItem->product_return_id = $return->id;
+            // $returnItem->product_id = $productId;
+            // $returnItem->quantity = 0;
+            // $returnItem->currentPrice = Price::where(['client_id' => $client, 'product_id' => $productId])->first()->price;
+            // $returnItem->save();
+
+
+
+        }
+       }
+       public static function saveReturnItemsToDatabase($client_return,$return,$request,$client){
+
+        foreach($client_return as $productId => $quantity){
+
             $returnItem = new returnItem;
-            $returnItem->order_items_id = $orderItem->id;
+
             $returnItem->product_return_id = $return->id;
             $returnItem->product_id = $productId;
-            $returnItem->quantity = 0;
+            $returnItem->quantity = $quantity;
             $returnItem->currentPrice = Price::where(['client_id' => $client, 'product_id' => $productId])->first()->price;
             $returnItem->save();
 
@@ -100,7 +115,18 @@ class Utils
         }
         return $client_order;
     }
+    public static function createClientReturnArray($products, $request, $client){
+        $client_return = [];
+        foreach($products as $key => $product_id ){
 
+            if($request->input($client ."_". $product_id) >= 0 &&  $request->input($client ."_". $product_id) !== null){
+
+                $client_return[$product_id] =  $request->input($client ."_". $product_id);
+
+         }
+        }
+        return $client_return;
+    }
 public static function prefix_product($supplierName,$productNameInput,$type){
   $prefix = $supplierName;
 

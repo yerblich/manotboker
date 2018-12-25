@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductReturn extends Model
 {
 
-
+  
 
     protected $dates = ['date'];
     public function order(){

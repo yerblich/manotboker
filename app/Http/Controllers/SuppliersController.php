@@ -254,7 +254,9 @@ foreach ($currentMonthMissing as $missingDay) {
 
                       $missingProducts[Carbon::parse($missing->date)->format('d-m-Y')][$productId] =  $missingItem->quantity;
                       $missingCosts[Carbon::parse($missing->date)->format('d-m-Y')][$productId] =  $missingItem->quantity *  $missingItem->current_price ;
-                      }
+                    }else{
+                        $missingProducts[Carbon::parse($missing->date)->format('d-m-Y')][$productId] =  $quantity;
+                    }
                   }
 
 
@@ -319,7 +321,7 @@ foreach ($currentMonthMissing as $missingDay) {
                   'names' => $names
               );
               //return $data;
-          $pdfData =   $this->pdfWrapper($data, $supplier,$from_date,$to_date);
+    $pdfData =   $this->pdfWrapper($data, $supplier,$from_date,$to_date);
               $mpdf = new \Mpdf\Mpdf();
               $mpdf = PDF::loadView('missingProducts.missingProductsPdf', compact('pdfData'));
               $mpdf->save( storage_path('app/public/missingReportsPdf/mReport'.$from_date. '~~' . $to_date .'.pdf')  );

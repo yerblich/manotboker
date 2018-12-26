@@ -109,7 +109,10 @@
               <td>{{$quantity}}</td>
               @if(array_key_exists($date,$pdfData['missingProducts']))
                 @if(array_key_exists($page,$pdfData['missingProducts'][$date]))
-                  <td class= "returnsBg">{{$pdfData['missingProducts'][$date][$page][$id]}}</td>
+                  @if(array_key_exists($id,$pdfData['missingProducts'][$date][$page]))
+                    <td class= "returnsBg">{{$pdfData['missingProducts'][$date][$page][$id]}}</td>
+
+                  @endif
                 @endif
               @else
                 <td class= "returnsBg">0</td>

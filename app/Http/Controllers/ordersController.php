@@ -578,14 +578,14 @@ class ordersController extends Controller
                                    if(Order::where(['date' => $orderDate, 'client_id' => $client])->first() != ''){
 
                                     $order =  Order::where(['date' => $orderDate, 'client_id' => $client])->first();
-                                    $return = ProductReturn::where('order_id' , $order->id)->first();
+                                  //  $return = ProductReturn::where('order_id' , $order->id)->first();
 
                                     // if user delete product from order erase order item and return item
                                     $orderItems = $order->orderItems()->get();
                                        foreach ($orderItems as $orderItem) {
                                         if(!array_key_exists($orderItem->product_id,$client_order)){
 
-                                            returnItem::where('order_items_id',$orderItem->id)->delete();
+
                                             $orderItem->delete();
                                                 }
 
@@ -608,14 +608,14 @@ class ordersController extends Controller
                                             $orderItem->currentPrice = Price::where(['client_id' => $client, 'product_id' => $product_id])->first()->price;
                                             $orderItem->save();
 
-                                              /////add return item
-                                            $returnItem = new returnItem;
-                                            $returnItem->order_items_id = $orderItem->id;
-                                            $returnItem->product_return_id = $return->id;
-                                            $returnItem->product_id = $product_id;
-                                            $returnItem->quantity = 0;
-                                            $returnItem->currentPrice = Price::where(['client_id' => $client, 'product_id' => $product_id])->first()->price;
-                                            $returnItem->save();
+                                            //   /////add return item
+                                            // $returnItem = new returnItem;
+                                            // $returnItem->order_items_id = $orderItem->id;
+                                            // $returnItem->product_return_id = $return->id;
+                                            // $returnItem->product_id = $product_id;
+                                            // $returnItem->quantity = 0;
+                                            // $returnItem->currentPrice = Price::where(['client_id' => $client, 'product_id' => $product_id])->first()->price;
+                                            // $returnItem->save();
 
 
                                            }
@@ -629,8 +629,8 @@ class ordersController extends Controller
                                                 $parsha = $request->input('parsha');
                                                 $day =  $request->input('day');
                                      $order =   Utils::saveOrderToDatabase($orderDate,$client, $parsha, $day);
-                                  $return = Utils::saveReturnToDatabase($orderDate,$client,$order);
-                                  $orderItems = Utils::saveOrderItemsAndReturnItemsToDatabase($client_order,$order,$request,$client,$return);
+                                //  $return = Utils::saveReturnToDatabase($orderDate,$client,$order);
+                                  $orderItems = Utils::saveOrderItemsAndReturnItemsToDatabase($client_order,$order,$request,$client);
 
 
                                             }

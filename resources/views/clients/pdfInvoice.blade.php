@@ -130,7 +130,7 @@
   </tfoot>
   </table>
 
-  @if (count($data['prevProductsQty']) > 0)
+  @if (max($data['prevProductsQty']) > 0)
     <br>
     <div style=" width:100%;">
 

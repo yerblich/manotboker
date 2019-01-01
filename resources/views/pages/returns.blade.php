@@ -19,7 +19,7 @@ padding: 1%;
 
   </ol>
 
-
+<h3 style="text-align:center">חזרות מחודש הנוכחי</h3>
   <div class="row">
       <div class=" col-md-12 ">
         {!! Form::open(['action'=> 'ReturnsController@create', 'method' => 'POST']) !!}
@@ -31,6 +31,29 @@ padding: 1%;
 
         {!! Form::close() !!}
           </div>
+
+
+
+
+</div>
+<br/>
+<br/>
+<br/>
+
+
+<h3 style="text-align:center">חזרות מחודש קודם</h3>
+<div class="row">
+    <div class=" col-md-12 ">
+      {!! Form::open(['action'=> 'ReturnsController@create', 'method' => 'POST']) !!}
+      {{ csrf_field() }}
+      {{Form::text('date',null,   ['class' => 'datepicker ', 'autocomplete' => 'off'])}}
+      {{Form::hidden('prevMonth',1)}}
+
+
+      {{ Form::button('<i class="fa fa-arrow-circle-right" aria-hidden="true"></i>', ['class' => 'btn btn-primary btn-lg ', 'type' => 'submit']) }}
+
+      {!! Form::close() !!}
+        </div>
 
 
 

@@ -10,6 +10,7 @@ use App\Invoice;
 use App\orderItem;
 use App\returnItem;
 use App\ProductReturn;
+use App\PrevReturnItem;
 use App\Order;
 use PDF;
 use Input;
@@ -260,7 +261,9 @@ class ClientsController extends Controller
 //    }
 
         $client = Client::find($id);
-        $orders = $client->orders()->whereBetween('date',[$from_date,$to_date])->orderBy('date')->get();
+         $orders = $client->orders()->whereBetween('date',[$from_date,$to_date])->orderBy('date')->pluck('date')->toArray();
+       $returns = $client->returns()->whereBetween('date',[$from_date,$to_date])->orderBy('date')->pluck('date')->toArray();
+         $ordersAndReturns =  array_unique(array_merge($orders,$returns));
         if(!count($orders)){
             return redirect()->route('clients.show',$id)->with('error','לא נמצאו הזמנות לתאריכים אלה');
         }
@@ -271,7 +274,8 @@ class ClientsController extends Controller
         $products_array = [];
         $orders_array = [];
         $returns_array = [];
-        foreach($orders as $order){
+        foreach($orders as $date){
+          $order = $client->orders()->where('date' ,$date->format('Y-m-d'))->first();
             $allOrderItems[$order->id] = orderItem::where('order_id',$order->id)->get();
             foreach($allOrderItems as $id => $itemArray){
                 foreach($itemArray as  $item){
@@ -288,43 +292,51 @@ class ClientsController extends Controller
         foreach($products_array as $productId){
             $productNames[$productId] = Product::find($productId)->name;
         }
-        foreach($orders as $order){
-      $return = $client->returns()->where('date', $order->date)->first();
+        foreach($ordersAndReturns as $key => $date){
+        $orderItems[$date->format('d-m-Y')] = [];
+        $returnItems[$date->format('d-m-Y')] =[];
 
-          $orderItems[$client->name] =  orderItem::where('order_id',$order->id)->get();
+          $order = $client->orders()->where('date', $date->format('Y-m-d'))->first();
+          if(!$order == ''){
+          $orderItems[$date->format('d-m-Y')] =  orderItem::where('order_id',$order->id)->get();
+          $orderItemlist = $orderItems[$date->format('d-m-Y')];
+}
+          $return = $client->returns()->where('date', $date->format('Y-m-d'))->first();
           if(!$return == ''){
-            $returnItems[$client->name] =  returnItem::where('product_return_id',$return->id)->get();
-            $returnItemlist = $returnItems[$client->name];
+            $returnItems[$date->format('d-m-Y')] =  returnItem::where('product_return_id',$return->id)->get();
+             $returnItemlist = $returnItems[$date->format('d-m-Y')];
           }
 
 
-          $orderItemlist = $orderItems[$client->name];
 
-          //return $orderItems;
-           //return $products_array;
+
+
+        //   return $products_array;
 
             foreach($products_array as $product){
                 $product_id = $product;
                 $qty = 0;
                 if(!$return == ''){
                 foreach($returnItemlist as $returnItem){
-                     $returnItem;
+
 
                         // find the product inside the orderitems , if exists
                         if($returnItem->product_id == $product_id ){
                            //set to quantity
                             $qty = $returnItem->quantity;
-                        }
+                          }
                         }    //else its stays at default 0
                     }
-                 $returns_array[$product_id] = $qty;
+              $returns_array[$product_id] = $qty;
 
 
 
 
             }
 
-         // return $returns_array;
+        //  return $returns_array;
+
+
 
 
 
@@ -333,39 +345,48 @@ class ClientsController extends Controller
 
                 $product_id = $product;
                 $quantity = 0;
+                if(!$order == ''){
+                  foreach($orderItemlist as $orderItem){
 
-                foreach($orderItemlist as $orderItem){
+                      if($orderItem->product_id == $product_id ){
+                          //set to quantity
 
-                    if($orderItem->product_id == $product_id ){
-                        //set to quantity
+                           $quantity = $orderItem->quantity;
 
-                         $quantity = $orderItem->quantity;
-
+                       }
+                       //else its stays at default 0
                      }
-                     //else its stays at default 0
 
-                     $order_array[$product_id] = $quantity;
                 }
                     // find the product inside the orderitems , if exists
-
+                    $order_array[$product_id] = $quantity;
 
 
 
             }
+          //  return $order_array;
           //  return array_sum($order_array);
 
-            $allOrdersArray[$order->date->format('d-m-Y')]['orders'] = $order_array  ;
+            $allOrdersArray[$date->format('d-m-Y')]['orders'] = $order_array  ;
 
-                $allOrdersArray[$order->date->format('d-m-Y')]['returns'] = $returns_array;
+                $allOrdersArray[$date->format('d-m-Y')]['returns'] = $returns_array;
 
 
-
+                                // foreach ($returnItems[$client->name] as $returnItem) {
+                                //     $date =  $order->date->format('d-m-Y');
+                                //   if (!in_array($returnItem->product_id, $products_array)) {
+                                //    $soloReturns[$date][$returnItem->product_id] = $returnItem->quantity;
+                                //   }
+                                //
+                                // }
 
 
         }
 
+  //return $orderItems;
 
-
+ // return $allOrdersArray;
+// return $soloReturns;
     foreach($allOrdersArray as $test){
         foreach($test['returns'] as $id => $amount){
             $currentReturnsAmount[$id] = $amount;
@@ -383,10 +404,37 @@ class ClientsController extends Controller
         $productOrderTotals[$product] = ['orders'=> array_sum(array_column($allOrderAmounts,$product)),
                                          'returns' => array_sum(array_column($allReturnsAmounts,$product))  ] ;
     }
- //return $productNames;
+ // return $returnItems;
+
+$prevReturnsArray = [];
+ $prevReturns = $client->PrevReturns()->whereBetween('date',[$from_date,$to_date])->get();
+ $prevReturnIds = $client->PrevReturns()->whereBetween('date',[$from_date,$to_date])->pluck('id')->toArray();
+ $allProductsInPrevReturns = PrevReturnItem::whereIn('prev_return_id', $prevReturnIds)->pluck('product_id')->toArray();
+  $prevProducts = array_unique($allProductsInPrevReturns);
+ foreach ($prevReturns as $prevReturn) {
+
+   foreach ($prevProducts as $key => $productId) {
+     $quantity = 0;
+      $product = $prevReturn->PrevReturnItems()->where('product_id',$productId)->first();
+if ($product !== null) {
+  $quantity = $product->quantity;
+}
+      $prevReturnsArray[Carbon::parse($prevReturn->date)->format('d-m-Y')][Product::find($productId)->name] = $quantity;
+      if ($quantity > 0) {
+        $prevProductsNames[Product::find($productId)->name] = $productId;
+
+      }
+      $prevProductsTotals[Product::find($productId)->name] = PrevReturnItem::whereIn('prev_return_id', $prevReturnIds)->where('product_id',$productId)->sum('quantity');
+   }
+ }
+ //return $prevProductsTotals;
+
 
        //  return $allOrdersArray;
        $data = array(
+         'prevProductsTotals' => $prevProductsTotals,
+         'prevProductsNames' => $prevProductsNames,
+         'prevReturnsArray' =>$prevReturnsArray,
         'overWriteAlert' => $overWriteAlert,
            'client' => $client,
            'orders' => $orders,
@@ -439,6 +487,9 @@ $ordersPage = 1;
        $data['pagedOrderTotals'] = $pagedOrderTotals;
        $data['pagedNames'] =$pagedNames;
        $data['pagedOrders'] =$pagedOrders;
+
+
+
 // return $data;
        $pdf = PDF::loadView('clients.detailedInvoice', compact('data'),[],
         [

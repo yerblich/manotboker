@@ -61,7 +61,7 @@ class InvoiceController extends Controller
 
      $invoiceId = InvoiceFactory::getCurrentIncrement();
         //get client ids and dates
-    $req =  array('data' => json_decode($request->data));
+   $req =  array('data' => json_decode($request->data));
    $clientId =  $req['data']->client->id;
   $from_date = Carbon::parse($req['data']->from_date)->format('Y-m-d') ;
    $to_date =  Carbon::parse($req['data']->to_date)->format('Y-m-d') ;
@@ -99,7 +99,7 @@ return redirect()->route('invoices.show', [$invoice_exists->id])->with('error','
 
      $from_date = Carbon::parse($data['from_date'])->format('Y-m-d') ;
      $to_date =  Carbon::parse($data['to_date'])->format('Y-m-d') ;
-        $debt = $data['totalToPay'];
+        $debt = $data['totalToPay'] - $data['totalReturnCredit'];
 
       $exist =   Invoice::where(['client_id' => $clientId,'from_date' => $from_date , 'to_date' => $to_date])->first();
     // return $clientId;

@@ -8,6 +8,7 @@ use App\Price;
 use App\orderItem;
 use App\returnItem;
 use App\Supplier;
+use App\PrevReturnItem;
 use Carbon\Carbon;
 use DB;
 
@@ -30,7 +31,8 @@ if(Invoice::latest()->first()){
 
 
 public static function generateInvoice($clientId,$from_date,$to_date, $invoiceId){
-
+  $prevProductsQty = [];
+  $prevProductsCosts = [];
   $client = Client::find($clientId);
      //get all orders between date of created invoice
         $orders = $client->orders()->whereBetween('date',[$from_date,$to_date])->get();
@@ -38,10 +40,21 @@ public static function generateInvoice($clientId,$from_date,$to_date, $invoiceId
    $orders = null;
  }
       $orderIds = $client->orders()->whereBetween('date',[$from_date,$to_date])->pluck('id')->toArray();
-     //""
+
       $returns = $client->returns()->whereBetween('date',[$from_date,$to_date])->get();
      $returnIds = $client->returns()->whereBetween('date',[$from_date,$to_date])->pluck('id')->toArray();
 
+     $prevReturnIds = $client->PrevReturns()->whereBetween('date',[$from_date,$to_date])->pluck('id')->toArray();
+     $allProductsInPrevReturns = PrevReturnItem::whereIn('prev_return_id', $prevReturnIds)->pluck('product_id')->toArray();
+     $prevProducts = array_unique($allProductsInPrevReturns);
+foreach ($prevProducts as $productId) {
+  $currentProductItems = PrevReturnItem::whereIn('prev_return_id', $prevReturnIds)->where('product_id', $productId)->get();
+    $prevProductsQty[Product::find($productId)->name] =  PrevReturnItem::whereIn('prev_return_id', $prevReturnIds)->where('product_id', $productId)->sum('quantity');
+    $prevProductsCosts[Product::find($productId)->name] = $currentProductItems->sum(function($t){
+       return $t->quantity * $t->currentPrice;
+     });
+}
+// return $prevProductsQty;
       //initialize
          $totalToPay = [];
          $products = Product::all();
@@ -64,7 +77,7 @@ public static function generateInvoice($clientId,$from_date,$to_date, $invoiceId
 
             $qtyOfReturns[$productId] =   array_sum(returnItem::whereIn('product_return_id', $returnIds)->where('product_id', $productId)->pluck('quantity')->toArray()) ;
 
-            $priceChanges = orderItem::whereIn('order_id', $orderIds)->where('product_id', $productId)->pluck('currentPrice')->toArray();
+             $priceChanges = orderItem::whereIn('order_id', $orderIds)->where('product_id', $productId)->pluck('currentPrice')->toArray();
              $priceAndQty = [];
              // go through the price changes -
              foreach(array_unique($priceChanges) as $prc){
@@ -120,13 +133,17 @@ public static function generateInvoice($clientId,$from_date,$to_date, $invoiceId
 
 
         }
-
-     $totalToPay =  array_sum(array_column($totalToPay, 'totalToPay'));
+//
+    $totalReturnCredit = array_sum(array_values ($prevProductsCosts ));
+     $totalToPay =  array_sum(array_column($totalToPay, 'totalToPay')) ;
 
 
 
  return       $data = array(
           // 'paid' => $invoice->paid,
+          'totalReturnCredit' => $totalReturnCredit,
+        'prevProductsQty' =>   $prevProductsQty,
+        'prevProductsCosts' =>   $prevProductsCosts,
           'isOriginal' => true,
          'invoiceId' => $invoiceId,
          'client' => $client,

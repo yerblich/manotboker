@@ -129,17 +129,64 @@
 
   </tfoot>
   </table>
-  <br>
-    <table id="dataTable" width="50%"   autosize="1" cellspacing="0">
+
+  @if (count($data['prevProductsQty']) > 0)
+    <br>
+    <div style=" width:100%;">
+
+    <table  id="dataTable" width="100%"   autosize="1" cellspacing="0">
+      <thead>
+        <tr>
+          <th> זיכוי</th>
+          <th>כמות</th>
+          <th> חזרות מחודש קודם</th>
+
+
+        </tr>
+      </thead>
+
+        @foreach ($data['prevProductsQty'] as $ProductName => $quantity)
+          @if ($quantity > 0)
+            <tr class="table-danger">
+    <td>{{number_format($data['prevProductsCosts'][$ProductName]/1.17,2)}}</td>
+               <td>{{$quantity}}</td>
+              <td>{{$ProductName}}</td>
+
+            </tr>
+          @endif
+
+        @endforeach
+<tfoot>
+{{-- <tr>
+  <td>{{number_format(array_sum(array_values($data['prevProductsCosts'])),2)}}</td>
+<td>סה״כ זיכוי</td>
+
+
+</tr> --}}
+</tfoot>
+
+
+
+
+
+
+
+    </table>
+    </div>
+  @endif
+
+  <br/>
+  <div style="float:left; width:50%;">
+    <table id="dataTable" width="99%"   autosize="1" cellspacing="0">
 
       <tr class="table-danger">
-          <td>{{number_format($data['totalToPay']  / 1.17,2)}} </td>
+          <td>{{number_format($data['totalToPay'] / 1.17 - $data['totalReturnCredit'] / 1.17,2)    }}  </td>
         <td >סה"כ</td>
 
 
       </tr>
       <tr class="table-success">
-        <td>{{ number_format(($data['totalToPay'] /  1.17) * .17,2) }}</td>
+        <td>{{ number_format(($data['totalToPay'] /  1.17 - $data['totalReturnCredit'] / 1.17) * .17,2) }}</td>
       <td > 17%  מע״מ </td>
 
 
@@ -154,7 +201,7 @@
       </tr>
 
       <tr class="table-success">
-          <td>{{($data['totalToPay']) - $data['client']['credit'] }}</td>
+          <td>{{($data['totalToPay']) - $data['client']['credit'] - $data['totalReturnCredit']   }}</td>
         <td >     סה״כ לתשלום </td>
 
 
@@ -169,14 +216,14 @@
       </tr>
 
       <tr class="table-success">
-        <td>{{$data['totalToPay'] + $data['client']['debt'] }}</td>
+        <td>{{$data['totalToPay'] + $data['client']['debt'] - $data['totalReturnCredit']  }}</td>
       <td >    סה״כ לתשלום </td>
 
 
       </tr>
       @else
         <tr class="table-success">
-          <td>{{$data['totalToPay'] }}</td>
+          <td>{{$data['totalToPay']  - $data['totalReturnCredit']  }}</td>
         <td >    סה״כ לתשלום </td>
 
 
@@ -186,7 +233,13 @@
 
     </table>
 </div>
-<br>
+<div style="text-align: right;float:right; width:49%;border:1px solid;border-radius:3px;height:150px;">:הערות</div>
+
+
+</div>
+<br/>
+  <br/>
+<br/>
   <table width="100%" border="0">
 <tr>
   <thead>

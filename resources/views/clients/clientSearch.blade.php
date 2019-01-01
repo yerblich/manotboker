@@ -65,6 +65,7 @@
           {!! Form::close() !!}
    </div> --}}
     <div class="col-md-8 text-right">
+
     {!! Form::open(['action'=>['InvoiceController@create', $data['client']->id], 'method' => 'POST',]) !!}
         {{ csrf_field() }}
 
@@ -74,13 +75,15 @@
 
         {{-- <a class="btn btn-primary" href="{{ url('/orders/pdf')}}">Download</a> --}}
        {{Form::submit('ליצור חשבונית',  ['name' => 'create','class' => 'progressBar  btn btn-primary'])}}
+
         {!! Form::close() !!}
+
  </div>
 
 
 </div>
 
-@if(!$data['orders']->all() == '')
+@if(count($data['orders']) > 0)
   <div class="table-responsive">
   <table class="table table-bordered table-responsive" id="dataTable" width="100%" cellspacing="0">
     <thead class="thead-light">

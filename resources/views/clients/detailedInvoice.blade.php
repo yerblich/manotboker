@@ -36,25 +36,26 @@
 
 </div>
 @foreach ($data['pagedNames'] as $page => $array)
-  @if(!$data['orders']->all() == '')
+  @if(count($data['orders']) > 0)
     <div class="table-responsive">
     <table  class="table table-bordered " autosize="1.6" id="dataTable" width="100%" cellspacing="0">
       <thead class="thead-light">
         <tr>
-          <th>Date</th>
+
           @if(count($data['pagedNames']) > 0 )
 
           @foreach($data['pagedNames'][$page] as $productid => $name)
 
-
-            <th>{{$name}}</th>
             <th>ח</th>
+            <th>{{$name}}</th>
+
 
           @endforeach
 
         @else
           <p> לא נמצאו מוצרים </p>
         @endif
+          <th>תאריך</th>
   </tr>
   </thead>
 
@@ -65,20 +66,21 @@
     @foreach($data['pagedOrders'] as $orderDate => $orderAndReturns)
 
        <tr>
-        <td style="white-space:nowrap">{{$orderDate}}</td>
+
 
 
                         @foreach($orderAndReturns['orders'][$page] as $productId => $qty)
-                      <td>{{$qty}}</td>
+
                     @if(array_key_exists('returns', $orderAndReturns ))
                       <td class="table-danger">{{$orderAndReturns['returns'][$page][$productId]}}</td>
 
                       @else
                       <td class="table-danger">0</td>
                       @endif
+                      <td>{{$qty}}</td>
                       @endforeach
 
-
+                      <td style="white-space:nowrap">{{$orderDate}}</td>
 
       </tr>
       @endforeach
@@ -90,31 +92,31 @@
   </tbody>
   <tfoot>
     <tr >
-        <th class="table-success">סה"כ</th>
+
 
 
 
 
                @foreach($data['pagedOrderTotals'][$page] as $product)
-
+                 <td class="table-danger">{{$product['returns']}}</td>
                        <td class="table-success">{{$product['orders']}}</td>
 
-    <td class="table-danger">{{$product['returns']}}</td>
+
 
                        @endforeach
-
+<th class="table-success">סה"כ</th>
 
     </tr>
     <tr>
-          <th>Date</th>
+
 
       @if(count($data['pagedNames']) > 0 )
 
       @foreach($data['pagedNames'][$page] as $productid => $name)
-
+  <th>ח</th>
 
         <th>{{$name}}</th>
-        <th>ח</th>
+
 
 
       @endforeach
@@ -122,6 +124,7 @@
     @else
       <p> לא נמצאו מוצרים </p>
     @endif
+      <th>תאריך</th>
     </tr>
   </tfoot>
   </table>
@@ -132,3 +135,72 @@
   @endif
   <pagebreak>
 @endforeach
+@if (count($data['prevReturnsArray']) > 0)
+
+    <div style=" width:100%;">
+<h3 style="text-align:center">חזרות מחודש קודם</h3>
+    <table id="dataTable" width="100%"   autosize="1" cellspacing="0">
+      <thead>
+        <tr>
+
+
+          @foreach ($data['prevProductsNames']  as $ProductName => $productId)
+
+
+
+                <th>{{$ProductName}}</th>
+
+
+
+          @endforeach
+
+
+
+
+<th>תאריך קבלה </th>
+        </tr>
+      </thead>
+      <tbody>
+         @foreach ($data['prevReturnsArray'] as $date => $array)
+@if (max(array_values($array)) > 0)
+  <tr class="table-danger">
+
+@foreach ($array as $ProductName => $quantity)
+@if ($quantity > 0)
+   <td>{{$quantity}}</td>
+@endif
+
+
+
+
+
+
+
+@endforeach
+  <td>{{$date}}-קיבלו ב</td>
+</tr>
+@endif
+
+
+  @endforeach
+<tbody>
+  <tfoot>
+<tr>
+@foreach ($data['prevProductsTotals'] as $name => $total)
+  @if ($total > 0)
+<td>{{$total}}</td>
+  @endif
+
+@endforeach
+<td>סה״כ</td>
+</tr>
+
+  </tfoot>
+
+
+
+
+    </table>
+    </div>
+
+@endif

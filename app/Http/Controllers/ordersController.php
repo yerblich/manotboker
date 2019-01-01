@@ -475,7 +475,7 @@ class ordersController extends Controller
        //get al clients
      $clientList = [];
      $clientIds = [];
-    $allClients =  Client::orderBy('route', 'asc')->get();
+    $allClients =  Client::orderBy('name', 'asc')->get();
 
 
     //      loop through clients and create array of the orders from yeserdays order in order to fill the form
@@ -537,6 +537,7 @@ class ordersController extends Controller
         unset($requestProducts['_token'],$requestProducts['_method']);
 
      $clients = Utils::extractClientIds($requestProducts);
+
      $products =  Product::where('active', 1)->get();
      $orderDate =  Carbon::parse($date)->format('Y-m-d');
 

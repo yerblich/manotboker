@@ -21,7 +21,7 @@
   </style>
   <ol class="breadcrumb">
     <li class="breadcrumb-item">
-      <a href="#""></a>
+      <a href="#"></a>
     </li>
 
   </ol>
@@ -63,6 +63,13 @@
 
 
   {!! Form::open(['action'=> 'ReturnsController@store', 'method' => 'POST','class' => 'form-group order' ]) !!}
+
+@if ($data['prevMonth'] == 1)
+    {{Form::hidden('prevMonth',1)}}
+
+
+@endif
+
 {{ csrf_field() }}
  <div class="row form-group">
 

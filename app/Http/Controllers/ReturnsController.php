@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\ProductReturn;
+use App\PrevReturn;
+use App\PrevReturnItem;
 use App\Client;
 use App\Order;
 use App\Product;
@@ -44,7 +46,7 @@ class ReturnsController extends Controller
     public function create(Request $request)
     {
 
-//test
+
       $products['daily'] = Product::where(['active' => 1, 'type' => '1' ])->orderBy('type', 'desc')->get();
       $products['shabbos'] = Product::where(['active' => 1, 'type' => '0' ])->orderBy('type', 'desc')->get();
       $products['american'] = Product::where(['active' => 1, 'type' => '2' ])->orderBy('type', 'desc')->get();
@@ -68,15 +70,26 @@ class ReturnsController extends Controller
     $clientList[$client->name] =[];
     $clientIds[$client->name] = $client->id;
 
+    if ($request->input('prevMonth') == 1) {
+      $return =  $client->PrevReturns()->where('date',$newDateformat)->first();
 
-    $return =  $client->returns()->where('date',$newDateformat)->first();
+    }else{
+      $return =  $client->returns()->where('date',$newDateformat)->first();
+
+    }
 
     foreach($products as $orderType => $productsArray){
 
     foreach($productsArray as $product){
       $quantity = '';
       if($return !== null){
-        $returnItem = $return->returnItems()->where('product_id', $product->id)->first();
+        if ($request->input('prevMonth') == 1) {
+          $returnItem = $return->PrevreturnItems()->where('product_id', $product->id)->first();
+
+        }else{
+          $returnItem = $return->returnItems()->where('product_id', $product->id)->first();
+
+        }
         if ($returnItem !== null ) {
           $quantity = $returnItem->quantity;
         }else{
@@ -101,10 +114,12 @@ class ReturnsController extends Controller
     }
 
     // get all products in order to create form
-    //$products = Product::where('active', 1)->orderBy('type', 'desc')->orderBy('supplier_id')->get();
-
+$prevMonth = 0;    //$products = Product::where('active', 1)->orderBy('type', 'desc')->orderBy('supplier_id')->get();
+if ($request->input('prevMonth') == 1) {
+$prevMonth = 1;
+}
        $data = array(
-
+      'prevMonth' =>  $prevMonth,
       'products' =>  $products,
       'clientList' =>  $clientList,
       'date' => Carbon::parse($newDateformat)->format('d-m-Y'),
@@ -125,9 +140,10 @@ class ReturnsController extends Controller
     public function store(Request $request)
     {
 
+
                // create array with just orders without the token and date in order to check if all fields are empty
              $requestProducts = $request->all();
-              unset($requestProducts['_token'],$requestProducts['date']);
+              unset($requestProducts['_token'],$requestProducts['date'],$requestProducts['prevMonth']);
               $requestProducts;
            //validate date
               $this->validate($request,[
@@ -165,23 +181,42 @@ class ReturnsController extends Controller
                               $client_return = [];
                               $returnItem = '';
                           // check to see if a return exists with this client id and this date
-                              $returnCheck = ProductReturn::where([
-                                  'client_id' => $client,
-                                  'date' => $newDateformat
-                          ])->first();
 
 
                           $client_return =   Utils::createClientReturnArray($products, $request, $client);
+
+
+                          $returnCheck = ProductReturn::where([
+                              'client_id' => $client,
+                              'date' => $newDateformat,
+
+                        ])->first();
+
+                        $prevReturnCheck = PrevReturn::where([
+                            'client_id' => $client,
+                            'date' => $newDateformat,
+
+                      ])->first();
+                      if ($request->input('prevMonth') == 1) {
+                        $returnCheck = $prevReturnCheck;
+                      }else{
+                        $returnCheck = $returnCheck;
+                      }
 
 
                           if( isset($client_return) && !$client_return == "" ){
 
 
                               if($returnCheck == ''){
+                                if ($request->input('prevMonth') == 1) {
+                                  $return =   Utils::savePrevReturnToDatabase($newDateformat,$client);
+                                  $returnItems = Utils::savePrevReturnItemsToDatabase($client_return,$return,$request,$client);
 
+                                }else{
                                   $return =   Utils::saveReturnToDatabase($newDateformat,$client);
-
                                   $returnItems = Utils::saveReturnItemsToDatabase($client_return,$return,$request,$client);
+
+                                }
 
 
 
@@ -191,16 +226,33 @@ class ReturnsController extends Controller
                               }else{
 
                                       foreach($client_return as $productId => $quantity){
-                                       $returnItem =   returnItem::where(['product_return_id' => $returnCheck->id, 'product_id' => $productId ])->first();
+                                        if ($request->input('prevMonth') == 1) {
+                                          $returnItem =   PrevReturnItem::where(['prev_return_id' => $returnCheck->id, 'product_id' => $productId ])->first();
+
+                                        }else{
+                                          $returnItem =   returnItem::where(['product_return_id' => $returnCheck->id, 'product_id' => $productId ])->first();
+
+                                        }
+
 
 
                                        if ($returnItem == '') {
+                                         if ($request->input('prevMonth') == 1) {
+                                           $returnItem = new prevReturnItem;
+                                           $returnItem->prev_return_id = $returnCheck->id;
+                                           $returnItem->product_id = $productId;
+                                           $returnItem->quantity = $quantity;
+                                           $returnItem->currentPrice = Price::where(['client_id' => $client, 'product_id' => $productId])->first()->price;
+                                           $returnItem->save();
+                                         }else {
                                            $returnItem = new returnItem;
                                            $returnItem->product_return_id = $returnCheck->id;
                                            $returnItem->product_id = $productId;
                                            $returnItem->quantity = $quantity;
                                            $returnItem->currentPrice = Price::where(['client_id' => $client, 'product_id' => $productId])->first()->price;
                                            $returnItem->save();
+                                         }
+
                                        }else{
 
                                          $returnItem->update([

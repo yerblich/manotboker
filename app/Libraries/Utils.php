@@ -4,6 +4,8 @@ namespace App\Libraries;
 use App\Order;
 use App\orderItem;
 use App\ProductReturn;
+use App\PrevReturn;
+use App\PrevReturnItem   ;
 use App\returnItem;
 use App\Price;
 use App\Product;
@@ -31,6 +33,13 @@ class Utils
         $return->save();
         return $return;
        }
+       public static function savePrevReturnToDatabase($newDateformat,$client){
+         $return = new PrevReturn;
+         $return->date = $newDateformat;
+         $return->client_id = $client;
+         $return->save();
+         return $return;
+        }
 
 
 
@@ -67,6 +76,26 @@ class Utils
             $returnItem->product_id = $productId;
             $returnItem->quantity = $quantity;
             $returnItem->currentPrice = Price::where(['client_id' => $client, 'product_id' => $productId])->first()->price;
+
+
+            $returnItem->save();
+
+
+
+        }
+       }
+       public static function savePrevReturnItemsToDatabase($client_return,$return,$request,$client){
+
+        foreach($client_return as $productId => $quantity){
+
+            $returnItem = new PrevReturnItem;
+
+            $returnItem->prev_return_id = $return->id;
+            $returnItem->product_id = $productId;
+            $returnItem->quantity = $quantity;
+            $returnItem->currentPrice = Price::where(['client_id' => $client, 'product_id' => $productId])->first()->price;
+
+
             $returnItem->save();
 
 

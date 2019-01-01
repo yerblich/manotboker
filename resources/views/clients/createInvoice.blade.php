@@ -81,22 +81,24 @@
 
 
 
-    <div class="col-12  ">
+    <div class="col-4  ">
       <button id= "printInvoice" class="button btn-primary">הדפס</button>
 </div>
-{{-- Download --}}
-{{-- <div class="col-4 text-center">
-      {!! Form::open(['action'=> ['InvoiceController@pdfDownload', $data['client']->id], 'method' => 'POST']) !!}
-      {{ csrf_field() }}
+<div class="col-md-8 text-right">
 
-      {!! Form::hidden('pdf', json_encode($data,TRUE)) !!}
+{!! Form::open(['action'=>['InvoiceController@create', $data['client']->id], 'method' => 'POST',]) !!}
+    {{ csrf_field() }}
 
-      {{Form::submit('Download Pdf', ['class' => 'btn btn-primary'])}}
+     {{-- {!! Form::hidden('from_date',json_encode($data['from_date'],TRUE) ) !!}
+     {!! Form::hidden('to_date',json_encode($data['to_date'],TRUE) ) !!} --}}
+     {!! Form::hidden('data', json_encode($data,TRUE)) !!}
 
-      {!! Form::close() !!}
-    </div> --}}
+    {{-- <a class="btn btn-primary" href="{{ url('/orders/pdf')}}">Download</a> --}}
+   {{Form::submit('עדכון',  ['name' => 'create','class' => 'progressBar  btn btn-primary'])}}
 
-{{-- Send --}}
+    {!! Form::close() !!}
+
+</div>
 
 
 

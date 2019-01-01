@@ -121,7 +121,7 @@
 
           <tr class="table-danger">
               <td>{{number_format($data['totalToPay'] / 1.17 ,2)    }}  </td>
-            <td >סה"כ לפני מע״ם</td>
+            <td >סה"כ לפני מע״מ</td>
 
 
           </tr>
@@ -133,7 +133,7 @@
           </tr>
           <tr class="table-danger">
               <td>{{number_format($data['totalToPay'] ,2)    }}  </td>
-            <td >סה"כ אחרי מע״ם</td>
+            <td >סה"כ אחרי מ״מ</td>
 
 
           </tr>

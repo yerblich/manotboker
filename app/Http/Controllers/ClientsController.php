@@ -407,6 +407,8 @@ class ClientsController extends Controller
  // return $returnItems;
 
 $prevReturnsArray = [];
+$prevProductsTotals =  [];
+$prevProductsNames = [];
  $prevReturns = $client->PrevReturns()->whereBetween('date',[$from_date,$to_date])->get();
  $prevReturnIds = $client->PrevReturns()->whereBetween('date',[$from_date,$to_date])->pluck('id')->toArray();
  $allProductsInPrevReturns = PrevReturnItem::whereIn('prev_return_id', $prevReturnIds)->pluck('product_id')->toArray();

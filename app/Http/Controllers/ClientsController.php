@@ -236,7 +236,9 @@ class ClientsController extends Controller
 
     public function search(Request $request ,$id){
 
-
+      $prevReturnsArray = [];
+      $prevProductsTotals = [];
+      $prevProductsNames = [];
 
         $from_date =  date('Y-m-d',strtotime($request->input('from_date')));
         $to_date = date('Y-m-d',strtotime($request->input('to_date'))) ;
@@ -406,9 +408,7 @@ class ClientsController extends Controller
     }
  // return $returnItems;
 
-$prevReturnsArray = [];
-$prevProductsTotals =  [];
-$prevProductsNames = [];
+
  $prevReturns = $client->PrevReturns()->whereBetween('date',[$from_date,$to_date])->get();
  $prevReturnIds = $client->PrevReturns()->whereBetween('date',[$from_date,$to_date])->pluck('id')->toArray();
  $allProductsInPrevReturns = PrevReturnItem::whereIn('prev_return_id', $prevReturnIds)->pluck('product_id')->toArray();

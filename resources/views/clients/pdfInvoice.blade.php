@@ -147,7 +147,7 @@
   </tfoot>
   </table>
 
-  @if (max($data['prevProductsQty']) > 0)
+  @if (array_sum(array_values($data['prevProductsQty'])) > 0)
     <br>
     <div style=" width:100%;">
 

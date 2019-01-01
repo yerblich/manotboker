@@ -81,31 +81,76 @@
 
 
 
-    <div class="col-4  ">
+    <div class="col-6  ">
       <button id= "printInvoice" class="button btn-primary">הדפס</button>
-</div>
-<div class="col-md-8 text-right">
 
-{!! Form::open(['action'=>['InvoiceController@create', $data['client']->id], 'method' => 'POST',]) !!}
+
+
+{!! Form::open(['action'=>['InvoiceController@create', $data['client']->id], 'method' => 'POST','onSubmit' =>' $(window).unbind("beforeunload")']) !!}
     {{ csrf_field() }}
 
      {{-- {!! Form::hidden('from_date',json_encode($data['from_date'],TRUE) ) !!}
      {!! Form::hidden('to_date',json_encode($data['to_date'],TRUE) ) !!} --}}
      {!! Form::hidden('data', json_encode($data,TRUE)) !!}
+     </div>
 
-    {{-- <a class="btn btn-primary" href="{{ url('/orders/pdf')}}">Download</a> --}}
-   {{Form::submit('עדכון',  ['name' => 'create','class' => 'progressBar  btn btn-primary'])}}
 
-    {!! Form::close() !!}
+
+
+<div class="col-md-6 text-right">
+  {{Form::submit('עדכון',  ['name' => 'create','class' => 'progressBar  btn btn-primary'])}}
+
+</div>
+</div>
+<div class="row">
+  <div class="col-md-2"></div>
+  <div style="text-align:right" class=" form-control col-md-3">
+    הערות
+    {!! Form::textarea('notes', null, ['id' => 'notes', 'rows' => 4, 'cols' => 35]) !!}
+
+  </div>
+
+  <div class="col-md-1"></div>
+  <div style="margin-top:2%" class="col-md-3 ">
+
+
+    <div class="input-group form-control">
+       {!! Form::select('discountType',array('percent' => '%', 'amount' => 'סכום')) !!}
+       {!! Form::text('discount',null, ['class' => 'form-control']) !!}
+       <div class="input-group-append">
+           <span class="input-group-text">הנחה</span>
+         </div>
+
+
+    </div>
+    <div class="input-group form-control">
+    {!! Form::select('feeType',array('percent' => '%', 'amount' => 'סכום')) !!}
+    {!! Form::text('fee',null, ['class' => 'form-control']) !!}
+    <div class="input-group-append">
+        <span class="input-group-text">עמלה</span>
+      </div>
 
 </div>
 
 
+ </div>
+
+ <div class="col-md-2"></div>
+
+ </div>
+
+
+    {{-- <a class="btn btn-primary" href="{{ url('/orders/pdf')}}">Download</a> --}}
+    {!! Form::close() !!}
 
 
 
 
-    </div>
+
+
+
+
+
 </div>
 <br>
 <div class="row">

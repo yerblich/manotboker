@@ -58,6 +58,12 @@ class InvoiceController extends Controller
     public function create(Request $request)
     {
 
+$request->flashOnly(['notes']);
+      $notes = '';
+      if ($request->has('notes') !== '' ) {
+
+        $notes = $request->input('notes');
+      }
 
      $invoiceId = InvoiceFactory::getCurrentIncrement();
         //get client ids and dates
@@ -78,7 +84,7 @@ return redirect()->route('invoices.show', [$invoice_exists->id])->with('error','
 
 
   //return $data;
-
+$data['notes'] = $notes;
   $pdf = PDF::loadView('clients.pdfInvoice', compact('data'))->save( storage_path('app/public/pdfInvoices/invoicePreview.pdf')  );
          return view('clients.createInvoice')->with('data', $data)->with(['from_date' => $from_date, 'to_date' => $to_date]);
     }

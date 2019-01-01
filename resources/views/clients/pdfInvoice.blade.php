@@ -119,7 +119,24 @@
 
           @endforeach
 
+          <tr class="table-danger">
+              <td>{{number_format($data['totalToPay'] / 1.17 ,2)    }}  </td>
+            <td >סה"כ לפני מע״ם</td>
 
+
+          </tr>
+          <tr class="table-success">
+            <td>{{ number_format(($data['totalToPay'] /  1.17 ) * .17,2) }}</td>
+          <td > 17%  מע״מ </td>
+
+
+          </tr>
+          <tr class="table-danger">
+              <td>{{number_format($data['totalToPay'] ,2)    }}  </td>
+            <td >סה"כ אחרי מע״ם</td>
+
+
+          </tr>
 
 
   </tbody>
@@ -148,7 +165,7 @@
         @foreach ($data['prevProductsQty'] as $ProductName => $quantity)
           @if ($quantity > 0)
             <tr class="table-danger">
-    <td>{{number_format($data['prevProductsCosts'][$ProductName]/1.17,2)}}</td>
+    <td>{{number_format($data['prevProductsCosts'][$ProductName])}}</td>
                <td>{{$quantity}}</td>
               <td>{{$ProductName}}</td>
 
@@ -179,18 +196,7 @@
   <div style="float:left; width:50%;">
     <table id="dataTable" width="99%"   autosize="1" cellspacing="0">
 
-      <tr class="table-danger">
-          <td>{{number_format($data['totalToPay'] / 1.17 - $data['totalReturnCredit'] / 1.17,2)    }}  </td>
-        <td >סה"כ</td>
 
-
-      </tr>
-      <tr class="table-success">
-        <td>{{ number_format(($data['totalToPay'] /  1.17 - $data['totalReturnCredit'] / 1.17) * .17,2) }}</td>
-      <td > 17%  מע״מ </td>
-
-
-      </tr>
 
       @if($data['client']['credit']  > 0 )
       <tr class="table-success">
@@ -233,7 +239,15 @@
 
     </table>
 </div>
-<div style="text-align: right;float:right; width:49%;border:1px solid;border-radius:3px;height:150px;">:הערות</div>
+<div style="text-align: right;float:right; width:49%;border:1px solid;border-radius:3px;height:150px;">
+  &nbsp;&nbsp;
+@if ($data['notes'] !== '')
+
+  {{$data['notes']}}
+
+@endif
+&nbsp;&nbsp;&nbsp;&nbsp;
+</div>
 
 
 </div>

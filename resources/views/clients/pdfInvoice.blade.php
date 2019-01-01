@@ -229,6 +229,12 @@
       </tr>
       @else
         <tr class="table-success">
+          <td>0.00</td>
+        <td >   הנחה</td>
+
+
+        </tr>
+        <tr class="table-success">
           <td>{{$data['totalToPay']  - $data['totalReturnCredit']  }}</td>
         <td >    סה״כ לתשלום </td>
 

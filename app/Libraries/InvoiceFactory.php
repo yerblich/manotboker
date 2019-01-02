@@ -17,20 +17,28 @@ class InvoiceFactory{
 
 public static function getCurrentIncrement(){
 
-if(Invoice::latest()->first()){
-  $invoiceId = Invoice::latest('id')->first()->id + 1;
+
+  $invoiceNum =   Invoice::orderBy('invoice_num','desc')->first()->invoice_num + 1;
+if ($invoiceNum !== '') {
+  $invoiceNum = $invoiceNum;
 }else {
-  $tableStatus =   DB::select("show table status where name='invoices' ");
-  $currentIncrement =  $tableStatus[0]->Auto_increment;
-  $invoiceId = $currentIncrement ;
+  $invoiceNum = 1;
+}
+// if(Invoice::latest()->first()){
+//   $invoiceId = Invoice::latest('id')->first()->id + 1;
+// }else {
+//   $tableStatus =   DB::select("show table status where name='invoices' ");
+//   $currentIncrement =  $tableStatus[0]->Auto_increment;
+//   $invoiceId = $currentIncrement ;
+// }
+
+  return $invoiceNum;
 }
 
-  return $invoiceId;
-}
 
 
-
-public static function generateInvoice($clientId,$from_date,$to_date, $invoiceId){
+public static function generateInvoice($clientId,$from_date,$to_date, $invoiceNum,$info){
+  //return $info;
   $prevProductsQty = [];
   $prevProductsCosts = [];
   $client = Client::find($clientId);
@@ -136,24 +144,96 @@ foreach ($prevProducts as $productId) {
 //
     $totalReturnCredit = array_sum(array_values ($prevProductsCosts ));
      $totalToPay =  array_sum(array_column($totalToPay, 'totalToPay')) ;
+     $pretax = '';
+     $notes = '';
+     $tax =   '';
+     $posttax =    '';
+     $returncredit = '';
+     $discount =  '';
+     $fee =  '';
+     $prevdebt =  '';
+     $prevcredit =  '';
+     $originality = '';
+     $discountType = '';
+     $feeType = '';
+     if ($info['source'] == 'original') {
+       if ($info['feeType'] == 'percent') {
+         $fee  = $totalToPay  * ($info['fee']/100);
+       }else {
+         $fee  =  $info['fee'];
+       }
+       if ($info['discountType'] == 'percent') {
+         $discount  =  $totalToPay  * ($info['discount']/100);
+       }else {
+         $discount  =  $info['discount'];
+       }
+     }
+
+
+     $pretax = $totalToPay /1.17;
+     $tax =  ($totalToPay/1.17) * .17;
+     $posttax =   $totalToPay;
+     $returncredit = $totalReturnCredit;
+if($info['source'] == 'original'){
+  $originality = 'original';
+  $discount = $discount;
+  $fee = $fee;
+  $notes = $info['notes'];
+  $prevdebt = $client->debt;
+  $prevcredit = $client->credit;
+  $discountType = $info['discountType'];
+  $feeType = $info['feeType'];
+
+  $grandTotal = $posttax - $returncredit - $discount  + $fee ;
+}elseif($info['source'] == 'originalCopy') {
+  $invoice =  Invoice::find($info['invoiceId']);
+  $originality = 'originalCopy';
+  $discount = $invoice->discount;
+  $notes = $invoice->notes;
+  $fee = $invoice->fee;
+  $prevdebt = $invoice->documented_debt;
+  $prevcredit = $invoice->documented_credit;
+  $discountType = $invoice->discount_type;
+  $feeType = $invoice->fee_type;
+  $invoiceNum = $invoice->invoice_num;
+  $grandTotal = $invoice->debt ;
+}else{//mass invoice
+  $originality = 'original';
+
+  $prevdebt = $client->debt;
+  $prevcredit = $client->credit;
+  $grandTotal = $posttax - $returncredit  ;
+
+}
 
 
 
  return       $data = array(
-          // 'paid' => $invoice->paid,
+            'notes' => $notes,
+            'grandTotal' => $grandTotal,
+           'pretax' =>  $pretax,
+           'tax' =>   $tax,
+           'posttax' =>    $posttax,
+           'returncredit' =>  $returncredit,
+           'discount' =>  $discount,
+           'fee' =>  $fee,
+           'prevdebt' =>  $prevdebt,
+           'prevcredit' =>  $prevcredit,
+          'discountType' => $discountType,
+          'feeType' => $feeType,
           'totalReturnCredit' => $totalReturnCredit,
         'prevProductsQty' =>   $prevProductsQty,
         'prevProductsCosts' =>   $prevProductsCosts,
-          'isOriginal' => true,
-         'invoiceId' => $invoiceId,
+          'originality' => $originality,
+         'invoiceNum' => $invoiceNum,
          'client' => $client,
          'orders' => $orders,
          'productNames' =>  $productNames,
          'products'=> $products,
          'from_date' => Carbon::parse($from_date)->format('d-m-Y'),
          'to_date' => Carbon::parse($to_date)->format('d-m-Y'),
-         'invoiceInfo' => $invoiceInfo,
-         'totalToPay' => $totalToPay
+         'invoiceInfo' => $invoiceInfo
+
      );
 
 

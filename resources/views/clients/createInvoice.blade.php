@@ -26,17 +26,7 @@
     }
     </style>
   </ol>
-  <div style="display:none" class="row">
 
- <div  class="col-md-5 text-right"> {!! Form::open(['action'=>[ 'InvoiceController@store', $data['client']->id ],'onSubmit' =>' $(window).unbind("beforeunload")','id'=> 'postPrint','method' => 'POST']) !!}
-    {{ csrf_field() }}
-
-    {!! Form::hidden('data', json_encode($data,TRUE)) !!}
-
-    {{Form::submit('save',  ['name' => 'paid','class' => 'btn btn-primary'])}}
-
-    {!! Form::close() !!}</div>
-</div>
 
 <hr>
 <div class="card clientInfo ">
@@ -81,27 +71,68 @@
 
 
 
-    <div class="col-6  ">
+    <div class="col-md-2  ">
       <button id= "printInvoice" class="button btn-primary">הדפס</button>
+    </div>
 
 
 
-{!! Form::open(['action'=>['InvoiceController@create', $data['client']->id], 'method' => 'POST','onSubmit' =>' $(window).unbind("beforeunload")']) !!}
+
+
+        <div class="col-md-8 text-center">
+          <div style="display:none" class="col-md-1 "> {!! Form::open(['action'=>[ 'InvoiceController@store', $data['client']->id ],'onSubmit' =>' $(window).unbind("beforeunload")','id'=> 'postPrint','method' => 'POST']) !!}
+            {{ csrf_field() }}
+
+            {!! Form::hidden('data', json_encode($data,TRUE)) !!}
+
+            {{Form::submit('save',  ['name' => 'paid','class' => 'btn btn-primary'])}}
+
+            </div>
+          <div style="display: none;margin-left: 35%;">
+
+          {{ Form::radio('invoiceType' ,'example',  ($invoiceType == 'example') ? true : false)}}
+          {{ Form::label('invoiceType', 'דוגמה',['style' => 'padding-right:2%']) }}
+
+
+        {{ Form::radio('invoiceType' ,'invoice',($invoiceType == 'invoice') ? true : false)}}
+        {{ Form::label('invoiceType', 'חשבונית מס', ['class' => 'form-fontrol']) }}
+
+
+
+
+      </div>
+
+        {!! Form::close() !!}
+      </div>
+
+
+
+
+ <div class="col-md-2 text-right">
+{!! Form::open(['action'=>['InvoiceController@create', $data['client']->id], 'method' => 'POST','onSubmit' =>' $(window).unbind("beforeunload")' , 'id' => 'updateInvoice']) !!}
     {{ csrf_field() }}
 
      {{-- {!! Form::hidden('from_date',json_encode($data['from_date'],TRUE) ) !!}
      {!! Form::hidden('to_date',json_encode($data['to_date'],TRUE) ) !!} --}}
      {!! Form::hidden('data', json_encode($data,TRUE)) !!}
+     {{-- {!! Form::select('invoiceType',[
+           0 => 'test1' ,
+           1 => 'test2',
+           ]
+     ,null,['class' => ' text-right custom-select'] ) !!} --}}
+
+
+       {{Form::submit('עדכון',  ['name' => 'create','class' => 'progressBar  btn btn-primary'])}}
+
+     </div>
+
      </div>
 
 
 
 
-<div class="col-md-6 text-right">
-  {{Form::submit('עדכון',  ['name' => 'create','class' => 'progressBar  btn btn-primary'])}}
 
-</div>
-</div>
+
 <div class="row">
   <div class="col-md-2"></div>
   <div style="text-align:right" class=" form-control col-md-3">
@@ -135,7 +166,17 @@
 
  </div>
 
- <div class="col-md-2"></div>
+ <div class="col-md-2" style="    margin-top: 4%;margin-left: 3%;">
+
+
+                   {{ Form::radio('invoiceType' ,'invoice',($invoiceType == 'invoice') ? true : false,['class' => 'invoiceType'])}}
+                   {{ Form::label('invoiceType', 'חשבונית מס', ['class' => 'form-fontrol']) }}
+                   <br>
+                  {{ Form::radio('invoiceType' ,'example',  ($invoiceType == 'example') ? true : false, ['class' => 'invoiceType'])}}
+                  {{ Form::label('invoiceType', 'דוגמה',['style' => 'padding-right:2%']) }}
+
+
+ </div>
 
  </div>
 
@@ -183,7 +224,7 @@
       @endsection
       @section('js')
 
-
+      <script src={{ asset('storage/js/invoiceType.js') }}></script>
       <script src={{ asset('storage/js/checkSave.js') }}></script>
       <script src={{ asset('storage/js/printInvoice.js') }}></script>
       @stop

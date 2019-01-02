@@ -41,7 +41,7 @@
           {{Form::submit('הסר',  ['class' => 'deleteAlert btn btn-primary'])}}
           {!! Form::close() !!}
         </div> --}}
-        {{-- <div class=" col-md-2 text-left" >
+        <div class=" col-md-2 text-left" >
       {!! Form::open(['action'=> ['InvoiceController@originalCopy',$invoice->id], 'method' => 'POST', 'class'=> 'postPrint']) !!}
       {{ csrf_field() }}
       {!! Form::hidden('client_id',$client->id) !!}
@@ -50,7 +50,7 @@
       {!! Form::hidden('invoice_id',$invoice->id) !!}
       {{Form::submit(' הדפס העתק נאמן למקור',  [ 'class' => 'btn btn-primary' ])}}
       {!! Form::close() !!}
-    </div> --}}
+    </div>
     <div class="col-md-1 text-left" >
   {!! Form::open(['action'=> 'InvoiceController@pdfSend', 'method' => 'POST']) !!}
   {{ csrf_field() }}

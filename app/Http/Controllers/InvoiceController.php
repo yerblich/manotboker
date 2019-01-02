@@ -26,6 +26,7 @@ use File;
 use InvoiceFactory;
 use App\Jobs\sendEmailJob;
 use App\Mail\sendEmail;
+use App\PrevReturnItem;
 //use Illuminate\Support\Facades\Request;
 
 class InvoiceController extends Controller
@@ -58,14 +59,24 @@ class InvoiceController extends Controller
     public function create(Request $request)
     {
 
-$request->flashOnly(['notes']);
-      $notes = '';
-      if ($request->has('notes') !== '' ) {
+      $invoiceType =  'invoice';
+      if ($request->has('invoiceType')) {
+        $invoiceType =  $request->input('invoiceType');
 
-        $notes = $request->input('notes');
       }
+      $request->flashOnly(['invoiceType','notes','discount','fee','discountType','feeType']);
 
-     $invoiceId = InvoiceFactory::getCurrentIncrement();
+      $info =  array(
+        'source' => 'original',
+        'notes' => $request->input('notes'),
+        'discount' => $request->input('discount'),
+        'discountType' => $request->input('discountType'),
+        'fee' => $request->input('fee'),
+        'feeType' => $request->input('feeType') ,
+       );
+
+
+     $invoiceNum = InvoiceFactory::getCurrentIncrement();
         //get client ids and dates
    $req =  array('data' => json_decode($request->data));
    $clientId =  $req['data']->client->id;
@@ -79,14 +90,19 @@ $request->flashOnly(['notes']);
 
 return redirect()->route('invoices.show', [$invoice_exists->id])->with('error','חשבונית כבר קיימת');
 
- }
-     $data =  InvoiceFactory::generateInvoice($clientId,$from_date,$to_date,$invoiceId);
+}
+
+     $data =  InvoiceFactory::generateInvoice($clientId,$from_date,$to_date,$invoiceNum, $info);
 
 
   //return $data;
-$data['notes'] = $notes;
+
+  $data['invoiceType'] =  $invoiceType;
+  //$data['discount'] = $info['discount'];
+//  $data['fee'] = $info['fee'];
+
   $pdf = PDF::loadView('clients.pdfInvoice', compact('data'))->save( storage_path('app/public/pdfInvoices/invoicePreview.pdf')  );
-         return view('clients.createInvoice')->with('data', $data)->with(['from_date' => $from_date, 'to_date' => $to_date]);
+         return view('clients.createInvoice')->with('data', $data)->with(['from_date' => $from_date, 'to_date' => $to_date,'invoiceType'=>$invoiceType]);
     }
 
     /**
@@ -98,19 +114,20 @@ $data['notes'] = $notes;
     public function store(Request $request, $clientId)
     {
 
-
+//return $request;
 
         $data =  json_decode($request->input('data'),TRUE);
-  $client = Client::find($clientId);
+        $client = Client::find($clientId);
 
-     $from_date = Carbon::parse($data['from_date'])->format('Y-m-d') ;
-     $to_date =  Carbon::parse($data['to_date'])->format('Y-m-d') ;
-        $debt = $data['totalToPay'] - $data['totalReturnCredit'];
 
-      $exist =   Invoice::where(['client_id' => $clientId,'from_date' => $from_date , 'to_date' => $to_date])->first();
+        $from_date = Carbon::parse($data['from_date'])->format('Y-m-d') ;
+        $to_date =  Carbon::parse($data['to_date'])->format('Y-m-d') ;
+          $debt = $data['grandTotal'] ;
+
+          $exist =   Invoice::where(['client_id' => $clientId,'from_date' => $from_date , 'to_date' => $to_date])->first();
     // return $clientId;
 
-    if($exist == ''){
+      if($exist == ''){
 
 
 
@@ -119,9 +136,23 @@ $data['notes'] = $notes;
         $invoice->from_date = $from_date;
         $invoice->to_date = $to_date;
         $invoice->debt = $debt;
-          $invoice->printed = true;
+        $invoice->printed = true;
+
+
+        $invoice->notes = $data['notes'];
+        $invoice->documented_debt = $data['prevdebt'];
+        $invoice->documented_credit = $data['prevcredit'];
+        $invoice->discount = $data['discount'];
+        $invoice->fee = $data['fee'];
+        $invoice->discount_type = $data['discountType'];
+        $invoice->fee_type = $data['feeType'];
+        if ($request->input('invoiceType') == 'invoice') {
+        $invoice->invoice_num = $data['invoiceNum'];
+        }
+
 
         $invoice->paid = 0;
+
 
         $invoice->save();
 
@@ -189,7 +220,7 @@ $data['notes'] = $notes;
        // $mpdf->AddFontDirectory();
         // $mpdf->WriteHTML('<h1>יחחיחי</h1>');
         // $mpdf->Output();
-     $data = array('pdf' => json_decode($request->pdf));
+        $data = array('pdf' => json_decode($request->pdf));
 
          $from_date =  $data['pdf']->from_date;
          $to_date =  $data['pdf']->to_date;
@@ -247,37 +278,37 @@ $data['notes'] = $notes;
     {
 
 
-    $invoice = Invoice::find($id);
-    $from_date = $invoice->from_date;
-    $to_date = $invoice->to_date;
-    $client = Client::find($invoice->client_id);
+        $invoice = Invoice::find($id);
+        $from_date = $invoice->from_date;
+        $to_date = $invoice->to_date;
+        $client = Client::find($invoice->client_id);
 
-        $sent = $invoice->sent;
-      $paid = $invoice->paid;
-      $debt = $invoice->debt;
-
-
+            $sent = $invoice->sent;
+          $paid = $invoice->paid;
+          $debt = $invoice->debt;
 
 
 
 
-    //   $data = array(
-    //       'paid' => $invoice->paid,
-    //     'client' => $client,
-    //     'orders' => $orders,
-    //     'productNames' =>  $productNames,
-    //     'products'=> $products,
-    //     'from_date' => Carbon::parse($from_date)->format('d-m-Y'),
-    //     'to_date' => Carbon::parse($to_date)->format('d-m-Y'),
-    //     'invoiceInfo' => $invoiceInfo,
-    //     'totalToPay' => $totalToPay
-    // );
 
-         return view('clients.clientInvoice')->with(['paid' => $paid,
-                                                     'debt' => $debt,
-                                                    'sent' => $sent,
-                                                    'from_date' => $from_date,
-                                                     'to_date' => $to_date,
+
+          //   $data = array(
+          //       'paid' => $invoice->paid,
+          //     'client' => $client,
+          //     'orders' => $orders,
+          //     'productNames' =>  $productNames,
+          //     'products'=> $products,
+          //     'from_date' => Carbon::parse($from_date)->format('d-m-Y'),
+          //     'to_date' => Carbon::parse($to_date)->format('d-m-Y'),
+          //     'invoiceInfo' => $invoiceInfo,
+          //     'totalToPay' => $totalToPay
+          // );
+
+               return view('clients.clientInvoice')->with(['paid' => $paid,
+                                                           'debt' => $debt,
+                                                          'sent' => $sent,
+                                                          'from_date' => $from_date,
+                                                           'to_date' => $to_date,
                                                       'client' => $client,
                                                       'invoice' => $invoice]);
     }
@@ -312,12 +343,12 @@ $data['notes'] = $notes;
 
 
             //$invoiceDebt = $data['data']->totalToPay -  $amountPaid ;
-    $invoice =  Invoice::find($invoiceId);
-     $invoice->update(['paid' => $amountPaid]);
+            $invoice =  Invoice::find($invoiceId);
+      $invoice->update(['paid' => $amountPaid]);
 
 
-      $this->updateBalance($invoice->client_id);
-        }
+          $this->updateBalance($invoice->client_id);
+      }
 
         return redirect()->route('invoices.show',[$invoiceId])->with('success', 'עודכן בהצלחה');
 
@@ -334,7 +365,7 @@ $data['notes'] = $notes;
       $invoice =  Invoice::find($id);
       $clientId = $invoice->client_id;
       $invoice->delete();
-     $this->updateBalance($clientId);
+      $this->updateBalance($clientId);
 
        return redirect()->route('invoices.index')->with('success','חשבונית נמחקה');
     }
@@ -389,8 +420,8 @@ public function generateMassInvoice(Request $request){
         $all = [];
 
 
-          $invoiceId = InvoiceFactory::getCurrentIncrement();
-
+        $invoiceNum = InvoiceFactory::getCurrentIncrement();
+          $info['source'] = 'massInvoice';
 
      foreach ($clients as $clientId) {
 
@@ -405,18 +436,32 @@ public function generateMassInvoice(Request $request){
 
         //get all orders between date of created invoice
 
-      $data =  InvoiceFactory::generateInvoice($clientId,$from_date,$to_date,$invoiceId);
-
-        $all[$client->name]['typeOfDocument'] = $request->input('typeOfDocument');
+      $data =  InvoiceFactory::generateInvoice($clientId,$from_date,$to_date,$invoiceNum, $info);
+      if(!$data['orders'] == ''){
+        $all[$client->name]['invoiceType'] = $request->input('invoiceType');
         $all[$client->name]['orders'] = $data['orders'];
         $all[$client->name]['invoiceInfo'] = $data['invoiceInfo'];
          $all[$client->name]['from_date'] = $data['from_date'];
          $all[$client->name]['to_date'] = $data['to_date'];
          $all[$client->name]['client'] = $client;
-        $all[$client->name]['totalToPay'] =  $data['totalToPay'];
-        $all[$client->name]['invoiceId'] =  $data['invoiceId'];
-        $all[$client->name]['isOriginal'] =  $data['isOriginal'];
-    $invoiceId++;
+        $all[$client->name]['pretax'] =  $data['pretax'];
+        $all[$client->name]['tax'] =  $data['tax'];
+        $all[$client->name]['posttax'] =  $data['posttax'];
+        $all[$client->name]['prevProductsQty'] =  $data['prevProductsQty'];
+        $all[$client->name]['prevProductsCosts'] =  $data['prevProductsCosts'];
+        $all[$client->name]['discount'] =  0;
+        $all[$client->name]['discountType'] =  '';
+        $all[$client->name]['feeType'] =  '';
+        $all[$client->name]['fee'] =  0;
+        $all[$client->name]['notes'] =  '';
+        $all[$client->name]['grandTotal'] =  $data['grandTotal'];
+        $all[$client->name]['prevdebt'] =  $data['prevdebt'];
+        $all[$client->name]['prevcredit'] =  $data['prevcredit'];
+       $all[$client->name]['invoiceNum'] =  $data['invoiceNum'];
+        $all[$client->name]['originality'] =  $data['originality'];
+    $invoiceNum++;
+      }
+
      }
 
 
@@ -439,29 +484,40 @@ public function saveMassInvoice(Request $request){
 
         $from_date = Carbon::parse($clientArray['from_date'])->format('Y-m-d') ;
         $to_date =  Carbon::parse($clientArray['to_date'])->format('Y-m-d') ;
-           $debt = $clientArray['totalToPay'];
+           $debt = $clientArray['grandTotal'];
 
 
 
            $exist =   Invoice::where(['client_id' => $clientArray['client']['id'],'from_date' => $from_date , 'to_date' => $to_date])->first();
            // return $clientId;
-
            if($exist == ''){
-            $invoice = new Invoice;
-            $invoice->client_id = $clientArray['client']['id'];
-            $invoice->from_date = $from_date;
-            $invoice->to_date = $to_date;
-            $invoice->debt = $debt;
-            $invoice->paid = 0;
-            $invoice->printed = true;
 
-            $invoice->save();
-           }else{
-            $exist->update(['debt' => $debt]);
-            $invoice = $exist;
+
+
+           $invoice = new Invoice;
+           $invoice->client_id = $clientArray['client']['id'];
+           $invoice->from_date = $from_date;
+           $invoice->to_date = $to_date;
+           $invoice->debt = $debt;
+           $invoice->printed = true;
+
+
+           $invoice->notes = $data['notes'];
+           $invoice->documented_debt = $data['prevdebt'];
+           $invoice->documented_credit = $data['prevcredit'];
+           $invoice->discount = $data['discount'];
+           $invoice->fee = $data['fee'];
+           $invoice->discount_type = $data['discountType'];
+           $invoice->fee_type = $data['feeType'];
+           $invoice->paid = 0;
+
+           if ($data['invoiceType'] == 'invoice') {
+           $invoice->invoice_num = $data['invoiceNum'];
            }
 
+           $invoice->save();
 
+        }
           $path =  storage_path('app/public/pdfInvoices/'.$clientArray['client']['id']) ;
 
            if (!File::exists($path))
@@ -518,145 +574,27 @@ public function saveMassInvoice(Request $request){
 
 }
 public function originalCopy(Request $request){
-
-   $from_date = $request->input('from_date');
-   $to_date = $request->input('to_date');
-
-  $client = Client::find($request->input('client_id'));
   $invoiceId = $request->input('invoice_id');
+  $clientId = $request->input('client_id');
+  $from_date = Carbon::parse($request->input('from_date'))->format('Y-m-d');
+  $to_date = Carbon::parse($request->input('to_date'))->format('Y-m-d');
 
+$info['source'] = 'originalCopy';
+$info['invoiceId'] = $invoiceId;
+$invoiceNum = 0;
+  $data =  InvoiceFactory::generateInvoice($clientId,$from_date,$to_date,$invoiceNum, $info);
 
-
-  $orders = $client->orders()->whereBetween('date',[$from_date,$to_date])->get();
-   //get ids of all orders
-$orderIds = $client->orders()->whereBetween('date',[$from_date,$to_date])->pluck('id')->toArray();
-//""
-$returns = $client->returns()->whereBetween('date',[$from_date,$to_date])->get();
-$returnIds = $client->returns()->whereBetween('date',[$from_date,$to_date])->pluck('id')->toArray();
-
-//initialize
-$totalToPay = [];
-   $products = Product::all();
-   $productTotal = [];
-   $productReturnTotal = [];
-   $products_array = [];
-   $orders_array = [];
-   $returns_array = [];
-
-   // get all products that exist in this invoice
-  $allProductsInInvoice = orderItem::whereIn('order_id', $orderIds)->pluck('product_id')->toArray();
-  //remove duplicates
-  $products_array  = array_unique($allProductsInInvoice);
-   //go through each product , and find any price changes within the orders and return array
-   foreach($products_array as $productId){
-       $totalTemp = [];
-      $qtyOfItemOrdered[$productId] =   array_sum(orderItem::whereIn('order_id', $orderIds)->where('product_id', $productId)->pluck('quantity')->toArray()) ;
-
-      $qtyOfReturns[$productId] =   array_sum(returnItem::whereIn('product_return_id', $returnIds)->where('product_id', $productId)->pluck('quantity')->toArray()) ;
-
-      $priceChanges = orderItem::whereIn('order_id', $orderIds)->where('product_id', $productId)->pluck('currentPrice')->toArray();
-       $priceAndQty = [];
-       // go through the price changes -
-       foreach(array_unique($priceChanges) as $prc){
-          //and find quantity of this product from all orders
-
-      $orderQtys =  orderItem::whereIn('order_id', $orderIds)->where(['product_id' => $productId, 'currentPrice' => $prc])->pluck('quantity')->toArray();
-        $returnQtys =  returnItem::whereIn('product_return_id', $returnIds)->where(['product_id' => $productId, 'currentPrice' => $prc])->pluck('quantity')->toArray();
-      // sum them up , and put into array
-       $priceAndQty[$prc] = array_sum($orderQtys) -   array_sum($returnQtys);
-       }
-
-
-       foreach($priceAndQty as $price => $qty){
-
-         array_push($totalTemp,$price * $qty);
-       }
-
-      $total =  array_sum($totalTemp);
-        // make new array with product containing price:quantity
-       $allCurrentPrices[$productId] = $priceAndQty;
-       $totalToPay[$productId]['totalToPay'] = $total;
-          }
-
-
-
-//  get names of products in order to fill form
-   foreach($products_array as $productId){
-
-       $productNames[$productId] = Product::find($productId)->name;
-        $productNames;
-   }
+$data['invoiceType'] = 'invoice';
 
 
 
 
-foreach($products_array as $product_id ){
-
-   $name =   Product::find($product_id)->name;
-    $totalToPayForProduct = $totalToPay[$product_id]['totalToPay'];
-//    return $allCurrentPrices[$product_id];
-   $invoiceInfo[$name] = array(
-        'price' =>$allCurrentPrices[$product_id],
-        'ordered' => $qtyOfItemOrdered[$product_id],
-        'returns' => $qtyOfReturns[$product_id],
-        'totalSold' => $qtyOfItemOrdered[$product_id] - $qtyOfReturns[$product_id],
-        'totalToPayForProduct' => $totalToPayForProduct
-    );
-
-  //  $totalToPay[$product_id] = $totalToPayForProduct;
-
-  }
-
-$totalToPay =  array_sum(array_column($totalToPay, 'totalToPay'));
-//     $invoice->update(['debt' =>  $totalToPay]);
-//     $allDebt = Invoice::all()->pluck('debt')->toArray();
-//     $allPaid = Invoice::all()->pluck('paid')->toArray();
-//    $balance =  array_sum($allDebt)  - array_sum($allPaid);
-//      if($balance < 0){
-//         Client::find($invoice->client_id)->update(['credit' => abs($balance), 'debt' => 0]);
-
-//      }elseif($balance > 0 ){
-//         Client::find($invoice->client_id)->update(['debt' => $balance, 'credit' => 0]);
-
-//      }else{
-//         Client::find($invoice->client_id)->update(['debt' => 0, 'credit' => 0]);
-//      }
 
 
 
-$data = array(
-    // 'paid' => $invoice->paid,
-    'isOriginal' => true,
-   'invoiceId' => $invoiceId,
-   'client' => $client,
-   'orders' => $orders,
-   'productNames' =>  $productNames,
-   'products'=> $products,
-   'from_date' => Carbon::parse($from_date)->format('d-m-Y'),
-   'to_date' => Carbon::parse($to_date)->format('d-m-Y'),
-   'invoiceInfo' => $invoiceInfo,
-   'totalToPay' => $totalToPay
-);
-$config = ['instanceConfigurator' => function($mpdf) {
-    $mpdf->SetImportUse();
-    $mpdf->percentSubset = 0;
-    $search = array(
-	'834'
+$pdf = PDF::loadView('clients.pdfInvoice', compact('data'));
 
-);
-
-$replacement = array(
-	'835',
-
-);
-    $mpdf->OverWrite('invoices.originalCopyPdf', $search, $replacement, 'I');
-}];
-
-
-
-$pdf = PDF::loadView('invoices.originalCopyPdf', compact('data'), [], $config);
-
-$pdf->stream( 'originalCopyPdf.pdf'  );
+$pdf->stream( 'pdfInvoice.pdf'  );
 
 
 

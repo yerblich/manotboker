@@ -9,9 +9,9 @@
     בחר לקוחות
   </button>
   <div style="" class="dropdown-menu ddpad" aria-labelledby="dropdownMenuButton">
-    {{ Form::radio('typeOfDocument', 'receipt' , true) }}  קבלה
+    {{ Form::radio('invoiceType', 'example' , true) }}  קבלה
     <br>
-      {{ Form::radio('typeOfDocument', 'invoice' , false) }}  חשבונית
+      {{ Form::radio('invoiceType', 'invoice' , false) }}  חשבונית
       <hr>
 
     {{ Form::checkbox('checkAll' ,'Clear/Fill','checked',['id' => 'checkAll','class' => 'checkAll menu-item'])}}

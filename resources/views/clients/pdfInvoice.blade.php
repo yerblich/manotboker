@@ -20,7 +20,13 @@
 
   </style>
 
-<h1><div style="text-align:center">הופמן</div><div style="text-align:center">חשבונית מס</div></h1>
+<h1><div style="text-align:center">הופמן</div></h1>
+@if ($data['invoiceType'] == 'invoice')
+   <h1><div style="text-align:center">חשבונית מס</div></h1>
+@else
+ <h1><div style="text-align:center">חשבונית</div></h1>
+
+@endif
 
 <div class=" heb wrapper">
 <div class="">
@@ -28,20 +34,25 @@
 
 
   @if(!$data['orders'] == '')
+     @if ($data['invoiceType'] == 'invoice')
     <table id="dataTable" width="100%"   autosize="1" cellspacing="0">
       <tr class="topHeader">
-        @if($data["isOriginal"] == true)
+        @if($data["originality"] == 'original')
           <th>מקור </th>
-          <th>{{$data['invoiceId']}} : חשבונית מס</th>
+          <th>{{$data['invoiceNum']}} : חשבונית מס</th>
+        @elseif($data["originality"] == 'originalCopy')
+          <th>העתק נאמן למקור </th>
+          <th>{{$data['invoiceNum']}} : חשבונית מס</th>
         @else
           <th>העתק </th>
-          <th>{{$data['invoiceId']}} : חשבונית מס</th>
+          <th>{{$data['invoiceNum']}} : חשבונית מס</th>
         @endif
       <th>    661519595 -  ע.מ</th>
 
       </tr>
 
     </table>
+  @endif
     <div class="table-responsive row centerTable col-12 ">
         <table class="clientInfo td-right heb table  table" id="dataTable" width="100%" cellspacing="0">
 
@@ -120,19 +131,19 @@
           @endforeach
 
           <tr class="table-danger">
-              <td>{{number_format($data['totalToPay'] / 1.17 ,2)    }}  </td>
+              <td>{{number_format($data['pretax'] ,2)    }}  </td>
             <td >סה"כ לפני מע״מ</td>
 
 
           </tr>
           <tr class="table-success">
-            <td>{{ number_format(($data['totalToPay'] /  1.17 ) * .17,2) }}</td>
+            <td>{{ number_format($data['tax'],2) }}</td>
           <td > 17%  מע״מ </td>
 
 
           </tr>
           <tr class="table-danger">
-              <td>{{number_format($data['totalToPay'] ,2)    }}  </td>
+              <td>{{number_format($data['posttax'] ,2)    }}  </td>
             <td >סה"כ אחרי מ״מ</td>
 
 
@@ -198,53 +209,58 @@
 
 
 
-      @if($data['client']['credit']  > 0 )
+
+
+
+        <tr class="table-success">
+          <td>{{number_format($data['discount'],2)}}</td>
+        <td >
+
+
+
+
+        @if ($data['discountType'] == 'percent')
+          {{$data['discount'] * 100 / $data['posttax']}}
+          %
+        @endif
+        הנחה
+      </td>
+
+
+        </tr>
+
+    
+      @if ($data['fee'] > 0)
+        <tr class="table-success">
+          <td>{{number_format($data['fee'],2)}}</td>
+        <td >
+
+
+
+
+        @if ($data['feeType'] == 'percent')
+          {{$data['fee'] * 100 / $data['posttax']}}
+          %
+        @endif
+        עמלה
+      </td>
+
+
+        </tr>
+
+      @endif
+
       <tr class="table-success">
-          <td>{{$data['client']['credit'] }}</td>
-          <td>    זכות </td>
-
-
-      </tr>
-
-      <tr class="table-success">
-          <td>{{($data['totalToPay']) - $data['client']['credit'] - $data['totalReturnCredit']   }}</td>
-        <td >     סה״כ לתשלום </td>
-
-
-      </tr>
-      @elseif($data['client']['debt'] > 0 )
-
-      <tr class="table-danger">
-        <td>{{$data['client']['debt']}}</td>
-        <td>    חוב </td>
-
-
-      </tr>
-
-      <tr class="table-success">
-        <td>{{$data['totalToPay'] + $data['client']['debt'] - $data['totalReturnCredit']  }}</td>
+        <td>{{$data['grandTotal']  }}</td>
       <td >    סה״כ לתשלום </td>
 
 
       </tr>
-      @else
-        <tr class="table-success">
-          <td>0.00</td>
-        <td >   הנחה</td>
-
-
-        </tr>
-        <tr class="table-success">
-          <td>{{$data['totalToPay']  - $data['totalReturnCredit']  }}</td>
-        <td >    סה״כ לתשלום </td>
-
-
-        </tr>
-      @endif
 
 
     </table>
 </div>
+
 <div style="text-align: right;float:right; width:49%;border:1px solid;border-radius:3px;height:150px;">
   &nbsp;&nbsp;
 @if ($data['notes'] !== '')
@@ -256,6 +272,46 @@
 </div>
 
 
+</div>
+<br>
+<div style="float:right; width:50%;">
+  <table id="dataTable" width="99%"   autosize="1" cellspacing="0">
+
+
+
+    @if($data['client']['credit']  > 0 )
+    <tr class="table-success">
+        <td>{{$data['prevcredit'] }}</td>
+        <td>    זכות קודם </td>
+
+
+    </tr>
+
+    {{-- <tr class="table-success">
+        <td>{{$data['grandTotal']   }}</td>
+      <td >     סה״כ לתשלום </td>
+
+
+    </tr> --}}
+  @endif
+
+    @if($data['client']['debt'] > 0 )
+
+      <tr class="table-danger">
+        <td>{{$data['prevdebt']}}</td>
+        <td>    חוב קודם</td>
+
+
+      </tr>
+
+      {{-- <tr class="table-success">
+        <td>{{$data['grandTotal']   }}</td>
+      <td >    סה״כ לתשלום </td>
+
+
+      </tr> --}}
+    @endif
+</table>
 </div>
 <br/>
   <br/>

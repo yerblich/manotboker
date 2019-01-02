@@ -229,7 +229,7 @@
 
         </tr>
 
-    
+
       @if ($data['fee'] > 0)
         <tr class="table-success">
           <td>{{number_format($data['fee'],2)}}</td>
@@ -295,7 +295,7 @@
     </tr> --}}
   @endif
 
-    @if($data['client']['debt'] > 0 )
+    @if($data['prevdebt'] > 0 )
 
       <tr class="table-danger">
         <td>{{$data['prevdebt']}}</td>

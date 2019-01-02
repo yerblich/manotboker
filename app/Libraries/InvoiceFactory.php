@@ -183,6 +183,7 @@ if($info['source'] == 'original'){
   $prevcredit = $client->credit;
   $discountType = $info['discountType'];
   $feeType = $info['feeType'];
+  $createdAt = date("d/m/Y");
 
   $grandTotal = $posttax - $returncredit - $discount  + $fee ;
 }elseif($info['source'] == 'originalCopy') {
@@ -197,9 +198,10 @@ if($info['source'] == 'original'){
   $feeType = $invoice->fee_type;
   $invoiceNum = $invoice->invoice_num;
   $grandTotal = $invoice->debt ;
+  $createdAt = Carbon::parse($invoice->created_at)->format('d-m-Y');
 }else{//mass invoice
   $originality = 'original';
-
+  $createdAt = date("d/m/Y");
   $prevdebt = $client->debt;
   $prevcredit = $client->credit;
   $grandTotal = $posttax - $returncredit  ;
@@ -232,7 +234,8 @@ if($info['source'] == 'original'){
          'products'=> $products,
          'from_date' => Carbon::parse($from_date)->format('d-m-Y'),
          'to_date' => Carbon::parse($to_date)->format('d-m-Y'),
-         'invoiceInfo' => $invoiceInfo
+         'invoiceInfo' => $invoiceInfo,
+         'created_at' => $createdAt
 
      );
 

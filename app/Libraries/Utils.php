@@ -104,7 +104,8 @@ class Utils
        }
 
        public static function extractClientIds($requestArray){
-
+         $temp = [];
+         $allTheRest =[];
         foreach($requestArray as $ClientId_ProductId => $amount) {
             if (is_numeric($ClientId_ProductId[0])) {
                 if($amount !== null){
@@ -118,7 +119,8 @@ class Utils
     }
 
        public static function extractProductIds($requestArray){
-
+$temp =[];
+$allTheRest = [];
         foreach($requestArray as $ClientId_ProductId => $amount) {
             if (is_numeric($ClientId_ProductId[0])) {
                 if($amount !== null){

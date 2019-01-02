@@ -169,7 +169,7 @@ $prevMonth = 1;
 
 
 
-              $newDateformat = Carbon::parse($request->input("date"))->format('Y-m-d');
+                $newDateformat = Carbon::parse($request->input("date"))->format('Y-m-d');
 
 
 
@@ -177,6 +177,7 @@ $prevMonth = 1;
 
 
                   foreach($clients as $client){
+
 
                               $client_return = [];
                               $returnItem = '';

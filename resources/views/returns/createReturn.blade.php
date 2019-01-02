@@ -150,16 +150,16 @@
 
       @foreach($products as $product)
       @if(isset($orderInfo[$orderType][$product->id]))
-      <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id,$orderInfo[$orderType][$product->id],[ 'onkeypress'=> "return isNumberKey(event)",'class' => 'amount_'. $product->id.' test form-control col-12 '.$orderType ,'style' => 'padding:1px; text-align:center'])}} </td>
+      <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id,$orderInfo[$orderType][$product->id],[ 'onkeypress'=> "return isNumberKey(event)",'class' => 'amount_'. $product->id.' test  insertZero form-control col-12 '.$orderType ,'style' => 'padding:1px; text-align:center'])}} </td>
    @else
-   <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id, '',['onkeypress'=> "return isNumberKey(event)",'class' => 'amount_'.$product->id.' test form-control col-12 '.$orderType ,'style' => 'padding:1px; text-align:center'])}} </td>
+   <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id, '',['onkeypress'=> "return isNumberKey(event)",'class' => 'amount_'.$product->id.' test  insertZero form-control col-12 '.$orderType ,'style' => 'padding:1px; text-align:center'])}} </td>
       @endif
       @endforeach
 
       @else
       @foreach($products as $product)
 
-      <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id,'',['onkeypress'=> "return isNumberKey(event)",'class' => 'amount_'.$product->id.' test form-control col-12 '.$orderType ,'style' => 'padding:0px;  text-align:center'])}} </td>
+      <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id,'',['onkeypress'=> "return isNumberKey(event)",'class' => 'amount_'.$product->id.' test insertZero  form-control col-12 '.$orderType ,'style' => 'padding:0px;  text-align:center'])}} </td>
       @endforeach
       @endif
 
@@ -213,7 +213,8 @@ var url  = '{{ route("storeOrder")}}';
 
 </script> --}}
          {{-- <script src={{ asset('storage/js/order.js') }}></script> --}}
-      <script src={{ asset('storage/js/sum.js') }}></script>
+  <script src={{ asset('storage/js/insertzero.js') }}></script>
+    <script src={{ asset('storage/js/sum.js') }}></script>
         <script src={{ asset('storage/js/isNumberKey.js') }}></script>
 <script src={{ asset('storage/js/reset.js') }}></script>
 

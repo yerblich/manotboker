@@ -8,16 +8,30 @@
 
   </ol>
   <div class="row">
-  <div class="col-md-9" >
+  <div class="col-md-2" >
     <a class="" href="{{ url('invoices/info/allClientDebts')}}">
       <button type="button" class="btn btn-primary">הדפס מצב חובות</button>
     </a>
+  </div>
 
+    <div class="col-md-3">
+  {!! Form::open(['action'=> ['InvoiceController@printInvoiceSummary'] ,'method' => 'POST']) !!}
+  {{ csrf_field() }}
+  {!! Form::text('to_date',null,['placeholder'=>'לתאריך','class' => ' form-control datepicker ', 'autocomplete' => 'off'] ) !!}
 
-    </div>
-  <div class=" col-md-3 float-rigth">
-  <a class="" href="{{ url('invoice/MassInvoice')}}">
-    <button type="button" class="btn btn-primary">ליצור חשבוניות מרובות</button>
+  </div>
+  <div class="col-md-3">
+ {!! Form::text('from_date',null,['placeholder'=>'מתאריך','class' => ' form-control datepicker ', 'autocomplete' => 'off'] ) !!}
+
+</div>
+<div class="col-md-2">
+{{Form::submit(' הדפס סיכום חשבוניות', ['class' => 'deleteAlert btn btn-primary'])}}
+{!! Form::close() !!}
+</div>
+
+  <div class=" col-md-2 ">
+  <a class="float-right" href="{{ url('invoice/MassInvoice')}}">
+    <button  type="button" class=" btn btn-primary">ליצור חשבוניות מרובות</button>
   </a>
   </div>
 </div>

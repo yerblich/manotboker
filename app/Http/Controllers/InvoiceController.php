@@ -634,6 +634,30 @@ $pdf->stream( 'pdfInvoice.pdf'  );
 //return $allDebts;
        }
 
+public function printInvoiceSummary(Request $request)
+{
+  if($request->input('from_date') == null || $request->input('to_date') == null ){
+    return redirect()->back()->with('error','Fill in Date fields');
+  }
+  $from_date = Carbon::parse($request->input('from_date'))->format('Y-m-d');
+  $to_date = Carbon::parse($request->input('to_date'))->format('Y-m-d');
+$invoicesList = [];
+   $invoices = Invoice::where('from_date', '>=', $from_date)->where('to_date', '<=', $to_date)->whereNotNull('invoice_num')->get();
+if (count($invoices) == 0) {
+  return redirect()->back()->with('error','לא נמצאו חשבוניות בתאריכים אלה');
+}
+foreach ($invoices as $invoice) {
+  $invoicesList[$invoice->invoice_num] = [
+    'clientName' => Client::find($invoice->client_id)->name ,
+    'total' => $invoice->debt,
+    'date' => Carbon::parse($invoice->created_at)->format('d-m-Y')
+  ];
+}
+//return $invoicesList;
+$pdf = PDF::loadView('invoices.printInvoicesSummaryPdf', compact('invoicesList'));
+
+$pdf->stream( 'printInvoicesSummary.pdf'  );
+}
 
 
 

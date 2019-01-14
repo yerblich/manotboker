@@ -78,6 +78,8 @@ Route::post('/invoice/generateMassInvoice', "InvoiceController@generateMassInvoi
 Route::post('/invoice/saveMassInvoice', "InvoiceController@saveMassInvoice");
 Route::post('/invoices/{id}', "InvoiceController@store");
 Route::get('/invoices/info/allClientDebts', "InvoiceController@allClientDebts")->name('allClientDebts');
+Route::post('/invoices/info/printInvoiceSummary', "InvoiceController@printInvoiceSummary")->name('printInvoiceSummary');
+
 Route::resource('prices', 'PricesController');
 
 

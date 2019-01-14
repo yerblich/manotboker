@@ -17,11 +17,11 @@
     <div class="col-md-3">
   {!! Form::open(['action'=> ['InvoiceController@printInvoiceSummary'] ,'method' => 'POST']) !!}
   {{ csrf_field() }}
-  {!! Form::text('to_date',null,['placeholder'=>'לתאריך','class' => ' form-control datepicker ', 'autocomplete' => 'off'] ) !!}
+  {!! Form::text('from_date',null,['placeholder'=>'מתאריך','class' => ' form-control datepicker ', 'autocomplete' => 'off'] ) !!}
 
   </div>
   <div class="col-md-3">
- {!! Form::text('from_date',null,['placeholder'=>'מתאריך','class' => ' form-control datepicker ', 'autocomplete' => 'off'] ) !!}
+    {!! Form::text('to_date',null,['placeholder'=>'לתאריך','class' => ' form-control datepicker ', 'autocomplete' => 'off'] ) !!}
 
 </div>
 <div class="col-md-2">

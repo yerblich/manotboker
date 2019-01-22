@@ -144,7 +144,7 @@
           </tr>
           <tr class="table-danger">
               <td>{{number_format($data['posttax'] ,2)    }}  </td>
-            <td >סה"כ אחרי מ״מ</td>
+            <td >סה"כ אחרי מע״מ</td>
 
 
           </tr>
@@ -286,6 +286,12 @@
 
 
     </tr>
+    <tr class="table-success">
+        <td>{{$data['prevcredit'] + $data['grandTotal'] }}</td>
+        <td>    המאזן עד כה </td>
+
+
+    </tr>
 
     {{-- <tr class="table-success">
         <td>{{$data['grandTotal']   }}</td>
@@ -303,7 +309,12 @@
 
 
       </tr>
+      <tr class="table-success">
+          <td>{{$data['prevdebt'] + $data['grandTotal'] }}</td>
+          <td>    המאזן עד כה </td>
 
+
+      </tr>
       {{-- <tr class="table-success">
         <td>{{$data['grandTotal']   }}</td>
       <td >    סה״כ לתשלום </td>

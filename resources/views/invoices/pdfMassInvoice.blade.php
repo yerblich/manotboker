@@ -300,6 +300,12 @@
 
 
             </tr>
+            <tr class="table-success">
+                <td>{{$data['prevcredit'] + $data['grandTotal'] }}</td>
+          <td>    המאזן עד כה </td>
+
+
+            </tr>
 
             {{-- <tr class="table-success">
                 <td>{{$data['grandTotal']   }}</td>
@@ -314,6 +320,12 @@
               <tr class="table-danger">
                 <td>{{$data['prevdebt']}}</td>
                 <td>    חוב קודם</td>
+
+
+              </tr>
+              <tr class="table-success">
+                  <td>{{$data['prevdebt'] + $data['grandTotal'] }}</td>
+                    <td>    המאזן עד כה </td>
 
 
               </tr>

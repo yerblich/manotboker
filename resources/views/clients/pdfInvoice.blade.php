@@ -294,6 +294,14 @@
 
 
       </tr>
+    @else
+      <tr class="table-success">
+          <td>{{ $data['grandTotal'] - $data['prevcredit'] }}</td>
+
+          <td>    המאזן עד כה </td>
+
+
+      </tr>
     @endif
 
 

@@ -300,12 +300,23 @@
 
 
             </tr>
-            <tr class="table-success">
-                <td>{{$data['grandTotal'] - $data['prevcredit'] }}</td>
-          <td>    המאזן עד כה </td>
+            @if ($data['grandTotal'] - $data['prevcredit'] < 0 )
+              <tr class="table-success">
+                  <td>{{ abs($data['grandTotal'] - $data['prevcredit']) }}</td>
+
+                  <td>  יתרה זכות </td>
 
 
-            </tr>
+              </tr>
+            @else
+              <tr class="table-success">
+                  <td>{{ $data['grandTotal'] - $data['prevcredit'] }}</td>
+
+                  <td>    המאזן עד כה </td>
+
+
+              </tr>
+            @endif
 
             {{-- <tr class="table-success">
                 <td>{{$data['grandTotal']   }}</td>

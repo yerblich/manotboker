@@ -287,7 +287,7 @@
 
     </tr>
     <tr class="table-success">
-        <td>{{$data['prevcredit'] + $data['grandTotal'] }}</td>
+        <td>{{ $data['grandTotal'] -$data['prevcredit'] }}</td>
         <td>    המאזן עד כה </td>
 
 

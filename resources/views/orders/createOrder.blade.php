@@ -5,8 +5,12 @@
   .table
     {
       overflow: initial;
+
   /* margin-left:15em; */
     }
+ .table tr th{
+   white-space: nowrap;
+ }
 
     thead th {
       position: sticky; top: 0; z-index: 100;

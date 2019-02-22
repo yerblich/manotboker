@@ -8,10 +8,20 @@
   /* margin-left:15em; */
     }
 
+    .table tr th{
+      white-space: nowrap;
+    }
     thead th {
       position: sticky; top: 0; z-index: 100;
     }
+    .delete{
+    padding-right: 4px;
+color: #ef2f2f94;
+    }
 
+.delete:hover{
+  color: red;
+}
 
   </style>
   <ol class="breadcrumb">
@@ -51,7 +61,7 @@
     @foreach($products as $product)
 
 
-        <th>{{$product->name}}</th>
+        <th><i id = {{$product->id}} class="delete fa fa-minus-circle"></i>{{$product->name}}</th>
 
     @endforeach
 
@@ -93,9 +103,17 @@
 
       @foreach($products  as $product)
       @if(isset($client[$product->id]))
-      <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id, $client[$product->id],['onkeypress'=> "return isNumberKey(event)",'class' => 'amount_'.$product->id.' test form-control col-12' ,'style' => 'padding:1px; text-align:center'])}} </td>
+      <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id, $client[$product->id],['onkeypress'=> "return isNumberKey(event)",
+      'class' => 'amount_'.$product->id.' test form-control col-12 '.$orderType ,
+      'style' => 'padding:1px; text-align:center',
+      'data-productid' => $product->id
+      ])}} </td>
      @else
-     <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id,0,['onkeypress'=> "return isNumberKey(event)",'class' => 'amount_'.$product->id.' test  form-control col-12' ,'style' => 'padding:1px; text-align:center'])}} </td>
+     <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id,0,['onkeypress'=> "return isNumberKey(event)",
+     'class' => 'amount_'.$product->id.' test form-control col-12 '.$orderType ,
+     'style' => 'padding:1px; text-align:center',
+     'data-productid' => $product->id
+     ])}} </td>
      @endif
      @endforeach
 
@@ -142,7 +160,7 @@
         <script src={{ asset('storage/js/isNumberKey.js') }}></script>
       <script src={{ asset('storage/js/deleteAlert.js') }}></script>
 
-
+<script src={{ asset('storage/js/reset.js') }}></script>
 
 
 

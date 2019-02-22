@@ -18,6 +18,10 @@
     .datepicker{
       z-index: 1000;
     }
+    .delete{
+    padding-right: 4px;
+color: #ef2f2f94;
+    }
 
 
 
@@ -100,7 +104,7 @@
     @foreach($products as $product)
 
 
-        <th>{{$product->name}}</th>
+        <th><i id = {{$product->id}} class="delete fa fa-minus-circle"></i>{{$product->name}}</th>
 
     @endforeach
 
@@ -116,7 +120,7 @@
         @foreach($products  as $product)
 
 
-        <td >{{Form::text('sum_'.$product->id,'',['class' => 'sum_'.$product->id.'  form-control col-12 '.$orderType ,'style' => 'padding:1px; text-align:center','readonly'])}} </td>
+        <td >{{Form::text('sum_'.$product->id,'',['class' => 'sum_'.$product->id.'   form-control col-12 '.$orderType ,'style' => 'padding:1px; text-align:center','readonly'])}} </td>
 
 
       @endforeach
@@ -126,7 +130,7 @@
       @foreach($products  as $product)
 
 
-      <th>{{$product->name}}</th>
+      <th>{{$product->name }} </th>
 
 
     @endforeach
@@ -142,7 +146,13 @@
 
       @foreach($products as $product)
       @if(isset($orderInfo[$orderType][$product->id]))
-      <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id, $orderInfo[$orderType][$product->id],[ 'onkeypress'=> "return isNumberKey(event)",'class' => 'amount_'. $product->id.' test form-control col-12 '.$orderType ,'style' => 'padding:1px; text-align:center'])}} </td>
+      <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id,
+         $orderInfo[$orderType][$product->id],
+            ['onkeypress'=> "return isNumberKey(event)",
+            'class' => 'amount_'.$product->id.' test form-control col-12 '.$orderType ,
+            'style' => 'padding:1px; text-align:center',
+            'data-productid' => $product->id
+            ])}} </td>
    @else
    <td>{{Form::input('number',$data['clientIds'][$clientName]. "_" . $product->id, '',['onkeypress'=> "return isNumberKey(event)",'class' => 'amount_'.$product->id.' test form-control col-12 '.$orderType ,'style' => 'padding:1px; text-align:center'])}} </td>
       @endif

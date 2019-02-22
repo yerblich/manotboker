@@ -23,7 +23,9 @@
 color: #ef2f2f94;
     }
 
-
+.delete:hover{
+  color: red;
+}
 
 
   </style>

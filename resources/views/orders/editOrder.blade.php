@@ -77,7 +77,7 @@ color: #ef2f2f94;
         @foreach($products  as $product)
 
 
-        <td >{{Form::text('sum_'.$product->id,'',['class' => 'sum_'.$product->id.'  form-control col-12' ,'style' => 'padding:1px; text-align:center','readonly'])}} </td>
+        <td >{{Form::text('sum_'.$product->id,'',['class' => 'sum_'.$product->id.'  form-control col-12' ,'style' => 'padding:1px; text-align:center','readonly', 'data-productid' => $product->id])}} </td>
 
 
       @endforeach

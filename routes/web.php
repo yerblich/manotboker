@@ -79,6 +79,7 @@ Route::post('/invoice/saveMassInvoice', "InvoiceController@saveMassInvoice");
 Route::post('/invoices/{id}', "InvoiceController@store");
 Route::get('/invoices/info/allClientDebts', "InvoiceController@allClientDebts")->name('allClientDebts');
 Route::post('/invoices/info/printInvoiceSummary', "InvoiceController@printInvoiceSummary")->name('printInvoiceSummary');
+Route::post('/order/populateCatOrder', "ordersController@populateCatOrder")->name('populateCatOrder');
 
 Route::resource('prices', 'PricesController');
 

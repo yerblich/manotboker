@@ -89,7 +89,10 @@ color: #ef2f2f94;
  @foreach($data['products'] as $orderType => $products)
  @if(count($data['products'][$orderType]))
    <div class="row">
-     <div class="col-11"><h1>{{ ucfirst($orderType)}}</h1></div>
+     <div class="col-2"><h1>{{ ucfirst($orderType)}}</h1></div>
+      <div class="col-3"><h1>{{Form::text('date', null, array('id' => "populate_".$orderType,'style' => 'position: relative; z-index: 1000;', 'placeholder'=>'populate','class' => ' form-control datepicker', 'autocomplete' => 'off', ))}}</h1></div>
+      <div class="col-6"><div id = {{$orderType}} onclick="return false"class="populate btn btn-primary">לאכלס</div></div>
+
      <div class="col-1"><div id = {{$orderType}} onclick="return false"class="reset btn btn-primary">לאפס</div></div>
    </div>
 
@@ -171,7 +174,7 @@ color: #ef2f2f94;
         'class' => 'amount_'.$product->id.' test form-control col-12 '.$orderType ,
         'style' => 'padding:1px; text-align:center',
         'data-productid' => $product->id
-        ])}} </td>  
+        ])}} </td>
       @endforeach
       @endif
 
@@ -233,15 +236,17 @@ color: #ef2f2f94;
 
       @section('js')
 {{-- var surl = '{{url('/orders')}}'; --}}
-{{-- <script>
+<script>
 var token = '{{Session::token()}}';
-var url  = '{{ route("storeOrder")}}';
+var url  = '{{ route("populateCatOrder")}}';
 
-</script> --}}
+</script>
          {{-- <script src={{ asset('storage/js/order.js') }}></script> --}}
       <script src={{ asset('storage/js/sum.js') }}></script>
         <script src={{ asset('storage/js/isNumberKey.js') }}></script>
 <script src={{ asset('storage/js/reset.js') }}></script>
+<script src={{ asset('storage/js/populate.js') }}></script>
+
 
 
 

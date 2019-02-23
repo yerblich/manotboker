@@ -738,6 +738,64 @@ if(count($clients) == 0 ){
 
     }
 
+    public function populateCatOrder(Request $request)
+    {
+      $products = [];
+      $date = Carbon::parse($request['date'])->format('Y-m-d');
+     $orderType = $request['orderType'];
+
+     if ($orderType == 'daily') {
+       $products = Product::where(['active' => 1, 'type' => '1' ])->orderBy('type', 'desc')->get();
+     }elseif ($orderType == 'shabbos') {
+     $products = Product::where(['active' => 1, 'type' => '0' ])->orderBy('type', 'desc')->get();
+   }elseif ($orderType == 'american') {
+     $products = Product::where(['active' => 1, 'type' => '2' ])->orderBy('type', 'desc')->get();
+   }
+
+   $orders = [];
+$clientList = [];
+$clientIds = [];
+$allClients = Client::orderBy('name', 'asc')->get();
+//      loop through clients and create array of the orders from yeserdays order in order to fill the form
+//  if client does not have any orders a blank array will return
+
+foreach($allClients as $client){
+// fetch ids and put them into client list object in order o fill the names of the inputs correctly for clients
+//not in the previous order $clientList[$client->name]
+$clientList[$client->name] =[];
+//get all clients with their orders from populate date or lataest date
+
+    $order =  $client->orders()->where('date',$date)->first();
+
+
+
+
+
+      foreach($products as $product){
+          $quantity = 0;
+          if($order !== null){
+            $orderItem = $order->orderItems()->where('product_id', $product->id)->first();
+            if ($orderItem !== null ) {
+              $quantity = $orderItem->quantity;
+            }
+          }
+        $orders[$product->id] = $quantity;
+
+      }
+$clientList[$client->id] = $orders;
+
+}
+return response()->json($clientList);
+// get all products in order to create form
+//$products = Product::where('active', 1)->orderBy('type', 'desc')->orderBy('supplier_id')->get();
+
+
+
+
+
+
+    }
+
 
 
 

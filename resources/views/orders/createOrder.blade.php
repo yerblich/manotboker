@@ -90,7 +90,7 @@ color: #ef2f2f94;
  @if(count($data['products'][$orderType]))
    <div class="row">
      <div class="col-2"><h1>{{ ucfirst($orderType)}}</h1></div>
-      <div class="col-3"><h1>{{Form::text('date', null, array('id' => "populate_".$orderType,'style' => 'position: relative; z-index: 1000;', 'placeholder'=>'populate','class' => ' form-control datepicker', 'autocomplete' => 'off', ))}}</h1></div>
+      <div class="col-3"><h1>{{Form::text('datePop', null, array('id' => "populate_".$orderType,'style' => 'position: relative; z-index: 1000;', 'placeholder'=>'populate','class' => ' form-control datepicker', 'autocomplete' => 'off', ))}}</h1></div>
       <div class="col-6"><div id = {{$orderType}} onclick="return false"class="populate btn btn-primary">לאכלס</div></div>
 
      <div class="col-1"><div id = {{$orderType}} onclick="return false"class="reset btn btn-primary">לאפס</div></div>

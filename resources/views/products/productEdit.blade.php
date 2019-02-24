@@ -86,7 +86,7 @@
                 </div>
           </div>
           <div class=" form-group input-group   ">
-              {!! Form::input('number','barcode',$data['barcode'],['onkeypress'=> "return isNumberKey(event)",'placeholder' => 'ברקוד','class' => 'text-right form-control'] ) !!}
+              {!! Form::text('barcode',$data['barcode'],['onkeypress'=> "return isNumberKey(event)",'placeholder' => 'ברקוד','class' => 'text-right form-control'] ) !!}
 
               <div class="input-group-append">
                   <span class="input-group-text">ברקוד</span>

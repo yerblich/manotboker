@@ -204,6 +204,7 @@
   @endif
 
   <br/>
+
   <div style="float:left; width:50%;">
     <table id="dataTable" width="99%"   autosize="1" cellspacing="0">
 
@@ -262,6 +263,7 @@
 </div>
 
 <div style="text-align: right;float:right; width:49%;border:1px solid;border-radius:3px;height:150px;">
+
   &nbsp;&nbsp;
 @if ($data['notes'] !== '')
 
@@ -270,6 +272,9 @@
 @endif
 &nbsp;&nbsp;&nbsp;&nbsp;
 </div>
+@if (count($data['invoiceInfo']) > 17)
+  <pagebreak>
+@endif
 
 
 </div>

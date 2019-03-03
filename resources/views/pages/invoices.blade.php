@@ -31,7 +31,7 @@
 
   <div class=" col-md-2 ">
   <a class="float-right" href="{{ url('invoice/MassInvoice')}}">
-    <button  type="button" class=" btn btn-primary">ליצור חשבוניות מרובות</button>
+    {{-- <button  type="button" class=" btn btn-primary">ליצור חשבוניות מרובות</button> --}}
   </a>
   </div>
 </div>

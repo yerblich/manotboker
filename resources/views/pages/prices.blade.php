@@ -2,6 +2,9 @@
 @section('content')
   <!-- Breadcrumbs-->
   <style>
+  .table tr th{
+    white-space: nowrap;
+  }
   .table
     {
       overflow: initial;
@@ -73,7 +76,7 @@
     @foreach($data['products'] as $product)
 
 
-      <th >{{$product->name}}</th>
+      <th>{{$product->name}}</th>
 
 
     @endforeach

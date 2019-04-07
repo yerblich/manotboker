@@ -27,7 +27,7 @@ class PricesController extends Controller
 
         $clients =  Client::orderBy('name', 'asc')->get();
 
-return "done";
+
         foreach($clients as $client){
 
                     //$client->prices()->where('active', 1)->get();
@@ -45,7 +45,7 @@ return "done";
            'clients' => $clients,
            'products' => $products
        );
-       return $data;
+       
         return view('pages.prices')->with('data', $data);
     }
 

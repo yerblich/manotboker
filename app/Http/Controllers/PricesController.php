@@ -24,11 +24,15 @@ class PricesController extends Controller
       // $prices = Price::where('active', 1)->get();
 
         $products = Product::where('active', 1)->get();
-
+$deleted = Product::where('active', 0)->get();
         $clients =  Client::orderBy('name', 'asc')->get();
       //  return $prices;
 //return $products->count();
-
+//return $deleted;
+foreach ($deleted as $prod) {
+  Price::where('product_id' , $prod->id)->update(['active' => 0]);
+}
+return "done";
         foreach($clients as $client){
 
                     //$client->prices()->where('active', 1)->get();
@@ -46,6 +50,7 @@ class PricesController extends Controller
            'clients' => $clients,
            'products' => $products
        );
+       return $data;
         return view('pages.prices')->with('data', $data);
     }
 

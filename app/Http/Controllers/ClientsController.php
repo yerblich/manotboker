@@ -86,7 +86,7 @@ class ClientsController extends Controller
         $client->address = $request->input("address");
         $client->save();
         Client::find($client->id)->update(['route' =>$client->id]);
-        $products = Product::all();
+        $products = Product::where('active', 1)->get();
 
         foreach($products as $product){
             $price = new Price;

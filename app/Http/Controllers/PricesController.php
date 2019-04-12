@@ -27,7 +27,11 @@ class PricesController extends Controller
 
         $clients =  Client::orderBy('name', 'asc')->get();
 
-
+   $delete =   $products = Product::where('active', 0)->get();
+  foreach ($delete as $prodtodelete) {
+    Price::where('product_id',$prodtodelete->id)->update(['active' => 0]);
+  }
+  return "done";
         foreach($clients as $client){
 
                     //$client->prices()->where('active', 1)->get();
@@ -45,7 +49,7 @@ class PricesController extends Controller
            'clients' => $clients,
            'products' => $products
        );
-       
+       //return $data;
         return view('pages.prices')->with('data', $data);
     }
 

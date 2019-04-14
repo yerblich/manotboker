@@ -22,7 +22,7 @@
 
 <h1><div style="text-align:center">הופמן</div></h1>
 @if ($data['creditType'] == 'credit')
-   <h1><div style="text-align:center">חשבונית זיכוי</div></h1>
+   <h1><div style="text-align:center">חשבונית מס זיכוי</div></h1>
 @else
  <h1><div style="text-align:center">זיכוי</div></h1>
 

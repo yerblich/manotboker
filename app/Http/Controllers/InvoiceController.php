@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Mail;
 use PDF;
 use DB;
 use Input;
+use Utils;
 use App\Charts\ClientChart;
 use Lava;
 use Khill\Lavacharts\Lavacharts;
@@ -169,7 +170,7 @@ return redirect()->route('invoices.show', [$invoice_exists->id])->with('error','
 
 
 
-       $this->updateBalance($clientId);
+       Utils::updateBalance($clientId);
 
 
 
@@ -347,7 +348,7 @@ return redirect()->route('invoices.show', [$invoice_exists->id])->with('error','
       $invoice->update(['paid' => $amountPaid]);
 
 
-          $this->updateBalance($invoice->client_id);
+          Utils::updateBalance($invoice->client_id);
       }
 
         return redirect()->route('invoices.show',[$invoiceId])->with('success', 'עודכן בהצלחה');
@@ -365,7 +366,7 @@ return redirect()->route('invoices.show', [$invoice_exists->id])->with('error','
       $invoice =  Invoice::find($id);
       $clientId = $invoice->client_id;
       $invoice->delete();
-      $this->updateBalance($clientId);
+      Utils::updateBalance($clientId);
 
        return redirect()->route('invoices.index')->with('success','חשבונית נמחקה');
     }
@@ -532,7 +533,7 @@ public function saveMassInvoice(Request $request){
 
 
 
-          $this->updateBalance($clientArray['client']['id']);
+          Utils::updateBalance($clientArray['client']['id']);
 
 
 
@@ -600,20 +601,7 @@ $pdf->stream( 'pdfInvoice.pdf'  );
 
 }
 
-    public function updateBalance($clientId){
-        $allDebt = Invoice::where('client_id' , $clientId)->pluck('debt')->toArray();
-        $allPaid = Invoice::where('client_id' , $clientId)->pluck('paid')->toArray();
-       $balance =  array_sum($allDebt)  - array_sum($allPaid);
-         if($balance < 0){
-            Client::find($clientId)->update(['credit' => abs($balance), 'debt' => 0]);
 
-         }elseif($balance > 0 ){
-            Client::find($clientId)->update(['debt' => $balance, 'credit' => 0]);
-
-         }else{
-            Client::find($clientId)->update(['debt' => 0, 'credit' => 0]);
-         }
-       }
 
        public function allClientDebts(){
          $clients = Client::orderBy('name', 'asc')->get();

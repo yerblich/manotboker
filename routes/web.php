@@ -35,14 +35,18 @@ Route::post('/clients/{id}/search', "ClientsController@search")->name('search');
 Route::get('/clients/{id}/search', "ClientsController@search")->name('searchget');
 Route::post('/clients/{id}/search/pdf', "ClientsController@pdfDownload");
 Route::post('/clients/{id}/search/pdfSend', "ClientsController@pdfSend");
+
 Route::post('/invoices/{id}/pdfDownload', "InvoiceController@pdfDownload");
 Route::post('/invoice/pdfSend', "InvoiceController@pdfSend");
 Route::post('/products/search', "ProductsController@search");
 
 
 Route::resource('reports', 'ReportsController');
-Route::get('reports/index/{id}', 'ReportsController@index');
 
+Route::get('reports/index/{id}', 'ReportsController@index');
+Route::get('/credit/create/{id}', "CreditController@create");
+
+Route::resource('credit', 'CreditController');
 
 Route::resource('options', 'OptionsController');
 Route::resource('orders', 'ordersController');

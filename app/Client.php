@@ -37,4 +37,8 @@ class Client extends Model
     return $this->hasMany('App\Invoice');
  }
 
+ public function credits(){
+
+    return $this->hasMany('App\Credit');
+ }
 }

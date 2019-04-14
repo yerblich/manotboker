@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Client;
+use App\Credit;
 use App\Product;
 use App\Price;
 use App\Invoice;
@@ -112,7 +113,7 @@ class ClientsController extends Controller
     {
        $client = Client::find($id);
        $invoices = $client->invoices()->orderBy('from_date' ,'desc')->get();
-
+       $credits = Credit::where('client_id',$id)->orderBy('created_at','desc')->get();
         // $orders = $client->orders()->orderBy('date','desc')->get();
         // $prices = $client->prices()->first();
         $products = Product::all();
@@ -182,7 +183,8 @@ class ClientsController extends Controller
            'orderTotals' => $productTotal,
            'returnTotals' => $productReturnTotal,
         //   'chart' => $chart,
-           'invoices' => $invoices
+           'invoices' => $invoices,
+           'all_credits' => $credits
        );
 //return $data;
         return view('clients.clientShow')->with('data', $data);

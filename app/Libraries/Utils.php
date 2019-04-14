@@ -9,6 +9,9 @@ use App\PrevReturnItem   ;
 use App\returnItem;
 use App\Price;
 use App\Product;
+use App\Invoice;
+use App\Credit;
+use App\Client;
 
 
 class Utils
@@ -173,6 +176,22 @@ public static function prefix_product($supplierName,$productNameInput,$type){
    }
 return $productFix;
 }
+
+public static function updateBalance($clientId){
+    $allDebt = Invoice::where('client_id' , $clientId)->pluck('debt')->toArray();
+    $allPaid = Invoice::where('client_id' , $clientId)->pluck('paid')->toArray();
+    $allCredit = Credit::where('client_id', $clientId)->pluck('amount')->toArray();
+   $balance =  array_sum($allDebt)  - array_sum($allPaid) - array_sum($allCredit);
+     if($balance < 0){
+        Client::find($clientId)->update(['credit' => abs($balance), 'debt' => 0]);
+
+     }elseif($balance > 0 ){
+        Client::find($clientId)->update(['debt' => $balance, 'credit' => 0]);
+
+     }else{
+        Client::find($clientId)->update(['debt' => 0, 'credit' => 0]);
+     }
+   }
 
 
 

@@ -48,8 +48,13 @@
   </div>
      --}}
 {{-- <div class="border 1px col-md-2" >Date: {{ $data['date'] }}</div> --}}
-<div class="  col-md-3 "><a class="btn btn-primary" href="{{ url('/clients')}}/{{$data['client']->id}}/edit">
-  עֲרוֹך</a> </div>
+<div class="row">
+  <div class="  col-md-9 "><a class="btn btn-primary" href="{{ url('/clients')}}/{{$data['client']->id}}/edit">
+    עֲרוֹך</a> </div>
+    <div class=" text-right col-md-3 "><a class="btn btn-primary" href="{{ url('/credit/create')}}/{{$data['client']->id}}">
+    ליצור חשבונית זיכוי</a> </div>
+</div>
+
 <br>
 
 
@@ -115,40 +120,68 @@
 
 <br>
 <div class="row">
-<div class=" col-md-8 chartWrapper float-left">
+  <div class="  col-md-3 float-right">
+  </div>
+
+  <div class="  col-md-3 float-right">
+   <div class="text-center"> זיכויים אחרונות<br></div>
+   <div class="clientInvoices ">
+      @if(count($data['all_credits']) > 0 )
+    @foreach($data['all_credits'] as $credit)
+      <div class="well text-right mr-2">
+
+      <a class="text-danger" href="{{ url('/credit')}}/{{$credit->id}}">   {{$credit->created_at->format('d-m-Y') }} </a>
+
+      </div>
+      @endforeach
+
+    @else
+      <p class="mr-2 text-right"> לא נמצאו חשבוניות </p>
+    @endif
+
+
+
+
+
+
+   </div>
+  </div>
+  <div class="  col-md-3">
+   <div class="text-center"> חשבוניות אחרונות<br></div>
+   <div class="clientInvoices">
+      @if(count($data['invoices']) > 0 )
+    @foreach($data['invoices'] as $invoice)
+      <div class="well text-right mr-2">
+      @if($invoice->debt - $invoice->paid > 0 )
+      <a class="text-danger" href="{{ url('/invoices')}}/{{$invoice->id}}">   {{$invoice->from_date->format('d-m-Y') }} To  {{$invoice->to_date->format('d-m-Y') }} </a>
+      @else
+      @if($invoice->debt - $invoice->paid  < 0 )
+      <a class = "text-primary" href="{{ url('/invoices')}}/{{$invoice->id}}">   {{$invoice->from_date->format('d-m-Y') }} To  {{$invoice->to_date->format('d-m-Y') }} </a>
+        @else
+      <a class = "text-success" href="{{ url('/invoices')}}/{{$invoice->id}}">   {{$invoice->from_date->format('d-m-Y') }} To  {{$invoice->to_date->format('d-m-Y') }} </a>
+      @endif
+      @endif
+      </div>
+      @endforeach
+
+    @else
+      <p class="mr-2 text-right"> לא נמצאו חשבוניות </p>
+    @endif
+
+
+   </div>
+
+  </div>
+  <div class="  col-md-3 float-right">
+  </div>
+</div>
+<div class="row">
+<div class=" col-md-10 chartWrapper float-left">
 <div id="stocks-chart"></div>
 {!! \Lava::render('ColumnChart', 'Finances', 'stocks-chart');!!}
 </div>
 
-<div class="  col-md-3 float-right">
- <div class="text-center"> חשבוניות אחרונות<br></div>
- <div class="clientInvoices">
-    @if(count($data['invoices']) > 0 )
-  @foreach($data['invoices'] as $invoice)
-    <div class="well">
-    @if($invoice->debt - $invoice->paid > 0 )
-    <a class="text-danger" href="{{ url('/invoices')}}/{{$invoice->id}}">   {{$invoice->from_date->format('d-m-Y') }} To  {{$invoice->to_date->format('d-m-Y') }} </a>
-    @else
-    @if($invoice->debt - $invoice->paid  < 0 )
-    <a class = "text-primary" href="{{ url('/invoices')}}/{{$invoice->id}}">   {{$invoice->from_date->format('d-m-Y') }} To  {{$invoice->to_date->format('d-m-Y') }} </a>
-      @else
-    <a class = "text-success" href="{{ url('/invoices')}}/{{$invoice->id}}">   {{$invoice->from_date->format('d-m-Y') }} To  {{$invoice->to_date->format('d-m-Y') }} </a>
-    @endif
-    @endif
-    </div>
-    @endforeach
 
-  @else
-    <p> לא נמצאו חשבוניות </p>
-  @endif
-
-
-
-
-
-
- </div>
-</div>
 </div>
 {{-- <div>{!! $data['chart']->container() !!}</div> --}}
 

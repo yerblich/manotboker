@@ -634,9 +634,16 @@ $invoicesList = [];
 if (count($invoices) == 0) {
   return redirect()->back()->with('error','לא נמצאו חשבוניות בתאריכים אלה');
 }
+//return $invoices;
 foreach ($invoices as $invoice) {
+  if(Client::find($invoice->client_id)  != ''){
+    $clientName = Client::find($invoice->client_id)->name ;
+  }else{
+    $clientName = "לקוח נמחק";
+  }
+
   $invoicesList[$invoice->invoice_num] = [
-    'clientName' => Client::find($invoice->client_id)->name ,
+    'clientName' => $clientName,
     'total' => $invoice->debt,
     'date' => Carbon::parse($invoice->created_at)->format('d-m-Y')
   ];

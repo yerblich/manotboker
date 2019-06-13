@@ -630,7 +630,7 @@ public function printInvoiceSummary(Request $request)
   $from_date = Carbon::parse($request->input('from_date'))->format('Y-m-d');
   $to_date = Carbon::parse($request->input('to_date'))->format('Y-m-d');
 $invoicesList = [];
-   $invoices = Invoice::where('from_date', '>=', $from_date)->where('to_date', '<=', $to_date)->whereNotNull('invoice_num')->get();
+   $invoices = Invoice::whereBetween('created_at', [$from_date, $to_date])->whereNotNull('invoice_num')->orderBy('created_at', 'ASC')->get();
 if (count($invoices) == 0) {
   return redirect()->back()->with('error','לא נמצאו חשבוניות בתאריכים אלה');
 }

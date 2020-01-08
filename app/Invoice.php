@@ -10,7 +10,8 @@ class Invoice extends Model
         'debt',
         'paid',
         'sent',
-        'printed'
+        'printed',
+        'invoice_num'
 
 
     ];

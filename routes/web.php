@@ -1,5 +1,5 @@
 <?php
-
+use App\Invoice;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -10,9 +10,24 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Auth::routes();
+Route::get('/test', function(){
+   $r = Invoice::whereNotNull('invoice_num')->orderBy('created_at')->get();
+ $invoice_num = 230;
+ foreach ($r as $invoice) {
+   $invoice->update(['invoice_num' => $invoice_num]);
+$invoice_num++;
+ }
+return Invoice::where('invoice_num',571)->get();
+});
 
+
+Auth::routes();
+///////Testing
+Route::resource('testingController', 'TestingController');
+
+////////
 Route::get('/', 'HomeController@index')->name('home');
+
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', "PagesController@index");
 Route::post('/orders/create', "ordersController@create");
@@ -86,6 +101,9 @@ Route::post('/invoices/info/printInvoiceSummary', "InvoiceController@printInvoic
 Route::post('/order/populateCatOrder', "ordersController@populateCatOrder")->name('populateCatOrder');
 
 Route::resource('prices', 'PricesController');
+
+
+
 
 
 });

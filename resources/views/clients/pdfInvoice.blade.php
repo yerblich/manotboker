@@ -110,7 +110,7 @@
                         @if(count((array)$infoArray['price']) > 1)
                        | {{$amount}} -  {{number_format($price / 1.17/$infoArray['units'],2)}} |
                        @else
-                       {{number_format($price / 1.17/$infoArray['units'],2)}}
+                         {{number_format($price / 1.17/$infoArray['units'],2)}} 
                        @endif
                         @endforeach
                       </td>

@@ -435,15 +435,11 @@ class ordersController extends Controller
      */
     public function show($orderDate)
     {
-    $orderDate =  Carbon::parse($orderDate)->format('Y-m-d');
-    // return $orderDate;
+
       $clientsIds =  Order::where('date', $orderDate)->pluck('client_id')->toArray();
       foreach ($clientsIds as $clientId) {
       $client =   Client::find($clientId);
-      if($client != ""){
         $clients[$client->name] = $client;
-        
-      }
 
       }
 

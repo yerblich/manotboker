@@ -43,7 +43,7 @@
 
   <div class="dateGroupItem ">
 
-    <div class=" dateGroup "><a  href='{{url("/orders/".$order->date->format('d-m-Y'))}}'> {{$order->date->format('d') }}</a></div>
+    <div class=" dateGroup "><a  href='{{url("/orders/$order->date")}}'> {{$order->date->format('d') }}</a></div>
 
 
  </div>

@@ -294,7 +294,7 @@ class ordersController extends Controller
 
             }
 
- $this->createOrderPdf($newDateformat,$sums);
+  $this->createOrderPdf($newDateformat,$sums);
 
      }else{
     $messageCode = 'error';
@@ -321,6 +321,11 @@ class ordersController extends Controller
         $orderIds = Order::where('date',$orderDate)->pluck('id')->toArray();
         //grouped by product id to remove duplicate products
         $allProductsInOrders = orderItem::whereIn('order_id',$orderIds)->groupBy('product_id')->get();
+        $active_products = Product::where('active',1)->pluck('id');
+    $allProductsInOrders =  $allProductsInOrders->filter(function($product) use ($active_products){
+   return   $active_products->contains($product->product_id);
+
+        });
         $allOrders = orderItem::whereIn('order_id',$orderIds)->get();
 
         foreach ($allProductsInOrders as $orderItem)
@@ -435,14 +440,22 @@ class ordersController extends Controller
      */
     public function show($orderDate)
     {
+    $orderDate =  Carbon::parse($orderDate)->format('Y-m-d');
+    // return $orderDate;
+      $clientsIds =  Order::where('date', $orderDate)
+      ->whereHas('orderItems', function ($query) {
+    $query->where('quantity', '>', 0);
+})->pluck('client_id')->toArray();
 
-      $clientsIds =  Order::where('date', $orderDate)->pluck('client_id')->toArray();
       foreach ($clientsIds as $clientId) {
       $client =   Client::find($clientId);
+      if($client != ""){
         $clients[$client->name] = $client;
 
       }
 
+      }
+// return $clients;
       $data =   array(
 
         'clients' => $clients,
@@ -464,12 +477,13 @@ class ordersController extends Controller
      */
     public function edit($date)
     {
+
         $products['daily'] = Product::where(['active' => 1, 'type' => '1' ])->orderBy('type', 'desc')->get();
         $products['shabbos'] = Product::where(['active' => 1, 'type' => '0' ])->orderBy('type', 'desc')->get();
           $products['american'] = Product::where(['active' => 1, 'type' => '2' ])->orderBy('type', 'desc')->get();
 
             $orderDate =  Carbon::parse($date)->format('Y-m-d');
-
+// return $orderDate;
               $parsha = Order::where('date',$orderDate)->first()->parsha;
             $day = Order::where('date',$orderDate)->first()->day;
        //get al clients
@@ -517,7 +531,7 @@ class ordersController extends Controller
         'clientIds' => $clientIds
 
       );
-   //   return $data;
+     return $data;
     return view('orders.editOrder')->with("data", $data);
 
 
@@ -532,7 +546,7 @@ class ordersController extends Controller
      */
     public function update(Request $request, $date)
     {
-
+// return $request;
       $requestProducts = $request->all();
         unset($requestProducts['_token'],$requestProducts['_method']);
 
@@ -557,7 +571,7 @@ class ordersController extends Controller
 
      // check if all fields are empty , if not continue
     if(!max($requestProducts )== "") {
-      Storage::delete('public/pdf/order'.$date.'.pdf');
+      Storage::delete('public/pdf/order'.Carbon::parse($date)->format('d-m-Y').'.pdf');
 
      $orders =  Order::where('date', $orderDate)->get();
 
@@ -646,7 +660,7 @@ class ordersController extends Controller
 
 
 
-                              $this->createOrderPdf($orderDate, $sums);
+                               $this->createOrderPdf($orderDate, $sums);
                                  $messageCode = 'success';
                                  $messageText = 'הזמנה עודכן בהצלחה';
 

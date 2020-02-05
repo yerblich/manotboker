@@ -531,7 +531,7 @@ class ordersController extends Controller
         'clientIds' => $clientIds
 
       );
-     return $data;
+     // return $data;
     return view('orders.editOrder')->with("data", $data);
 
 

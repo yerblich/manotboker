@@ -171,9 +171,10 @@ public static function prefix_product($supplierName,$productNameInput,$type){
       }  else{
           $productFix = $productNameInput;
       }
-   if($type == 0){
-       $productFix =  $productFix ."_ש" ;
-   }
+      // return $suffix = mb_substr($productFix,-2);
+       if($type == 0 && mb_substr($productFix, -2) !== "_ש"){
+           $productFix =  $productFix ."_ש" ;
+       }
 return $productFix;
 }
 

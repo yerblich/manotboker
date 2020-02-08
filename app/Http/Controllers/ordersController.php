@@ -621,6 +621,8 @@ class ordersController extends Controller
                                             $orderItem->product_id = $product_id;
                                              $orderItem->quantity = $quantity;
                                             $orderItem->currentPrice = Price::where(['client_id' => $client, 'product_id' => $product_id])->first()->price;
+                                            $orderItem->c_supplier_price = Product::where( 'id' ,$product_id)->first()->supplier_price;
+                                              ///here
                                             $orderItem->save();
 
                                             //   /////add return item

@@ -99,18 +99,37 @@
 
 
           @foreach($data['invoiceInfo'] as  $name => $infoArray)
+@php 
+if($data['invoiceType'] == 'invoice'){
+  $totalToPayForProduct = $infoArray['totalToPayForProduct'] / 1.17;
+}else{
+  $totalToPayForProduct = $infoArray['totalToPayForProduct'];
+
+}
+  
+
+@endphp
 
             <tr>
 
-                    <td> {{number_format($infoArray['totalToPayForProduct'] / 1.17 , 2) }}</td>
+                    <td> {{number_format($totalToPayForProduct, 2) }}</td>
 
                     <td>
                         @foreach($infoArray['price'] as $price => $amount)
+@php 
+if($data['invoiceType'] == 'invoice'){
+  $price = $price / 1.17;
+}else{
+  $price = $price ;
 
+}
+  
+
+@endphp
                         @if(count((array)$infoArray['price']) > 1)
-                       | {{$amount}} -  {{number_format($price / 1.17/$infoArray['units'],2)}} |
+                       | {{$amount}} -  {{number_format($price / $infoArray['units'],2)}} |
                        @else
-                         {{number_format($price / 1.17/$infoArray['units'],2)}} 
+                         {{number_format($price / $infoArray['units'],2)}}
                        @endif
                         @endforeach
                       </td>
@@ -129,7 +148,7 @@
 
 
           @endforeach
-
+    @if($data['invoiceType'] == 'invoice')
           <tr class="table-danger">
               <td>{{number_format($data['pretax'] ,2)    }}  </td>
             <td >סה"כ לפני מע״מ</td>
@@ -139,12 +158,17 @@
           <tr class="table-success">
             <td>{{ number_format($data['tax'],2) }}</td>
           <td > 17%  מע״מ </td>
-
+      @endif
 
           </tr>
           <tr class="table-danger">
+            
               <td>{{number_format($data['posttax'] ,2)    }}  </td>
-            <td >סה"כ אחרי מע״מ</td>
+              @if($data['invoiceType'] == 'invoice')
+                 <td >סה"כ אחרי מע״מ</td>
+              @else
+              <td >סה"כ</td>
+            @endif
 
 
           </tr>

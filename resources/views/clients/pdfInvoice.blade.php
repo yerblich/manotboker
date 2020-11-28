@@ -17,8 +17,15 @@
     width: 50%;
 
   }
+  @page {
+	header: page-header;
+	footer: page-footer;
+}
 
   </style>
+  <htmlpageheader name="page-header">
+    {{$data['created_at']}}  :תאריך רישום
+  </htmlpageheader>
 
 <h1><div style="text-align:center">הופמן</div></h1>
 @if ($data['invoiceType'] == 'invoice')
@@ -297,7 +304,7 @@ if($data['invoiceType'] == 'invoice'){
 &nbsp;&nbsp;&nbsp;&nbsp;
 </div>
 @if (count($data['invoiceInfo']) > 17)
-  <pagebreak>
+
 @endif
 
 
@@ -370,13 +377,14 @@ if($data['invoiceType'] == 'invoice'){
   <br/>
 <br/>
   <table width="100%" border="0">
-<tr>
+
   <thead>
+    <tr>
 <th> ________________:שם המקבל:________________ חתימה </th>
 
-<th> {{$data['created_at']}}  :תאריך רישום</th>
-</thead>
 </tr>
+</thead>
+
   </table>
 
   @else
